@@ -1,0 +1,1027 @@
+import React, { useEffect, useState } from 'react';
+
+const Hero = () => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsLoaded(true);
+    
+    const handleMouseMove = (e) => {
+      setMousePosition({
+        x: e.clientX / window.innerWidth,
+        y: e.clientY / window.innerHeight,
+      });
+    };
+    
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Elegant product carousel
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % 4);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const products = [
+    { 
+      name: "Luxury Basin Collection", 
+      subtitle: "Handcrafted Elegance",
+      description: "Premium ceramic basins with gold accents",
+      price: "₹25,000+",
+      gradient: "linear-gradient(135deg, #fef7cd 0%, #fde68a 100%)"
+    },
+    { 
+      name: "Smart Toilet Suite", 
+      subtitle: "Technology Meets Comfort",
+      description: "IoT-enabled intelligent bathroom systems",
+      price: "₹85,000+",
+      gradient: "linear-gradient(135deg, #dbeafe 0%, #c7d2fe 100%)"
+    },
+    { 
+      name: "Designer Faucets", 
+      subtitle: "Architectural Beauty",
+      description: "Precision-engineered water systems",
+      price: "₹15,000+",
+      gradient: "linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)"
+    },
+    { 
+      name: "Spa Shower Systems", 
+      subtitle: "Wellness Experience",
+      description: "Multi-function rainfall showers",
+      price: "₹45,000+",
+      gradient: "linear-gradient(135deg, #fae8ff 0%, #f3e8ff 100%)"
+    }
+  ];
+
+  const features = [
+    {
+      icon: "✨",
+      title: "Premium Materials",
+      description: "Finest ceramics and metals sourced globally",
+      detail: "German engineering standards"
+    },
+    {
+      icon: "🎯",
+      title: "Precision Crafted",
+      description: "Meticulous attention to every detail",
+      detail: "Handcrafted excellence"
+    },
+    {
+      icon: "🌿",
+      title: "Eco Conscious",
+      description: "Sustainable and water-efficient designs",
+      detail: "Green technology"
+    },
+    {
+      icon: "🏆",
+      title: "Award Winning",
+      description: "Recognized for innovation and quality",
+      detail: "Industry leader since 1995"
+    }
+  ];
+
+  const styles = {
+    container: {
+      position: 'relative',
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 25%, #e2e8f0 100%)',
+      overflow: 'hidden'
+    },
+    backgroundPattern: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      opacity: 0.02,
+      backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%2364748b' stroke-width='0.5'%3E%3Cpath d='M60 0L0 0 0 60'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+    },
+    mouseGradient: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: `radial-gradient(circle at ${mousePosition.x * 100}% ${mousePosition.y * 100}%, rgba(59,130,246,0.05) 0%, transparent 50%)`,
+      transition: 'background 0.3s ease'
+    },
+    floatingParticle: {
+      position: 'absolute',
+      width: '4px',
+      height: '4px',
+      background: 'linear-gradient(45deg, #fbbf24, #f59e0b)',
+      borderRadius: '50%',
+      opacity: 0.6
+    },
+    mainContent: {
+      position: 'relative',
+      zIndex: 10,
+      maxWidth: '1280px',
+      margin: '0 auto',
+      padding: '80px 24px 64px'
+    },
+    header: {
+      textAlign: 'center',
+      marginBottom: '80px'
+    },
+    badge: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '12px',
+      background: 'rgba(255, 255, 255, 0.9)',
+      backdropFilter: 'blur(20px)',
+      border: '1px solid rgba(226, 232, 240, 0.5)',
+      borderRadius: '50px',
+      padding: '16px 32px',
+      marginBottom: '32px',
+      boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+      transition: 'all 0.3s ease'
+    },
+    pulsingDot: {
+      width: '8px',
+      height: '8px',
+      background: '#fbbf24',
+      borderRadius: '50%',
+      animation: 'pulse 2s infinite'
+    },
+    mainHeading: {
+      fontSize: 'clamp(3rem, 8vw, 8rem)',
+      fontWeight: '300',
+      color: '#1e293b',
+      lineHeight: '0.9',
+      letterSpacing: '-0.02em',
+      marginBottom: '32px'
+    },
+    gradientText: {
+      background: 'linear-gradient(135deg, #64748b 0%, #1e293b 50%, #64748b 100%)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text'
+    },
+    subtitle: {
+      fontSize: 'clamp(1.25rem, 3vw, 2rem)',
+      color: '#64748b',
+      fontWeight: '300',
+      fontStyle: 'italic',
+      position: 'relative',
+      display: 'inline-block'
+    },
+    description: {
+      fontSize: 'clamp(1.125rem, 2vw, 1.5rem)',
+      color: '#64748b',
+      maxWidth: '800px',
+      margin: '0 auto',
+      lineHeight: '1.6',
+      fontWeight: '300'
+    },
+    gridContainer: {
+      display: 'grid',
+      gridTemplateColumns: '2fr 3fr',
+      gap: '64px',
+      alignItems: 'start',
+      '@media (max-width: 1024px)': {
+        gridTemplateColumns: '1fr',
+        gap: '48px'
+      }
+    },
+    featureCard: {
+      position: 'relative',
+      background: 'rgba(255, 255, 255, 0.7)',
+      backdropFilter: 'blur(20px)',
+      border: '1px solid rgba(226, 232, 240, 0.5)',
+      borderRadius: '16px',
+      padding: '24px',
+      marginBottom: '24px',
+      transition: 'all 0.3s ease',
+      cursor: 'pointer'
+    },
+    featureIcon: {
+      width: '56px',
+      height: '56px',
+      background: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
+      borderRadius: '12px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: '24px',
+      marginRight: '20px',
+      flexShrink: 0,
+      boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+    },
+    productShowcase: {
+      position: 'relative',
+      background: 'rgba(255, 255, 255, 0.8)',
+      backdropFilter: 'blur(30px)',
+      border: '1px solid rgba(226, 232, 240, 0.5)',
+      borderRadius: '24px',
+      padding: '32px',
+      boxShadow: '0 25px 50px rgba(0,0,0,0.1)',
+      overflow: 'hidden'
+    },
+    carouselContainer: {
+      position: 'relative',
+      height: '320px',
+      marginBottom: '32px',
+      overflow: 'hidden',
+      borderRadius: '16px'
+    },
+    carouselSlide: {
+      display: 'flex',
+      height: '100%',
+      transform: `translateX(-${currentSlide * 100}%)`,
+      transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)'
+    },
+    slideContent: {
+      minWidth: '100%',
+      height: '100%',
+      borderRadius: '16px',
+      border: '1px solid rgba(255,255,255,0.5)',
+      boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.05)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative',
+      overflow: 'hidden'
+    },
+    slidePattern: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      opacity: 0.05,
+      backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23000000'%3E%3Ccircle cx='50' cy='50' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+    },
+    indicators: {
+      display: 'flex',
+      justifyContent: 'center',
+      gap: '12px',
+      marginBottom: '32px'
+    },
+    indicator: {
+      width: '8px',
+      height: '8px',
+      borderRadius: '50%',
+      background: '#cbd5e1',
+      cursor: 'pointer',
+      transition: 'all 0.5s ease',
+      border: 'none'
+    },
+    indicatorActive: {
+      background: '#64748b',
+      width: '32px',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+    },
+    buttonPrimary: {
+      background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
+      color: 'white',
+      fontWeight: '500',
+      padding: '16px 32px',
+      borderRadius: '12px',
+      border: 'none',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      boxShadow: '0 8px 25px rgba(30,41,59,0.3)',
+      position: 'relative',
+      overflow: 'hidden'
+    },
+    buttonSecondary: {
+      background: 'rgba(255, 255, 255, 0.8)',
+      backdropFilter: 'blur(20px)',
+      border: '1px solid #cbd5e1',
+      color: '#1e293b',
+      fontWeight: '500',
+      padding: '16px 32px',
+      borderRadius: '12px',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease'
+    },
+    statsGrid: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(3, 1fr)',
+      gap: '24px',
+      marginTop: '32px'
+    },
+    statCard: {
+      textAlign: 'center',
+      background: 'rgba(255, 255, 255, 0.6)',
+      backdropFilter: 'blur(20px)',
+      border: '1px solid rgba(226, 232, 240, 0.5)',
+      borderRadius: '16px',
+      padding: '24px',
+      transition: 'all 0.3s ease'
+    },
+    ctaSection: {
+      textAlign: 'center',
+      marginTop: '96px',
+      marginBottom: '64px'
+    },
+    ctaContainer: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '24px',
+      background: 'linear-gradient(135deg, #fef7cd 0%, #fde68a 100%)',
+      backdropFilter: 'blur(20px)',
+      border: '1px solid rgba(251, 191, 36, 0.3)',
+      borderRadius: '50px',
+      padding: '24px 48px',
+      boxShadow: '0 20px 40px rgba(251, 191, 36, 0.2)',
+      position: 'relative'
+    },
+    ctaButton: {
+      background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+      color: 'white',
+      fontWeight: '600',
+      padding: '12px 32px',
+      borderRadius: '50px',
+      border: 'none',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      boxShadow: '0 8px 25px rgba(251, 191, 36, 0.3)'
+    }
+  };
+
+  // Floating particles animation
+  const FloatingParticles = () => {
+    const [particles, setParticles] = useState([]);
+
+    useEffect(() => {
+      const newParticles = [];
+      for (let i = 0; i < 12; i++) {
+        newParticles.push({
+          id: i,
+          x: Math.random() * window.innerWidth,
+          y: window.innerHeight + 10,
+          delay: Math.random() * 8,
+          duration: 15 + Math.random() * 10
+        });
+      }
+      setParticles(newParticles);
+    }, []);
+
+    return (
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+        {particles.map(particle => (
+          <div
+            key={particle.id}
+            style={{
+              ...styles.floatingParticle,
+              left: `${particle.x}px`,
+              animationName: 'floatUp',
+              animationDuration: `${particle.duration}s`,
+              animationDelay: `${particle.delay}s`,
+              animationIterationCount: 'infinite',
+              animationTimingFunction: 'linear'
+            }}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  // Floating geometric shapes
+  const FloatingShapes = () => {
+    const shapes = [];
+    for (let i = 0; i < 8; i++) {
+      shapes.push({
+        id: i,
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        size: 20 + Math.random() * 20,
+        isCircle: i % 2 === 0
+      });
+    }
+
+    return (
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, overflow: 'hidden', pointerEvents: 'none', opacity: 0.05 }}>
+        {shapes.map(shape => (
+          <div
+            key={shape.id}
+            style={{
+              position: 'absolute',
+              left: `${shape.x}px`,
+              top: `${shape.y}px`,
+              width: `${shape.size}px`,
+              height: `${shape.size}px`,
+              border: '2px solid #64748b',
+              borderRadius: shape.isCircle ? '50%' : '0',
+              transform: shape.isCircle ? 'none' : 'rotate(45deg)',
+              animationName: 'floatRotate',
+              animationDuration: `${20 + Math.random() * 10}s`,
+              animationIterationCount: 'infinite',
+              animationTimingFunction: 'linear'
+            }}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <>
+      <style jsx>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+        
+        @keyframes floatUp {
+          0% {
+            transform: translateY(0);
+            opacity: 0;
+          }
+          50% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(-100vh);
+            opacity: 0;
+          }
+        }
+        
+        @keyframes floatRotate {
+          0% {
+            transform: translateY(0) rotate(0deg);
+          }
+          50% {
+            transform: translateY(-50px) rotate(180deg);
+          }
+          100% {
+            transform: translateY(0) rotate(360deg);
+          }
+        }
+        
+        @keyframes shimmer {
+          0% {
+            transform: translateX(-100%) skewX(-12deg);
+          }
+          100% {
+            transform: translateX(100%) skewX(-12deg);
+          }
+        }
+        
+        @media (max-width: 768px) {
+          .grid-responsive {
+            grid-template-columns: 1fr !important;
+          }
+          .text-responsive {
+            font-size: clamp(2rem, 8vw, 4rem) !important;
+          }
+        }
+      `}</style>
+      
+      <div style={styles.container}>
+        
+        {/* Background Elements */}
+        <div style={styles.backgroundPattern} />
+        <div style={styles.mouseGradient} />
+        <FloatingShapes />
+        <FloatingParticles />
+
+        <div style={styles.mainContent}>
+          
+          {/* Elegant Header */}
+          <div style={styles.header}>
+            
+            {/* Premium Badge */}
+            <div 
+              style={{
+                ...styles.badge,
+                opacity: isLoaded ? 1 : 0,
+                transform: isLoaded ? 'scale(1)' : 'scale(0.8)',
+                transition: 'all 0.8s ease'
+              }}
+            >
+              <div style={styles.pulsingDot} />
+              <span style={{ color: '#475569', fontWeight: '500', letterSpacing: '0.025em' }}>
+                Crafting Luxury Since 1995
+              </span>
+              <div style={{ height: '16px', width: '1px', background: '#cbd5e1' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} style={{ color: '#fbbf24', fontSize: '14px' }}>★</span>
+                ))}
+                <span style={{ color: '#64748b', fontSize: '14px', marginLeft: '8px', fontWeight: '500' }}>4.9</span>
+              </div>
+            </div>
+
+            {/* Elegant Main Heading */}
+            <div style={{
+              opacity: isLoaded ? 1 : 0,
+              transform: isLoaded ? 'translateY(0)' : 'translateY(40px)',
+              transition: 'all 1s ease 0.3s',
+              marginBottom: '32px'
+            }}>
+              <h1 style={styles.mainHeading}>
+                <div style={{ position: 'relative' }}>
+                  Redefine
+                  <div style={{
+                    position: 'absolute',
+                    bottom: '-8px',
+                    left: 0,
+                    right: 0,
+                    height: '1px',
+                    background: 'linear-gradient(90deg, transparent, #fbbf24, transparent)',
+                    opacity: isLoaded ? 1 : 0,
+                    transition: 'opacity 1.5s ease 1s'
+                  }} />
+                </div>
+                <div style={styles.gradientText}>
+                  Elegance
+                </div>
+              </h1>
+              
+              <div style={{
+                position: 'relative',
+                display: 'inline-block',
+                opacity: isLoaded ? 1 : 0,
+                transform: isLoaded ? 'scale(1)' : 'scale(0.8)',
+                transition: 'all 0.8s ease 0.8s'
+              }}>
+                <p style={styles.subtitle}>
+                  in every detail
+                </p>
+                <div style={{
+                  position: 'absolute',
+                  top: '-16px',
+                  right: '-32px',
+                  fontSize: '32px',
+                  opacity: 0.2,
+                  transform: 'rotate(12deg)'
+                }}>
+                  ✨
+                </div>
+              </div>
+            </div>
+
+            {/* Sophisticated Description */}
+            <p style={{
+              ...styles.description,
+              opacity: isLoaded ? 1 : 0,
+              transform: isLoaded ? 'translateY(0)' : 'translateY(30px)',
+              transition: 'all 0.8s ease 0.6s'
+            }}>
+              Where <em style={{ color: '#1e293b', fontWeight: '500' }}>German precision</em> meets 
+              <em style={{ color: '#1e293b', fontWeight: '500' }}> timeless design</em>. 
+              Experience sanitaryware that transforms bathrooms into sanctuaries of luxury and comfort.
+            </p>
+          </div>
+
+          {/* Main Content Layout */}
+          <div style={styles.gridContainer} className="grid-responsive">
+            
+            {/* Left Column - Features */}
+            <div>
+              {features.map((feature, index) => (
+                <div
+                  key={feature.title}
+                  style={{
+                    ...styles.featureCard,
+                    opacity: isLoaded ? 1 : 0,
+                    transform: isLoaded ? 'translateX(0)' : 'translateX(-40px)',
+                    transitionDelay: `${0.8 + index * 0.15}s`,
+                    display: 'flex',
+                    alignItems: 'flex-start'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.9)';
+                    e.currentTarget.style.borderColor = 'rgba(203, 213, 225, 0.5)';
+                    e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.1)';
+                    e.currentTarget.style.transform = 'translateY(-5px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.7)';
+                    e.currentTarget.style.borderColor = 'rgba(226, 232, 240, 0.5)';
+                    e.currentTarget.style.boxShadow = 'none';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  <div style={styles.featureIcon}>
+                    {feature.icon}
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <h3 style={{ 
+                      fontSize: '20px', 
+                      fontWeight: '600', 
+                      color: '#1e293b', 
+                      marginBottom: '8px',
+                      transition: 'color 0.3s ease'
+                    }}>
+                      {feature.title}
+                    </h3>
+                    <p style={{ 
+                      color: '#64748b', 
+                      marginBottom: '12px', 
+                      lineHeight: '1.6' 
+                    }}>
+                      {feature.description}
+                    </p>
+                    <div style={{ 
+                      display: 'inline-flex', 
+                      alignItems: 'center', 
+                      gap: '8px', 
+                      fontSize: '14px', 
+                      fontWeight: '500', 
+                      color: '#f59e0b' 
+                    }}>
+                      <div style={{ 
+                        width: '6px', 
+                        height: '6px', 
+                        background: '#fbbf24', 
+                        borderRadius: '50%' 
+                      }} />
+                      {feature.detail}
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              {/* Contact Information */}
+              <div style={{
+                ...styles.featureCard,
+                background: 'linear-gradient(135deg, #fef7cd 0%, #fde68a 100%)',
+                border: '1px solid rgba(251, 191, 36, 0.3)',
+                opacity: isLoaded ? 1 : 0,
+                transform: isLoaded ? 'translateY(0)' : 'translateY(30px)',
+                transitionDelay: '1.4s',
+                position: 'relative'
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  top: '16px',
+                  right: '16px',
+                  fontSize: '48px',
+                  opacity: 0.1,
+                  transform: 'rotate(12deg)'
+                }}>
+                  📞
+                </div>
+                <h4 style={{ 
+                  fontSize: '18px', 
+                  fontWeight: '600', 
+                  color: '#1e293b', 
+                  marginBottom: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}>
+                  <span style={{ fontSize: '24px' }}>✨</span> 
+                  Expert Consultation Available
+                </h4>
+                <div style={{ fontSize: '14px' }}>
+                  {[
+                    { label: 'Phone', value: '+91-8527161330' },
+                    { label: 'Email', value: 'jd95royal@gmail.com' },
+                    { label: 'Showroom', value: 'Chawri Bazar, Delhi' }
+                  ].map((contact, i) => (
+                    <div key={i} style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'space-between', 
+                      marginBottom: i < 2 ? '12px' : '0' 
+                    }}>
+                      <span style={{ color: '#64748b' }}>{contact.label}</span>
+                      <span style={{ color: '#1e293b', fontWeight: '500' }}>{contact.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column - Product Showcase */}
+            <div style={{
+              opacity: isLoaded ? 1 : 0,
+              transform: isLoaded ? 'translateX(0)' : 'translateX(40px)',
+              transition: 'all 1s ease 1s'
+            }}>
+              {/* Main Product Display */}
+              <div style={styles.productShowcase}>
+                
+                <div style={{ position: 'relative' }}>
+                  {/* Header */}
+                  <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+                    <h3 style={{ 
+                      fontSize: '28px', 
+                      fontWeight: '300', 
+                      color: '#1e293b', 
+                      marginBottom: '12px' 
+                    }}>
+                      Featured Collections
+                    </h3>
+                    <p style={{ color: '#64748b' }}>
+                      Curated premium sanitaryware for discerning homes
+                    </p>
+                  </div>
+                  
+                  {/* Elegant Product Carousel */}
+                  <div style={styles.carouselContainer}>
+                    <div style={styles.carouselSlide}>
+                      {products.map((product, index) => (
+                        <div key={index} style={styles.slideContent}>
+                          <div style={{ 
+                            width: '100%', 
+                            height: '100%', 
+                            background: product.gradient, 
+                            borderRadius: '16px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            position: 'relative',
+                            overflow: 'hidden',
+                            border: '1px solid rgba(255,255,255,0.5)'
+                          }}>
+                            
+                            <div style={styles.slidePattern} />
+                            
+                            <div style={{ 
+                              position: 'relative', 
+                              textAlign: 'center', 
+                              color: '#1e293b', 
+                              maxWidth: '400px',
+                              margin: '0 auto',
+                              padding: '0 20px'
+                            }}>
+                              <div style={{ 
+                                fontSize: '64px', 
+                                marginBottom: '24px', 
+                                opacity: 0.2 
+                              }}>
+                                {index === 0 ? '🚿' : index === 1 ? '🚽' : index === 2 ? '🚰' : '💧'}
+                              </div>
+                              <h4 style={{ 
+                                fontSize: '24px', 
+                                fontWeight: '500', 
+                                marginBottom: '8px' 
+                              }}>
+                                {product.name}
+                              </h4>
+                              <p style={{ 
+                                color: '#475569', 
+                                marginBottom: '12px', 
+                                fontWeight: '300', 
+                                fontStyle: 'italic' 
+                              }}>
+                                {product.subtitle}
+                              </p>
+                              <p style={{ 
+                                color: '#64748b', 
+                                fontSize: '14px',
+                                marginBottom: '16px', 
+                                lineHeight: '1.6' 
+                              }}>
+                                {product.description}
+                              </p>
+                              <div style={{ 
+                                display: 'inline-flex', 
+                                alignItems: 'center', 
+                                gap: '8px', 
+                                background: 'rgba(255,255,255,0.5)', 
+                                backdropFilter: 'blur(10px)', 
+                                padding: '8px 16px', 
+                                borderRadius: '50px', 
+                                border: '1px solid rgba(255,255,255,0.3)' 
+                              }}>
+                                <span style={{ 
+                                  color: '#1e293b', 
+                                  fontWeight: '600' 
+                                }}>
+                                  {product.price}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Elegant Slide Indicators */}
+                  <div style={styles.indicators}>
+                    {products.map((_, index) => (
+                      <button
+                        key={index}
+                        style={{
+                          ...styles.indicator,
+                          ...(index === currentSlide ? styles.indicatorActive : {})
+                        }}
+                        onClick={() => setCurrentSlide(index)}
+                        onMouseEnter={(e) => {
+                          if (index !== currentSlide) {
+                            e.target.style.background = '#94a3b8';
+                            e.target.style.transform = 'scale(1.2)';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (index !== currentSlide) {
+                            e.target.style.background = '#cbd5e1';
+                            e.target.style.transform = 'scale(1)';
+                          }
+                        }}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Premium Action Buttons */}
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
+                    gap: '16px' 
+                  }}>
+                    <button
+                      style={styles.buttonPrimary}
+                      onMouseEnter={(e) => {
+                        e.target.style.transform = 'translateY(-2px)';
+                        e.target.style.boxShadow = '0 15px 35px rgba(30,41,59,0.4)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.transform = 'translateY(0)';
+                        e.target.style.boxShadow = '0 8px 25px rgba(30,41,59,0.3)';
+                      }}
+                    >
+                      <div style={{ 
+                        position: 'absolute', 
+                        top: 0, 
+                        left: '-100%', 
+                        width: '100%', 
+                        height: '100%', 
+                        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)', 
+                        transition: 'left 0.6s ease' 
+                      }} />
+                      <span style={{ 
+                        position: 'relative', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center', 
+                        gap: '8px' 
+                      }}>
+                        <span>Explore Collection</span>
+                        <span style={{ fontSize: '18px' }}>→</span>
+                      </span>
+                    </button>
+                    
+                    <button
+                      style={styles.buttonSecondary}
+                      onMouseEnter={(e) => {
+                        e.target.style.background = 'rgba(255, 255, 255, 1)';
+                        e.target.style.borderColor = '#94a3b8';
+                        e.target.style.transform = 'translateY(-2px)';
+                        e.target.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.background = 'rgba(255, 255, 255, 0.8)';
+                        e.target.style.borderColor = '#cbd5e1';
+                        e.target.style.transform = 'translateY(0)';
+                        e.target.style.boxShadow = 'none';
+                      }}
+                    >
+                      <span style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center', 
+                        gap: '8px' 
+                      }}>
+                        <span>Visit Showroom</span>
+                        <span style={{ fontSize: '18px' }}>📍</span>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Elegant Stats Grid */}
+              <div style={{
+                ...styles.statsGrid,
+                opacity: isLoaded ? 1 : 0,
+                transform: isLoaded ? 'translateY(0)' : 'translateY(20px)',
+                transition: 'all 0.8s ease 1.6s'
+              }}>
+                {[
+                  { number: "500+", label: "Premium Products", icon: "✨" },
+                  { number: "28", label: "Years Excellence", icon: "🏆" },
+                  { number: "15K+", label: "Satisfied Clients", icon: "💎" }
+                ].map((stat, index) => (
+                  <div 
+                    key={index} 
+                    style={styles.statCard}
+                    onMouseEnter={(e) => {
+                      e.target.style.background = 'rgba(255, 255, 255, 0.8)';
+                      e.target.style.transform = 'translateY(-5px)';
+                      e.target.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.background = 'rgba(255, 255, 255, 0.6)';
+                      e.target.style.transform = 'translateY(0)';
+                      e.target.style.boxShadow = 'none';
+                    }}
+                  >
+                    <div style={{ fontSize: '24px', marginBottom: '8px', opacity: 0.3 }}>
+                      {stat.icon}
+                    </div>
+                    <div style={{ 
+                      fontSize: '28px', 
+                      fontWeight: '300', 
+                      color: '#1e293b', 
+                      marginBottom: '8px' 
+                    }}>
+                      {stat.number}
+                    </div>
+                    <div style={{ 
+                      color: '#64748b', 
+                      fontSize: '14px', 
+                      fontWeight: '500' 
+                    }}>
+                      {stat.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Elegant CTA */}
+          <div style={{
+            ...styles.ctaSection,
+            opacity: isLoaded ? 1 : 0,
+            transform: isLoaded ? 'translateY(0)' : 'translateY(40px)',
+            transition: 'all 0.8s ease 2s'
+          }}>
+            <div style={styles.ctaContainer}>
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent)',
+                borderRadius: '50px'
+              }} />
+              <div style={{ 
+                position: 'relative', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '24px',
+                flexWrap: 'wrap',
+                justifyContent: 'center'
+              }}>
+                <div style={{ 
+                  width: '12px', 
+                  height: '12px', 
+                  background: '#fbbf24', 
+                  borderRadius: '50%',
+                  animation: 'pulse 2s infinite',
+                  boxShadow: '0 2px 8px rgba(251, 191, 36, 0.3)' 
+                }} />
+                <span style={{ 
+                  color: '#1e293b', 
+                  fontWeight: '500', 
+                  fontSize: '18px' 
+                }}>
+                  Ready to experience luxury?
+                </span>
+                <button
+                  style={styles.ctaButton}
+                  onMouseEnter={(e) => {
+                    e.target.style.transform = 'scale(1.05) translateX(5px)';
+                    e.target.style.boxShadow = '0 15px 35px rgba(251, 191, 36, 0.4)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = 'scale(1) translateX(0)';
+                    e.target.style.boxShadow = '0 8px 25px rgba(251, 191, 36, 0.3)';
+                  }}
+                >
+                  <span style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '8px' 
+                  }}>
+                    Begin Your Journey
+                    <span style={{ 
+                      display: 'inline-block',
+                      animation: 'floatArrow 1.5s ease-in-out infinite'
+                    }}>
+                      →
+                    </span>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <style jsx>{`
+        @keyframes floatArrow {
+          0%, 100% { transform: translateX(0); }
+          50% { transform: translateX(5px); }
+        }
+      `}</style>
+    </>
+  );
+};
+
+export default Hero;

@@ -40,7 +40,7 @@ const Contact = () => {
   return (
     <Box 
       py={{ base: 20, md: 28 }} 
-      bg="linear-gradient(135deg, #1e293b 0%, #475569 50%, #64748b 100%)"
+      bg="linear-gradient(135deg, #1e293b 0%, #475569 30%, #64748b 60%, #fbbf24 100%)"
       position="relative"
       overflow="hidden"
     >
@@ -53,7 +53,9 @@ const Contact = () => {
         bottom="0"
         backgroundImage={`
           radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
-          radial-gradient(circle at 70% 80%, rgba(255,255,255,0.1) 0%, transparent 50%)
+          radial-gradient(circle at 70% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+          radial-gradient(circle at 20% 70%, rgba(251,191,36,0.05) 0%, transparent 40%),
+          radial-gradient(circle at 80% 30%, rgba(245,158,11,0.03) 0%, transparent 45%)
         `}
       />
       
@@ -78,8 +80,8 @@ const Contact = () => {
         />
       </Box>
       
-      <Container maxW="container.xl" position="relative" zIndex={2}>
-        <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={20}>
+      <Container maxW="container.xl" position="relative" zIndex={2} px={{ base: 3, sm: 4, md: 6, lg: 8 }}>
+        <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={{ base: 8, sm: 12, lg: 20 }} px={{ base: 2, md: 0 }}>
           {/* Contact Information */}
           <MotionBox
             initial={{ opacity: 0, x: -30 }}
@@ -255,7 +257,7 @@ const Contact = () => {
             viewport={{ once: true }}
           >
             <Box
-              p={8}
+              p={{ base: 6, md: 8 }}
               borderRadius="2xl"
               bg="rgba(255,255,255,0.95)"
               backdropFilter="blur(20px)"

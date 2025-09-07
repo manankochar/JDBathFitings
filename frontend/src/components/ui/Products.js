@@ -255,7 +255,8 @@ const Products = () => {
         maxW="container.xl" 
         position="relative" 
         zIndex={2}
-        px={{ base: 4, sm: 6, md: 8, lg: 12 }}
+        px={{ base: 4, sm: 6, md: 8, lg: 10, xl: 12 }}
+        className="container-responsive"
       >
         <Stack spacing={{ base: 12, md: 16, lg: 20 }}>
           {/* Enhanced Section Header */}
@@ -285,19 +286,21 @@ const Products = () => {
             
             <VStack spacing={4} align="center" mb={6}>
               <Text
-                fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
+                fontSize={{ base: "xl", sm: "2xl", md: "3xl", lg: "4xl" }}
                 fontWeight="800"
                 color="gray.800"
                 textAlign="center"
                 lineHeight="1.2"
                 letterSpacing="-0.01em"
                 fontFamily="Inter"
+                px={{ base: 2, md: 0 }}
+                wordBreak="break-word"
               >
                 Explore Our
               </Text>
               <Heading
                 as="h2"
-                fontSize={{ base: "4xl", md: "5xl", lg: "6xl" }}
+                fontSize={{ base: "3xl", sm: "4xl", md: "5xl", lg: "6xl" }}
                 fontWeight="900"
                 color="gray.800"
                 lineHeight="1.1"
@@ -305,14 +308,16 @@ const Products = () => {
                 fontFamily="Inter"
                 textAlign="center"
                 position="relative"
+                px={{ base: 2, md: 0 }}
+                wordBreak="break-word"
                 _after={{
                   content: '""',
                   position: 'absolute',
                   bottom: '-15px',
                   left: '50%',
                   transform: 'translateX(-50%)',
-                  w: '200px',
-                  h: '4px',
+                  w: { base: '150px', sm: '180px', md: '200px' },
+                  h: { base: '3px', md: '4px' },
                   bg: 'linear-gradient(90deg, #64748b, #fbbf24, #1e293b)',
                   borderRadius: '2px'
                 }}
@@ -320,7 +325,6 @@ const Products = () => {
                 <Text 
                   as="span" 
                   bgGradient="linear(45deg, #64748b, #fbbf24, #1e293b)"
-                  bgClip="text"
                 >
                   Product Collection
                 </Text>
@@ -328,12 +332,14 @@ const Products = () => {
             </VStack>
             
             <Text
-              fontSize={{ base: "lg", md: "xl" }}
+              fontSize={{ base: "md", sm: "lg", md: "xl" }}
               color="gray.600"
               maxW="700px"
               mx="auto"
               lineHeight="1.8"
               fontWeight="400"
+              px={{ base: 2, md: 0 }}
+              wordBreak="break-word"
             >
               Discover our comprehensive range of bathroom fittings, sanitaryware, and accessories. 
               Each product is carefully selected for quality, durability, and aesthetic appeal.
@@ -350,11 +356,13 @@ const Products = () => {
             <Flex 
               justify="center" 
               wrap="wrap" 
-              gap={{ base: 2, md: 3 }} 
+              gap={{ base: 2, sm: 3, md: 4 }} 
               align="center"
               maxW="100%"
               overflowX={{ base: "auto", md: "visible" }}
-              px={{ base: 2, md: 0 }}
+              px={{ base: 3, sm: 4, md: 0 }}
+              pb={{ base: 2, md: 0 }}
+              className="category-filters-responsive"
             >
               {categoryList.slice(0, 8).map((category, index) => (
                 <MotionBox
@@ -440,10 +448,12 @@ const Products = () => {
           <AnimatePresence mode="wait">
             <MotionSimpleGrid
               key={activeCategory}
-              columns={{ base: 1, sm: 2, md: 3, lg: 4, xl: 4 }}
-              spacing={{ base: 4, md: 6 }}
+              columns={{ base: 1, sm: 2, md: 3, lg: 4, xl: 5 }}
+              spacing={{ base: 4, sm: 5, md: 6, lg: 7 }}
+              px={{ base: 3, sm: 4, md: 0 }}
               w="100%"
               maxW="100%"
+              className="responsive-grid"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
@@ -471,18 +481,21 @@ const Products = () => {
                         borderColor: "rgba(100,116,139,0.3)"
                       }}
                     role="group"
-                    minH={{ base: "400px", md: "450px" }}
+                    minH={{ base: "350px", sm: "380px", md: "420px", lg: "450px" }}
                     display="flex"
                     flexDirection="column"
                     w="100%"
+                    maxW="100%"
+                    boxSizing="border-box"
+                    className="product-card-responsive"
                   >
                     {/* Image Container */}
                     <Box
                       position="relative"
-                      height={{ base: "220px", md: "280px" }}
+                      height={{ base: "180px", sm: "200px", md: "220px", lg: "250px" }}
                       overflow="hidden"
                       borderRadius="xl"
-                      mb={{ base: 3, md: 4 }}
+                      mb={{ base: 2, sm: 3, md: 4 }}
                       bg="linear-gradient(135deg, #f8fafc, #ffffff)"
                       display="flex"
                       alignItems="center"
@@ -735,7 +748,7 @@ const Products = () => {
         </Stack>
       </Container>
       
-      {/* CSS Animations */}
+      {/* CSS Animations and Responsive Styles */}
       <style jsx>{`
         @keyframes float {
           0%, 100% {
@@ -751,6 +764,61 @@ const Products = () => {
           border-radius: 12px;
           box-shadow: 0 4px 20px rgba(0,0,0,0.1);
           transition: all 0.3s ease;
+        }
+        
+        /* Enhanced Responsive Styles */
+        @media (max-width: 768px) {
+          .responsive-grid {
+            gap: 16px !important;
+          }
+          
+          .product-card-responsive {
+            margin-bottom: 16px !important;
+          }
+          
+          .category-filters-responsive {
+            overflow-x: auto !important;
+            scroll-snap-type: x mandatory !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+          }
+          
+          .category-filters-responsive::-webkit-scrollbar {
+            display: none !important;
+          }
+          
+          .category-filters-responsive > * {
+            scroll-snap-align: center !important;
+            flex-shrink: 0 !important;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .responsive-grid {
+            gap: 12px !important;
+            padding: 0 8px !important;
+          }
+          
+          .product-card-responsive {
+            min-height: 320px !important;
+            margin-bottom: 12px !important;
+          }
+          
+          .category-filters-responsive {
+            gap: 8px !important;
+          }
+        }
+        
+        @media (max-width: 320px) {
+          .responsive-grid {
+            gap: 8px !important;
+            padding: 0 4px !important;
+          }
+          
+          .product-card-responsive {
+            min-height: 300px !important;
+          }
         }
       `}</style>
     </Box>

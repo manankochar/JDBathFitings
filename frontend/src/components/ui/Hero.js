@@ -4,6 +4,7 @@ const Hero = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -15,8 +16,19 @@ const Hero = () => {
       });
     };
     
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 480);
+    };
+    
+    // Initial check
+    handleResize();
+    
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   // Elegant product carousel
@@ -90,7 +102,8 @@ const Hero = () => {
       position: 'relative',
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 25%, #e2e8f0 100%)',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      paddingBottom: '80px'
     },
     backgroundPattern: {
       position: 'absolute',
@@ -123,11 +136,25 @@ const Hero = () => {
       zIndex: 10,
       maxWidth: '1280px',
       margin: '0 auto',
-      padding: '80px 24px 64px'
+      padding: '80px 16px 64px',
+      width: '100%',
+      boxSizing: 'border-box',
+      '@media (max-width: 768px)': {
+        padding: '60px 12px 48px'
+      },
+      '@media (max-width: 480px)': {
+        padding: '40px 8px 32px'
+      }
     },
     header: {
       textAlign: 'center',
-      marginBottom: '80px'
+      marginBottom: '80px',
+      '@media (max-width: 768px)': {
+        marginBottom: '60px'
+      },
+      '@media (max-width: 480px)': {
+        marginBottom: '40px'
+      }
     },
     badge: {
       display: 'inline-flex',
@@ -138,6 +165,7 @@ const Hero = () => {
       border: '1px solid rgba(226, 232, 240, 0.5)',
       borderRadius: '50px',
       padding: '16px 32px',
+      marginTop: '40px',
       marginBottom: '32px',
       boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
       transition: 'all 0.3s ease'
@@ -187,6 +215,14 @@ const Hero = () => {
       '@media (max-width: 1024px)': {
         gridTemplateColumns: '1fr',
         gap: '48px'
+      },
+      '@media (max-width: 768px)': {
+        gridTemplateColumns: '1fr',
+        gap: '32px'
+      },
+      '@media (max-width: 480px)': {
+        gridTemplateColumns: '1fr',
+        gap: '24px'
       }
     },
     featureCard: {
@@ -305,7 +341,17 @@ const Hero = () => {
       display: 'grid',
       gridTemplateColumns: 'repeat(3, 1fr)',
       gap: '24px',
-      marginTop: '32px'
+      marginTop: '32px',
+      '@media (max-width: 768px)': {
+        gridTemplateColumns: 'repeat(3, 1fr)',
+        gap: '16px',
+        marginTop: '24px'
+      },
+      '@media (max-width: 480px)': {
+        gridTemplateColumns: '1fr',
+        gap: '12px',
+        marginTop: '20px'
+      }
     },
     statCard: {
       textAlign: 'center',
@@ -468,9 +514,174 @@ const Hero = () => {
         @media (max-width: 768px) {
           .grid-responsive {
             grid-template-columns: 1fr !important;
+            gap: 32px !important;
           }
           .text-responsive {
             font-size: clamp(2rem, 8vw, 4rem) !important;
+          }
+          .main-content {
+            padding: 60px 12px 40px !important;
+          }
+          .hero-heading {
+            font-size: clamp(2.5rem, 9vw, 5rem) !important;
+            line-height: 0.95 !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
+            margin-bottom: 24px !important;
+          }
+          .hero-subtitle {
+            font-size: clamp(1rem, 4vw, 1.4rem) !important;
+            padding: 0 8px !important;
+          }
+          .hero-description {
+            font-size: clamp(0.9rem, 3vw, 1.2rem) !important;
+            padding: 0 8px !important;
+            margin-bottom: 32px !important;
+          }
+          .feature-cards {
+            margin-bottom: 24px !important;
+          }
+          
+          .feature-card {
+            padding: 16px !important;
+            margin-bottom: 12px !important;
+            border-radius: 12px !important;
+          }
+          
+          .feature-icon {
+            width: 44px !important;
+            height: 44px !important;
+            margin-right: 12px !important;
+          }
+          
+          .contact-card {
+            padding: 12px !important;
+          }
+          
+          .contact-card h4 {
+            font-size: 16px !important;
+            margin-bottom: 12px !important;
+          }
+          
+          .contact-card .contact-item {
+            font-size: 12px !important;
+            margin-bottom: 8px !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            justify-content: flex-start !important;
+            gap: 2px !important;
+          }
+          
+          .contact-card .contact-item span {
+            font-size: 11px !important;
+            line-height: 1.3 !important;
+          }
+          .product-showcase {
+            margin-top: 24px !important;
+            padding: 0 8px !important;
+          }
+          
+          .product-showcase h3 {
+            font-size: 20px !important;
+            margin-bottom: 8px !important;
+          }
+          
+          .product-showcase p {
+            font-size: 12px !important;
+            padding: 0 4px !important;
+          }
+          
+          .carousel-container {
+            height: 220px !important;
+            margin-bottom: 20px !important;
+          }
+          
+          .slide-content h4 {
+            font-size: 18px !important;
+            margin-bottom: 6px !important;
+          }
+          
+          .slide-content .subtitle {
+            font-size: 12px !important;
+            margin-bottom: 8px !important;
+          }
+          
+          .slide-content .description {
+            font-size: 11px !important;
+            margin-bottom: 12px !important;
+            line-height: 1.4 !important;
+          }
+          
+          .slide-content .price {
+            font-size: 12px !important;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .grid-responsive {
+            gap: 24px !important;
+          }
+          .main-content {
+            padding: 40px 8px 32px !important;
+          }
+          .hero-heading {
+            font-size: clamp(2rem, 8vw, 4rem) !important;
+            line-height: 1 !important;
+            margin-bottom: 20px !important;
+          }
+          .hero-subtitle {
+            font-size: clamp(0.9rem, 3.5vw, 1.2rem) !important;
+            padding: 0 4px !important;
+          }
+          .hero-description {
+            font-size: clamp(0.85rem, 2.5vw, 1.1rem) !important;
+            padding: 0 4px !important;
+            margin-bottom: 24px !important;
+          }
+          .badge-mobile {
+            padding: 8px 16px !important;
+            margin-bottom: 20px !important;
+            font-size: 12px !important;
+            max-width: 90% !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+          }
+          .cta-section {
+            margin-top: 48px !important;
+          }
+          .responsive-button-grid {
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+          }
+        }
+        
+        @media (max-width: 320px) {
+          .main-content {
+            padding: 32px 6px 24px !important;
+          }
+          .hero-heading {
+            font-size: clamp(1.75rem, 7vw, 3rem) !important;
+          }
+          .grid-responsive {
+            gap: 20px !important;
+          }
+          .responsive-button-grid {
+            gap: 10px !important;
+          }
+          .product-showcase {
+            padding: 0 4px !important;
+          }
+          .slide-content h4 {
+            font-size: 16px !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+          }
+          .slide-content .description {
+            font-size: 10px !important;
+            padding: 0 8px !important;
+          }
+          .contact-card {
+            padding: 8px !important;
           }
         }
       `}</style>
@@ -483,30 +694,58 @@ const Hero = () => {
         <FloatingShapes />
         <FloatingParticles />
 
-        <div style={styles.mainContent}>
+        <div style={styles.mainContent} className="main-content">
           
           {/* Elegant Header */}
           <div style={styles.header}>
             
             {/* Premium Badge */}
             <div 
+              className="badge-mobile"
               style={{
                 ...styles.badge,
                 opacity: isLoaded ? 1 : 0,
                 transform: isLoaded ? 'scale(1)' : 'scale(0.8)',
-                transition: 'all 0.8s ease'
+                transition: 'all 0.8s ease',
+                flexWrap: 'wrap',
+                justifyContent: 'center'
               }}
             >
               <div style={styles.pulsingDot} />
-              <span style={{ color: '#475569', fontWeight: '500', letterSpacing: '0.025em' }}>
+              <span style={{ 
+                color: '#475569', 
+                fontWeight: '500', 
+                letterSpacing: '0.025em',
+                fontSize: 'clamp(11px, 2.5vw, 14px)',
+                textAlign: 'center'
+              }}>
                 Crafting Luxury Since 1995
               </span>
-              <div style={{ height: '16px', width: '1px', background: '#cbd5e1' }} />
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <div style={{ 
+                height: '12px', 
+                width: '1px', 
+                background: '#cbd5e1',
+                display: isMobile ? 'none' : 'block'
+              }} />
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '3px',
+                flexWrap: 'wrap',
+                justifyContent: 'center'
+              }}>
                 {[...Array(5)].map((_, i) => (
-                  <span key={i} style={{ color: '#fbbf24', fontSize: '14px' }}>★</span>
+                  <span key={i} style={{ 
+                    color: '#fbbf24', 
+                    fontSize: 'clamp(10px, 2vw, 12px)' 
+                  }}>★</span>
                 ))}
-                <span style={{ color: '#64748b', fontSize: '14px', marginLeft: '8px', fontWeight: '500' }}>4.9</span>
+                <span style={{ 
+                  color: '#64748b', 
+                  fontSize: 'clamp(10px, 2vw, 12px)', 
+                  marginLeft: '4px', 
+                  fontWeight: '500' 
+                }}>4.9</span>
               </div>
             </div>
 
@@ -517,9 +756,9 @@ const Hero = () => {
               transition: 'all 1s ease 0.3s',
               marginBottom: '32px'
             }}>
-              <h1 style={styles.mainHeading}>
+              <h1 style={styles.mainHeading} className="hero-heading">
                 <div style={{ position: 'relative' }}>
-                  Redefine
+                  JANKIDAS
                   <div style={{
                     position: 'absolute',
                     bottom: '-8px',
@@ -532,7 +771,20 @@ const Hero = () => {
                   }} />
                 </div>
                 <div style={styles.gradientText}>
-                  Elegance
+                  SANITARYWARE
+                </div>
+                <div style={{
+                  ...styles.gradientText,
+                  fontSize: 'clamp(2rem, 8vw, 4rem)',
+                  marginTop: '16px',
+                  background: 'linear-gradient(135deg, #64748b 0%, #1e293b 50%, #fbbf24 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  fontWeight: '800',
+                  letterSpacing: '-0.02em'
+                }}>
+                  AND BATH FITTINGS
                 </div>
               </h1>
               
@@ -543,8 +795,8 @@ const Hero = () => {
                 transform: isLoaded ? 'scale(1)' : 'scale(0.8)',
                 transition: 'all 0.8s ease 0.8s'
               }}>
-                <p style={styles.subtitle}>
-                  in every detail
+                <p style={styles.subtitle} className="hero-subtitle">
+                  Crafting Luxury Since 1995
                 </p>
                 <div style={{
                   position: 'absolute',
@@ -565,7 +817,7 @@ const Hero = () => {
               opacity: isLoaded ? 1 : 0,
               transform: isLoaded ? 'translateY(0)' : 'translateY(30px)',
               transition: 'all 0.8s ease 0.6s'
-            }}>
+            }} className="hero-description">
               Where <em style={{ color: '#1e293b', fontWeight: '500' }}>German precision</em> meets 
               <em style={{ color: '#1e293b', fontWeight: '500' }}> timeless design</em>. 
               Experience sanitaryware that transforms bathrooms into sanctuaries of luxury and comfort.
@@ -576,10 +828,11 @@ const Hero = () => {
           <div style={styles.gridContainer} className="grid-responsive">
             
             {/* Left Column - Features */}
-            <div>
+            <div className="feature-cards">
               {features.map((feature, index) => (
                 <div
                   key={feature.title}
+                  className="feature-card"
                   style={{
                     ...styles.featureCard,
                     opacity: isLoaded ? 1 : 0,
@@ -601,7 +854,7 @@ const Hero = () => {
                     e.currentTarget.style.transform = 'translateY(0)';
                   }}
                 >
-                  <div style={styles.featureIcon}>
+                  <div style={styles.featureIcon} className="feature-icon">
                     {feature.icon}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -642,15 +895,17 @@ const Hero = () => {
               ))}
 
               {/* Contact Information */}
-              <div style={{
-                ...styles.featureCard,
-                background: 'linear-gradient(135deg, #fef7cd 0%, #fde68a 100%)',
-                border: '1px solid rgba(251, 191, 36, 0.3)',
-                opacity: isLoaded ? 1 : 0,
-                transform: isLoaded ? 'translateY(0)' : 'translateY(30px)',
-                transitionDelay: '1.4s',
-                position: 'relative'
-              }}>
+              <div 
+                className="feature-card contact-card"
+                style={{
+                  ...styles.featureCard,
+                  background: 'linear-gradient(135deg, #fef7cd 0%, #fde68a 100%)',
+                  border: '1px solid rgba(251, 191, 36, 0.3)',
+                  opacity: isLoaded ? 1 : 0,
+                  transform: isLoaded ? 'translateY(0)' : 'translateY(30px)',
+                  transitionDelay: '1.4s',
+                  position: 'relative'
+                }}>
                 <div style={{
                   position: 'absolute',
                   top: '16px',
@@ -679,14 +934,26 @@ const Hero = () => {
                     { label: 'Email', value: 'jd95royal@gmail.com' },
                     { label: 'Showroom', value: 'Chawri Bazar, Delhi' }
                   ].map((contact, i) => (
-                    <div key={i} style={{ 
+                    <div key={i} className="contact-item" style={{ 
                       display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'space-between', 
-                      marginBottom: i < 2 ? '12px' : '0' 
+                      flexDirection: isMobile ? 'column' : 'row',
+                      alignItems: isMobile ? 'flex-start' : 'center',
+                      justifyContent: isMobile ? 'flex-start' : 'space-between',
+                      marginBottom: i < 2 ? '12px' : '0',
+                      gap: isMobile ? '2px' : '8px'
                     }}>
-                      <span style={{ color: '#64748b' }}>{contact.label}</span>
-                      <span style={{ color: '#1e293b', fontWeight: '500' }}>{contact.value}</span>
+                      <span style={{ 
+                        color: '#64748b',
+                        fontSize: isMobile ? '11px' : '14px',
+                        fontWeight: '600'
+                      }}>{contact.label}:</span>
+                      <span style={{ 
+                        color: '#1e293b', 
+                        fontWeight: '500',
+                        fontSize: isMobile ? '11px' : '14px',
+                        wordBreak: 'break-all',
+                        lineHeight: '1.3'
+                      }}>{contact.value}</span>
                     </div>
                   ))}
                 </div>
@@ -694,35 +961,52 @@ const Hero = () => {
             </div>
 
             {/* Right Column - Product Showcase */}
-            <div style={{
-              opacity: isLoaded ? 1 : 0,
-              transform: isLoaded ? 'translateX(0)' : 'translateX(40px)',
-              transition: 'all 1s ease 1s'
-            }}>
+            <div 
+              className="product-showcase"
+              style={{
+                opacity: isLoaded ? 1 : 0,
+                transform: isLoaded ? 'translateX(0)' : 'translateX(40px)',
+                transition: 'all 1s ease 1s'
+              }}>
               {/* Main Product Display */}
               <div style={styles.productShowcase}>
                 
                 <div style={{ position: 'relative' }}>
                   {/* Header */}
-                  <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+                  <div style={{ 
+                    textAlign: 'center', 
+                    marginBottom: isMobile ? '20px' : '32px',
+                    padding: isMobile ? '0 8px' : '0'
+                  }}>
                     <h3 style={{ 
-                      fontSize: '28px', 
+                      fontSize: isMobile ? '20px' : '28px', 
                       fontWeight: '300', 
                       color: '#1e293b', 
-                      marginBottom: '12px' 
+                      marginBottom: isMobile ? '8px' : '12px',
+                      wordWrap: 'break-word',
+                      overflowWrap: 'break-word'
                     }}>
                       Featured Collections
                     </h3>
-                    <p style={{ color: '#64748b' }}>
+                    <p style={{ 
+                      color: '#64748b',
+                      fontSize: isMobile ? '12px' : '16px',
+                      lineHeight: '1.5',
+                      padding: isMobile ? '0 4px' : '0'
+                    }}>
                       Curated premium sanitaryware for discerning homes
                     </p>
                   </div>
                   
                   {/* Elegant Product Carousel */}
-                  <div style={styles.carouselContainer}>
+                  <div style={{
+                    ...styles.carouselContainer,
+                    height: isMobile ? '280px' : '320px',
+                    marginBottom: isMobile ? '20px' : '32px'
+                  }} className="carousel-container">
                     <div style={styles.carouselSlide}>
                       {products.map((product, index) => (
-                        <div key={index} style={styles.slideContent}>
+                        <div key={index} style={styles.slideContent} className="slide-content">
                           <div style={{ 
                             width: '100%', 
                             height: '100%', 
@@ -742,53 +1026,63 @@ const Hero = () => {
                               position: 'relative', 
                               textAlign: 'center', 
                               color: '#1e293b', 
-                              maxWidth: '400px',
+                              maxWidth: isMobile ? '100%' : '400px',
                               margin: '0 auto',
-                              padding: '0 20px'
+                              padding: isMobile ? '0 12px' : '0 20px',
+                              wordWrap: 'break-word',
+                              overflowWrap: 'break-word'
                             }}>
                               <div style={{ 
-                                fontSize: '64px', 
-                                marginBottom: '24px', 
+                                fontSize: isMobile ? '40px' : '64px', 
+                                marginBottom: isMobile ? '16px' : '24px', 
                                 opacity: 0.2 
                               }}>
                                 {index === 0 ? '🚿' : index === 1 ? '🚽' : index === 2 ? '🚰' : '💧'}
                               </div>
                               <h4 style={{ 
-                                fontSize: '24px', 
+                                fontSize: isMobile ? '18px' : '24px', 
                                 fontWeight: '500', 
-                                marginBottom: '8px' 
+                                marginBottom: isMobile ? '6px' : '8px',
+                                wordWrap: 'break-word',
+                                overflowWrap: 'break-word',
+                                lineHeight: '1.2'
                               }}>
                                 {product.name}
                               </h4>
-                              <p style={{ 
+                              <p className="subtitle" style={{ 
                                 color: '#475569', 
-                                marginBottom: '12px', 
+                                marginBottom: isMobile ? '8px' : '12px', 
                                 fontWeight: '300', 
-                                fontStyle: 'italic' 
+                                fontStyle: 'italic',
+                                fontSize: isMobile ? '12px' : '16px',
+                                lineHeight: '1.3'
                               }}>
                                 {product.subtitle}
                               </p>
-                              <p style={{ 
+                              <p className="description" style={{ 
                                 color: '#64748b', 
-                                fontSize: '14px',
-                                marginBottom: '16px', 
-                                lineHeight: '1.6' 
+                                fontSize: isMobile ? '11px' : '14px',
+                                marginBottom: isMobile ? '12px' : '16px', 
+                                lineHeight: isMobile ? '1.4' : '1.6',
+                                wordWrap: 'break-word',
+                                overflowWrap: 'break-word'
                               }}>
                                 {product.description}
                               </p>
                               <div style={{ 
                                 display: 'inline-flex', 
                                 alignItems: 'center', 
-                                gap: '8px', 
+                                gap: isMobile ? '4px' : '8px', 
                                 background: 'rgba(255,255,255,0.5)', 
                                 backdropFilter: 'blur(10px)', 
-                                padding: '8px 16px', 
+                                padding: isMobile ? '6px 12px' : '8px 16px', 
                                 borderRadius: '50px', 
                                 border: '1px solid rgba(255,255,255,0.3)' 
                               }}>
-                                <span style={{ 
+                                <span className="price" style={{ 
                                   color: '#1e293b', 
-                                  fontWeight: '600' 
+                                  fontWeight: '600',
+                                  fontSize: isMobile ? '12px' : '16px'
                                 }}>
                                   {product.price}
                                 </span>
@@ -801,13 +1095,22 @@ const Hero = () => {
                   </div>
                   
                   {/* Elegant Slide Indicators */}
-                  <div style={styles.indicators}>
+                  <div style={{
+                    ...styles.indicators,
+                    marginBottom: isMobile ? '20px' : '32px',
+                    gap: isMobile ? '8px' : '12px'
+                  }}>
                     {products.map((_, index) => (
                       <button
                         key={index}
                         style={{
                           ...styles.indicator,
-                          ...(index === currentSlide ? styles.indicatorActive : {})
+                          ...(index === currentSlide ? styles.indicatorActive : {}),
+                          width: isMobile ? '6px' : '8px',
+                          height: isMobile ? '6px' : '8px',
+                          minHeight: isMobile ? '44px' : 'auto',
+                          minWidth: isMobile ? '44px' : 'auto',
+                          padding: isMobile ? '18px' : '0'
                         }}
                         onClick={() => setCurrentSlide(index)}
                         onMouseEnter={(e) => {
@@ -829,11 +1132,16 @@ const Hero = () => {
                   {/* Premium Action Buttons */}
                   <div style={{ 
                     display: 'grid', 
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-                    gap: '16px' 
-                  }}>
+                    gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(200px, 1fr))', 
+                    gap: isMobile ? '12px' : '16px',
+                    padding: isMobile ? '0 8px' : '0'
+                  }} className="responsive-button-grid">
                     <button
-                      style={styles.buttonPrimary}
+                      style={{
+                        ...styles.buttonPrimary,
+                        fontSize: isMobile ? '14px' : '16px',
+                        padding: isMobile ? '12px 20px' : '16px 32px'
+                      }}
                       onMouseEnter={(e) => {
                         e.target.style.transform = 'translateY(-2px)';
                         e.target.style.boxShadow = '0 15px 35px rgba(30,41,59,0.4)';
@@ -857,15 +1165,20 @@ const Hero = () => {
                         display: 'flex', 
                         alignItems: 'center', 
                         justifyContent: 'center', 
-                        gap: '8px' 
+                        gap: isMobile ? '4px' : '8px',
+                        fontSize: isMobile ? '14px' : '16px'
                       }}>
-                        <span>Explore Collection</span>
-                        <span style={{ fontSize: '18px' }}>→</span>
+                        <span>{isMobile ? 'Explore' : 'Explore Collection'}</span>
+                        <span style={{ fontSize: isMobile ? '16px' : '18px' }}>→</span>
                       </span>
                     </button>
                     
                     <button
-                      style={styles.buttonSecondary}
+                      style={{
+                        ...styles.buttonSecondary,
+                        fontSize: isMobile ? '14px' : '16px',
+                        padding: isMobile ? '12px 20px' : '16px 32px'
+                      }}
                       onMouseEnter={(e) => {
                         e.target.style.background = 'rgba(255, 255, 255, 1)';
                         e.target.style.borderColor = '#94a3b8';
@@ -883,10 +1196,11 @@ const Hero = () => {
                         display: 'flex', 
                         alignItems: 'center', 
                         justifyContent: 'center', 
-                        gap: '8px' 
+                        gap: isMobile ? '4px' : '8px',
+                        fontSize: isMobile ? '14px' : '16px'
                       }}>
-                        <span>Visit Showroom</span>
-                        <span style={{ fontSize: '18px' }}>📍</span>
+                        <span>{isMobile ? 'Showroom' : 'Visit Showroom'}</span>
+                        <span style={{ fontSize: isMobile ? '16px' : '18px' }}>📍</span>
                       </span>
                     </button>
                   </div>
@@ -944,12 +1258,14 @@ const Hero = () => {
           </div>
 
           {/* Bottom Elegant CTA */}
-          <div style={{
-            ...styles.ctaSection,
-            opacity: isLoaded ? 1 : 0,
-            transform: isLoaded ? 'translateY(0)' : 'translateY(40px)',
-            transition: 'all 0.8s ease 2s'
-          }}>
+          <div 
+            className="cta-section"
+            style={{
+              ...styles.ctaSection,
+              opacity: isLoaded ? 1 : 0,
+              transform: isLoaded ? 'translateY(0)' : 'translateY(40px)',
+              transition: 'all 0.8s ease 2s'
+            }}>
             <div style={styles.ctaContainer}>
               <div style={{
                 position: 'absolute',

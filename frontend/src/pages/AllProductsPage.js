@@ -94,7 +94,7 @@ const AllProductsPage = () => {
           zIndex={1}
         />
         
-        <Container maxW="container.xl" position="relative" zIndex={2} px={{ base: 6, md: 8, lg: 12 }}>
+        <Container maxW="container.xl" position="relative" zIndex={2} px={{ base: 3, sm: 4, md: 6, lg: 8 }}>
           <Stack spacing={12}>
             {/* Page Header */}
             <MotionBox
@@ -116,13 +116,15 @@ const AllProductsPage = () => {
               
               <Heading
                 as="h1"
-                fontSize={{ base: "4xl", md: "5xl", lg: "6xl" }}
+                fontSize={{ base: "3xl", sm: "4xl", md: "5xl", lg: "6xl" }}
                 fontWeight="900"
                 color="gray.800"
                 lineHeight="1.1"
                 letterSpacing="-0.02em"
                 fontFamily="Inter"
                 mb={6}
+                px={{ base: 2, md: 0 }}
+                wordBreak="break-word"
               >
                 <Text as="span" display="block" mb={2}>
                   All Our Premium
@@ -133,12 +135,14 @@ const AllProductsPage = () => {
               </Heading>
               
               <Text
-                fontSize={{ base: "lg", md: "xl" }}
+                fontSize={{ base: "md", sm: "lg", md: "xl" }}
                 color="gray.600"
                 maxW="800px"
                 mx="auto"
                 lineHeight="1.7"
                 fontWeight="400"
+                px={{ base: 2, md: 0 }}
+                wordBreak="break-word"
               >
                 Browse our complete collection of {productsData.length} premium sanitaryware products. 
                 Each item is crafted with precision and designed for lasting quality.
@@ -254,6 +258,7 @@ const AllProductsPage = () => {
                 key={`${selectedCategory}-${searchTerm}-${sortBy}`}
                 columns={{ base: 1, sm: 2, md: 3, lg: 4, xl: 5 }}
                 spacing={6}
+                px={{ base: 2, md: 0 }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}

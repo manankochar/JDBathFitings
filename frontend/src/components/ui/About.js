@@ -50,7 +50,7 @@ const About = () => {
   return (
     <Box 
       py={{ base: 20, md: 28 }} 
-      bg="linear-gradient(135deg, #ffffff 0%, #f8fafc 25%, #e2e8f0 100%)"
+      bg="linear-gradient(135deg, #ffffff 0%, #fefce8 15%, #f8fafc 25%, #fef3c7 35%, #e2e8f0 100%)"
       position="relative"
       overflow="hidden"
     >
@@ -63,9 +63,11 @@ const About = () => {
         bottom="0"
         backgroundImage={`
           radial-gradient(circle at 25% 25%, rgba(100,116,139,0.05) 0%, transparent 50%),
-          radial-gradient(circle at 75% 75%, rgba(251,191,36,0.05) 0%, transparent 50%)
+          radial-gradient(circle at 75% 75%, rgba(251,191,36,0.08) 0%, transparent 50%),
+          radial-gradient(circle at 50% 10%, rgba(245,158,11,0.03) 0%, transparent 40%),
+          radial-gradient(circle at 10% 80%, rgba(251,191,36,0.04) 0%, transparent 45%)
         `}
-        opacity={0.6}
+        opacity={0.7}
       />
       
       {/* Floating geometric shapes */}
@@ -88,12 +90,33 @@ const About = () => {
           animation="float 8s ease-in-out infinite reverse"
         />
       </Box>
+
+      {/* Additional Yellow Accent Shapes */}
+      <Box position="absolute" top="30%" left="5%" w="60px" h="60px" opacity={0.08}>
+        <Box
+          w="100%"
+          h="100%"
+          borderRadius="40% 60% 60% 40% / 60% 40% 60% 40%"
+          bg="linear-gradient(45deg, #fef3c7, #f59e0b)"
+          animation="float 10s ease-in-out infinite"
+        />
+      </Box>
+
+      <Box position="absolute" bottom="40%" right="5%" w="70px" h="70px" opacity={0.06}>
+        <Box
+          w="100%"
+          h="100%"
+          borderRadius="50%"
+          bg="linear-gradient(45deg, #fefce8, #fbbf24)"
+          animation="float 7s ease-in-out infinite reverse"
+        />
+      </Box>
       
-      <Container maxW="container.xl" position="relative" zIndex={2}>
-        <Stack spacing={20}>
+      <Container maxW="container.xl" position="relative" zIndex={2} px={{ base: 4, sm: 6, md: 8, lg: 10, xl: 12 }} className="container-responsive">
+        <Stack spacing={{ base: 16, sm: 20, md: 24, lg: 32 }} className="about-content-responsive">
           {/* Enhanced Section Header */}
           <MotionStack
-            spacing={8}
+            spacing={{ base: 8, md: 12 }}
             textAlign="center"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -119,20 +142,22 @@ const About = () => {
             
             <Heading
               as="h2"
-              fontSize={{ base: "4xl", md: "5xl", lg: "6xl" }}
+              fontSize={{ base: "3xl", sm: "4xl", md: "5xl", lg: "6xl" }}
               fontWeight="900"
               color="gray.800"
               lineHeight="1.1"
               letterSpacing="-0.02em"
               fontFamily="Inter"
+              px={{ base: 2, md: 0 }}
+              wordBreak="break-word"
             >
-              <Text as="span" display="block" mb={2}>
+              <Text as="span" display="block" mb={3}>
                 A Reputed Name in
               </Text>
               <Text 
                 as="span" 
                 bgGradient="linear(45deg, #64748b, #1e293b, #fbbf24)"
-                bgClip="text"
+               
                 position="relative"
                 _after={{
                   content: '""',
@@ -140,8 +165,8 @@ const About = () => {
                   bottom: '-10px',
                   left: '50%',
                   transform: 'translateX(-50%)',
-                  w: '150px',
-                  h: '4px',
+                  w: { base: '120px', sm: '150px', md: '180px' },
+                  h: { base: '3px', md: '4px' },
                   bg: 'linear-gradient(90deg, #64748b, #1e293b, #fbbf24)',
                   borderRadius: '2px'
                 }}
@@ -151,12 +176,14 @@ const About = () => {
             </Heading>
             
             <MotionText
-              fontSize={{ base: "lg", md: "xl" }}
+              fontSize={{ base: "md", sm: "lg", md: "xl" }}
               color="gray.600"
               maxW="800px"
               mx="auto"
               lineHeight="1.8"
               fontWeight="400"
+              px={{ base: 2, md: 0 }}
+              wordBreak="break-word"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -175,17 +202,23 @@ const About = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
             viewport={{ once: true }}
           >
-            <SimpleGrid columns={{ base: 2, md: 4 }} spacing={8}>
+            <SimpleGrid 
+              columns={{ base: 2, sm: 2, md: 4 }} 
+              spacing={{ base: 3, sm: 4, md: 6, lg: 8 }} 
+              px={{ base: 2, sm: 3, md: 0 }}
+              className="stats-grid-responsive"
+            >
               {stats.map((stat, index) => (
                 <MotionBox
                   key={index}
                   textAlign="center"
-                  p={6}
+                  p={{ base: 3, sm: 4, md: 6, lg: 8 }}
                   bg="rgba(255,255,255,0.8)"
                   backdropFilter="blur(10px)"
-                  borderRadius="2xl"
+                  borderRadius={{ base: "xl", md: "2xl" }}
                   border="1px solid"
                   borderColor="rgba(100,116,139,0.1)"
+                  className="stat-card-responsive"
                   initial={{ opacity: 0, scale: 0.9 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -199,21 +232,26 @@ const About = () => {
                   <Box
                     p={3}
                     borderRadius="xl"
-                    bg="linear-gradient(135deg, #64748b, #1e293b)"
-                    color="white"
+                    bg="rgba(100, 116, 139, 0.08)"
+                    border="2px solid"
+                    borderColor="rgba(100, 116, 139, 0.15)"
                     display="inline-flex"
                     alignItems="center"
                     justifyContent="center"
                     mb={4}
-                    w="60px"
-                    h="60px"
+                    w={{ base: "50px", sm: "55px", md: "60px" }}
+                    h={{ base: "50px", sm: "55px", md: "60px" }}
+                    _hover={{
+                      bg: "rgba(100, 116, 139, 0.12)",
+                      borderColor: "rgba(100, 116, 139, 0.25)"
+                    }}
                   >
-                    <Text fontSize="2xl">{stat.icon}</Text>
+                    <Text fontSize={{ base: "lg", sm: "xl", md: "2xl" }} opacity={0.8}>{stat.icon}</Text>
                   </Box>
-                  <Text fontSize="2xl" fontWeight="900" color="gray.800" mb={1}>
+                  <Text fontSize={{ base: "xl", sm: "2xl", md: "2xl" }} fontWeight="900" color="gray.800" mb={1}>
                     {stat.number}
                   </Text>
-                  <Text fontSize="sm" color="gray.600" fontWeight="600">
+                  <Text fontSize={{ base: "xs", sm: "sm", md: "sm" }} color="gray.600" fontWeight="600">
                     {stat.label}
                   </Text>
                 </MotionBox>
@@ -222,20 +260,26 @@ const About = () => {
           </MotionBox>
 
           {/* Enhanced Features Grid */}
-          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8}>
+          <SimpleGrid 
+            columns={{ base: 1, md: 2 }} 
+            spacing={{ base: 4, sm: 6, md: 8, lg: 12 }} 
+            px={{ base: 3, sm: 4, md: 0 }}
+            className="features-grid-responsive"
+          >
             {features.map((feature, index) => (
               <MotionBox
                 key={index}
-                p={8}
+                p={{ base: 4, sm: 5, md: 6, lg: 8 }}
                 bg="rgba(255,255,255,0.9)"
                 backdropFilter="blur(20px)"
-                borderRadius="2xl"
+                borderRadius={{ base: "xl", md: "2xl" }}
                 border="1px solid"
                 borderColor="rgba(255,255,255,0.3)"
                 boxShadow="0 8px 32px rgba(0,0,0,0.1)"
                 textAlign="center"
                 position="relative"
                 overflow="hidden"
+                className="feature-card-responsive"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -271,7 +315,7 @@ const About = () => {
                   }
                 }}
               >
-                <VStack spacing={6} position="relative" zIndex={2}>
+                <VStack spacing={{ base: 6, md: 8 }} position="relative" zIndex={2}>
                   <Box
                     p={4}
                     borderRadius="2xl"
@@ -289,13 +333,17 @@ const About = () => {
                   </Box>
                   
                   <Badge
-                    bgGradient={feature.gradient}
-                    color="white"
+                    bg="rgba(100, 116, 139, 0.1)"
+                    color="#64748b"
+                    border="1px solid"
+                    borderColor="rgba(100, 116, 139, 0.2)"
                     px={4}
                     py={2}
                     borderRadius="full"
                     fontSize="xs"
                     fontWeight="700"
+                    textTransform="uppercase"
+                    letterSpacing="0.5px"
                   >
                     {feature.stats}
                   </Badge>
@@ -441,7 +489,7 @@ const About = () => {
         </Stack>
       </Container>
       
-      {/* Enhanced animations */}
+      {/* Enhanced animations and responsive styles */}
       <style jsx>{`
         @keyframes float {
           0%, 100% {
@@ -449,6 +497,72 @@ const About = () => {
           }
           50% {
             transform: translateY(-20px) rotate(180deg);
+          }
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+          .about-content-responsive {
+            gap: 48px !important;
+          }
+          
+          .stats-grid-responsive {
+            gap: 12px !important;
+          }
+          
+          .stat-card-responsive {
+            min-height: 140px !important;
+            padding: 12px !important;
+          }
+          
+          .features-grid-responsive {
+            gap: 20px !important;
+          }
+          
+          .feature-card-responsive {
+            min-height: 250px !important;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .about-content-responsive {
+            gap: 32px !important;
+          }
+          
+          .stats-grid-responsive {
+            gap: 8px !important;
+            grid-template-columns: 1fr 1fr !important;
+          }
+          
+          .stat-card-responsive {
+            min-height: 120px !important;
+            padding: 8px !important;
+          }
+          
+          .features-grid-responsive {
+            gap: 16px !important;
+            grid-template-columns: 1fr !important;
+          }
+          
+          .feature-card-responsive {
+            min-height: 220px !important;
+            padding: 16px !important;
+          }
+        }
+        
+        @media (max-width: 320px) {
+          .about-content-responsive {
+            gap: 24px !important;
+          }
+          
+          .stat-card-responsive {
+            min-height: 100px !important;
+            padding: 6px !important;
+          }
+          
+          .feature-card-responsive {
+            min-height: 200px !important;
+            padding: 12px !important;
           }
         }
       `}</style>

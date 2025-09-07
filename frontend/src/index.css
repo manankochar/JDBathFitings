@@ -1,10 +1,40 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  /* Enable smooth scrolling */
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  /* Better text rendering on mobile */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  /* Better touch scrolling on iOS */
+  -webkit-overflow-scrolling: touch;
+}
+
+#root {
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 code {
@@ -12,7 +42,59 @@ code {
     monospace;
 }
 
-html, body {
-  max-width: 100%;
-  overflow-x: hidden;
+/* Global responsive utilities */
+.container-responsive {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-responsive {
+    padding: 0 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-responsive {
+    padding: 0 3rem;
+  }
+}
+
+/* Prevent horizontal scroll on mobile */
+@media (max-width: 768px) {
+  html, body, #root {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  /* * {
+    max-width: 100% !important;
+  } */
+  
+  /* Fix for potential layout issues */
+  .chakra-stack,
+  .chakra-flex,
+  .css-0 {
+    max-width: 100% !important;
+  }
+}
+
+/* Responsive text sizes */
+.text-responsive-xl {
+  font-size: clamp(2rem, 5vw, 4rem);
+}
+
+.text-responsive-lg {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.text-responsive-md {
+  font-size: clamp(1.125rem, 3vw, 1.5rem);
+}
+
+.text-responsive-sm {
+  font-size: clamp(0.875rem, 2vw, 1.125rem);
 }

@@ -4,20 +4,14 @@ import {
   Container, 
   Heading, 
   Text, 
-  SimpleGrid, 
   DialogRoot,
   DialogBackdrop,
   DialogContent,
-  DialogBody,
-  Flex,
-  IconButton,
-  Badge,
-  VStack,
-  CloseButton
+  VStack
 } from '@chakra-ui/react';
-import { FaExpand, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { motion } from 'framer-motion';
-import ImagePlaceholder from './ImagePlaceholder';
+import ImagePlaceholder from './ImagePlaceholder'; // fallback retained
+import { Image } from '@chakra-ui/react';
 
 const MotionBox = motion(Box);
 
@@ -28,9 +22,7 @@ const ImageGallery = ({
   columns = { base: 1, md: 2, lg: 3, xl: 4 }
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(0);
 
-  const onOpen = () => setIsOpen(true);
   const onClose = () => setIsOpen(false);
 
   // Default gallery items if no images provided
@@ -38,250 +30,172 @@ const ImageGallery = ({
     {
       id: 1,
       title: "Premium Faucet Collection",
-      category: "Faucets",
-      description: "Modern and efficient faucets for your bathroom",
-      isNew: true
+      image: "/images/showroom1.jpg",
+      description: "A showcase of our finest faucets and fixtures in a luxury setting."
     },
     {
       id: 2,
-      title: "Luxury Shower Systems",
-      category: "Bathroom",
-      description: "Complete shower solutions with advanced features",
-      isNew: false
+      title: "Modern Bath Display",
+      image: "/images/showroom2.jpg",
+      description: "Contemporary designs and innovative solutions for modern bathrooms."
     },
     {
       id: 3,
-      title: "Designer Basin Sets",
-      category: "Sanitaryware",
-      description: "Elegant basin designs for contemporary bathrooms",
-      isNew: true
-    },
-    {
-      id: 4,
-      title: "Kitchen Sink Mixers",
-      category: "Kitchen",
-      description: "Functional and stylish kitchen fittings",
-      isNew: false
-    },
-    {
-      id: 5,
-      title: "Bathroom Accessories",
-      category: "Accessories",
-      description: "Complete your bathroom with matching accessories",
-      isNew: true
-    },
-    {
-      id: 6,
-      title: "Wall Mount Toilets",
-      category: "Sanitaryware",
-      description: "Space-saving and modern toilet solutions",
-      isNew: false
-    },
-    {
-      id: 7,
-      title: "Vanity Units",
-      category: "Furniture",
-      description: "Storage solutions for your bathroom",
-      isNew: false
-    },
-    {
-      id: 8,
-      title: "Mirror Cabinets",
-      category: "Accessories",
-      description: "Functional mirrors with built-in storage",
-      isNew: true
+      title: "Work Gallery",
+      image: "/images/showroom3.jpg",
+      description: "A gallery of our completed projects and installations."
     }
   ];
 
   const galleryItems = images.length > 0 ? images : defaultGalleryItems;
 
-  const openModal = (index) => {
-    setSelectedImage(index);
-    onOpen();
-  };
-
-  const nextImage = () => {
-    setSelectedImage((prev) => (prev + 1) % galleryItems.length);
-  };
-
-  const prevImage = () => {
-    setSelectedImage((prev) => (prev - 1 + galleryItems.length) % galleryItems.length);
-  };
-
   return (
-    <Box py={{ base: 12, sm: 16, md: 20 }} bg="#070b1b">
+    <Box py={{ base: 12, sm: 16, md: 20 }} bg="#070b1b" overflowX="hidden">
       <Container maxW="container.xl" px={{ base: 4, sm: 6, md: 8, lg: 10, xl: 12 }} className="container-responsive">
         {/* Section Header */}
         <VStack spacing={{ base: 3, md: 4 }} textAlign="center" mb={{ base: 8, md: 12 }} className="gallery-header-responsive">
           <Text color="brand.500" fontWeight="600" fontSize={{ base: "xs", md: "sm" }} textTransform="uppercase">
-            Gallery
+            <span style={{ color: '#fff', letterSpacing: '0.12em', textShadow: '0 2px 8px rgba(0,0,0,0.18)' }}>Gallery</span>
           </Text>
           <Heading 
-            as="h2" 
+            as="h2"
             fontSize={{ base: "2xl", sm: "3xl", md: "4xl", lg: "5xl" }}
-            fontWeight="bold" 
+            fontWeight="bold"
             lineHeight="1.2"
             px={{ base: 2, md: 0 }}
             wordBreak="break-word"
+            color="white"
+            textShadow="0 2px 12px rgba(0,0,0,0.18)"
           >
             {title}
           </Heading>
-          <Text 
-            color="gray.300" 
-            fontSize={{ base: "md", md: "lg" }} 
+          <Text
+            color="#f8fafc"
+            fontSize={{ base: "md", md: "lg" }}
             maxW="600px"
             px={{ base: 4, md: 0 }}
             wordBreak="break-word"
+            textShadow="0 2px 8px rgba(0,0,0,0.12)"
           >
             {subtitle}
           </Text>
         </VStack>
 
-        {/* Gallery Grid */}
-        <SimpleGrid 
-          columns={{ base: 1, sm: 2, md: 3, lg: 4, xl: 5 }} 
-          spacing={{ base: 4, sm: 5, md: 6 }}
-          className="gallery-grid-responsive"
-        >
-          {galleryItems.map((item, index) => (
-            <MotionBox
-              key={item.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              whileHover={{ y: -5 }}
-            >
-              <Box
-                position="relative"
-                borderRadius="xl"
-                overflow="hidden"
-                bg="slate.800"
-                className="glass-effect"
-                cursor="pointer"
-                onClick={() => openModal(index)}
-                _hover={{
-                  transform: "scale(1.02)",
-                  transition: "all 0.3s ease"
-                }}
-              >
-                {/* Image placeholder */}
-                <Box position="relative" height={{ base: "200px", sm: "220px", md: "250px" }} className="gallery-item-image">
-                  <ImagePlaceholder
-                    width="100%"
-                    height="100%"
-                    text={item.title}
-                    fontSize="sm"
-                    bg="linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(168, 85, 247, 0.1))"
-                    borderRadius="none"
-                    border="none"
-                    showIcon={true}
-                    color="gray.300"
-                  />
-                  
-                  {/* Overlay */}
-                  <Box
-                    position="absolute"
-                    top={0}
-                    left={0}
-                    right={0}
-                    bottom={0}
-                    bg="rgba(0,0,0,0.4)"
-                    opacity={0}
-                    transition="opacity 0.3s ease"
-                    _hover={{ opacity: 1 }}
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
-                    <IconButton
-                      aria-label="Expand image"
-                      icon={<FaExpand />}
-                      size="lg"
-                      colorScheme="blue"
-                      variant="solid"
-                      borderRadius="full"
-                    />
-                  </Box>
-
-                  {/* Category badge */}
-                  <Badge
-                    position="absolute"
-                    top={3}
-                    left={3}
-                    colorScheme="blue"
-                    variant="solid"
-                    fontSize="xs"
-                    px={2}
-                    py={1}
-                  >
-                    {item.category}
-                  </Badge>
-
-                  {/* New badge */}
-                  {item.isNew && (
-                    <Badge
-                      position="absolute"
-                      top={3}
-                      right={3}
-                      colorScheme="green"
-                      variant="solid"
-                      fontSize="xs"
-                      px={2}
-                      py={1}
-                    >
-                      NEW
-                    </Badge>
-                  )}
-                </Box>
-
-                {/* Content */}
-                <Box p={{ base: 3, md: 4 }}>
-                  <Heading 
-                    as="h3" 
-                    fontSize={{ base: "md", md: "lg" }}
-                    mb={2} 
-                    color="white"
-                    noOfLines={2}
-                  >
-                    {item.title}
-                  </Heading>
-                  <Text 
-                    color="gray.400" 
-                    fontSize={{ base: "xs", md: "sm" }} 
-                    noOfLines={2}
-                  >
-                    {item.description}
-                  </Text>
-                </Box>
-              </Box>
-            </MotionBox>
-          ))}
-        </SimpleGrid>
-
-        {/* View All Button */}
-        <Flex justify="center" mt={{ base: 8, md: 10 }}>
+        {/* Gallery Grid (refactored to CSS grid for consistent spacing) */}
+        <Box mt={{ base: 8, md: 10 }} mb={{ base: 10, md: 14 }} px={{ base: 2, sm: 2, md: 0 }}>
           <Box
-            as="button"
-            px={{ base: 6, md: 8 }}
-            py={{ base: 3, md: 4 }}
-            bg="transparent"
-            border="2px solid"
-            borderColor="brand.500"
-            color="brand.500"
-            borderRadius="lg"
-            fontWeight="medium"
-            fontSize={{ base: "sm", md: "md" }}
-            className="gallery-view-all-btn"
-            _hover={{
-              bg: "brand.500",
-              color: "white",
-              transform: "translateY(-2px)",
-              transition: "all 0.3s ease"
-            }}
+            display="grid"
+            gridTemplateColumns={{ base: '1fr', sm: 'repeat(2,1fr)', md: 'repeat(3,1fr)' }}
+            gap={{ base: 5, md: 10 }}
           >
-            View All Products
+            {galleryItems.map((item, index) => (
+              <MotionBox
+                key={item.id}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.65, delay: index * 0.1, ease: 'easeOut' }}
+                viewport={{ once: true, amount: 0.3 }}
+                whileHover={{ y: -10 }}
+                position="relative"
+                role="group"
+              >
+                <Box
+                  position="relative"
+                  borderRadius="24px"
+                  overflow="hidden"
+                  bgGradient="linear(to-b, #1b2034 0%, #141826 55%, #101320 100%)"
+                  boxShadow="0 12px 42px -10px rgba(0,0,0,0.45), 0 4px 18px -6px rgba(0,0,0,0.35)"
+                  border="1px solid rgba(255,255,255,0.06)"
+                  // Removed click and interactive cursor to make card non-clickable
+                  cursor="default"
+                  _before={{
+                    content: '""',
+                    position: 'absolute',
+                    inset: '0',
+                    background: 'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.08), transparent 60%)',
+                    opacity: 0,
+                    transition: 'opacity .5s'
+                  }}
+                  // Keep subtle highlight on hover without lift effect
+                  _groupHover={{ _before: { opacity: 1 } }}
+                  _hover={{
+                    boxShadow: '0 14px 38px -12px rgba(0,0,0,0.55)',
+                    borderColor: 'rgba(255,255,255,0.12)'
+                  }}
+                  transition="all .45s cubic-bezier(.4,0,.2,1)"
+                  minH={{ base: '320px', md: '360px' }}
+                  display="flex"
+                  flexDirection="column"
+                >
+                  <Box position="relative" height={{ base: '170px', sm: '190px', md: '200px' }} overflow="hidden">
+                    {item.image ? (
+                      <Image 
+                        src={item.image}
+                        alt={item.title}
+                        w="100%"
+                        h="100%"
+                        objectFit="cover"
+                        transition="transform .9s ease"
+                        _groupHover={{ transform: 'scale(1.08)' }}
+                        draggable={false}
+                      />
+                    ) : (
+                      <ImagePlaceholder
+                        width="100%"
+                        height="100%"
+                        text={item.title}
+                        fontSize="sm"
+                        bg="linear-gradient(135deg,#2d3350 0%,#4f56b3 55%,#6c63ff 100%)"
+                        borderRadius="0"
+                        border="none"
+                        showIcon={true}
+                        color="#eef2ff"
+                      />
+                    )}
+                    <Box position="absolute" inset={0} opacity={0.18} background="linear-gradient(to bottom, rgba(0,0,0,0) 35%, rgba(0,0,0,0.55) 100%)" />
+                  </Box>
+                  <Box p={{ base: 4, md: 5 }} flex="1" display="flex" flexDirection="column" justifyContent="flex-start">
+                    <Heading
+                      as="h3"
+                      fontSize={{ base: 'lg', md: 'xl' }}
+                      mb={2}
+                      color="#f1f5f9"
+                      textShadow="0 2px 6px rgba(0,0,0,0.35)"
+                      letterSpacing="0.02em"
+                    >
+                      {item.title}
+                    </Heading>
+                    <Text color="#cbd5e1" fontSize={{ base: 'sm', md: 'sm' }} lineHeight="1.45" flex="0" noOfLines={3}>
+                      {item.description}
+                    </Text>
+                    {/* Removed action link */}
+                  </Box>
+                </Box>
+              </MotionBox>
+            ))}
           </Box>
-        </Flex>
+          {/* Optional CTA below grid */}
+          <Box textAlign="center" mt={{ base: 10, md: 14 }}>
+            <Box as="button"
+              px={8}
+              py={4}
+              borderRadius="full"
+              fontSize="sm"
+              letterSpacing="0.25em"
+              fontWeight="600"
+              bgGradient="linear(to-r,#1e293b,#0f172a)"
+              color="#fff"
+              border="1px solid #334155"
+              boxShadow="0 8px 28px -8px rgba(15,23,42,0.55)"
+              transition="all .4s cubic-bezier(.4,0,.2,1)"
+              _hover={{ transform: 'translateY(-4px)', boxShadow: '0 16px 42px -10px rgba(15,23,42,0.65)' }}
+            >
+              Contact Us
+            </Box>
+          </Box>
+        </Box>
+
+
       </Container>
 
       {/* Dialog for expanded view */}
@@ -296,121 +210,7 @@ const ImageGallery = ({
           m={{ base: 0, md: 4 }}
           className="gallery-modal-responsive"
         >
-          <CloseButton 
-            color="white" 
-            position="absolute" 
-            top={4} 
-            right={4} 
-            zIndex={10}
-            onClick={onClose}
-          />
-          <DialogBody p={0}>
-            <Flex direction={{ base: "column", md: "row" }} className="gallery-modal-content">
-              {/* Image section */}
-              <Box flex={2} position="relative" height={{ base: "50vh", sm: "60vh", md: "500px" }}>
-                <ImagePlaceholder
-                  width="100%"
-                  height="100%"
-                  text={galleryItems[selectedImage]?.title}
-                  fontSize="xl"
-                  bg="linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(168, 85, 247, 0.2))"
-                  borderRadius="none"
-                  border="none"
-                  showIcon={true}
-                  color="white"
-                />
-
-                {/* Navigation arrows */}
-                <IconButton
-                  aria-label="Previous image"
-                  icon={<FaChevronLeft />}
-                  position="absolute"
-                  left={4}
-                  top="50%"
-                  transform="translateY(-50%)"
-                  colorScheme="whiteAlpha"
-                  variant="solid"
-                  borderRadius="full"
-                  onClick={prevImage}
-                />
-                <IconButton
-                  aria-label="Next image"
-                  icon={<FaChevronRight />}
-                  position="absolute"
-                  right={4}
-                  top="50%"
-                  transform="translateY(-50%)"
-                  colorScheme="whiteAlpha"
-                  variant="solid"
-                  borderRadius="full"
-                  onClick={nextImage}
-                />
-              </Box>
-
-              {/* Details section */}
-              <Box flex={1} p={{ base: 4, md: 6, lg: 8 }} color="white" className="gallery-modal-details">
-                <VStack align="start" spacing={4} h="100%">
-                  <Box>
-                    <Badge colorScheme="blue" mb={2}>
-                      {galleryItems[selectedImage]?.category}
-                    </Badge>
-                    <Heading 
-                      as="h3" 
-                      fontSize={{ base: "lg", md: "xl" }}
-                      mb={4}
-                      noOfLines={2}
-                    >
-                      {galleryItems[selectedImage]?.title}
-                    </Heading>
-                    <Text 
-                      color="gray.300" 
-                      lineHeight="1.6"
-                      fontSize={{ base: "sm", md: "md" }}
-                    >
-                      {galleryItems[selectedImage]?.description}
-                    </Text>
-                  </Box>
-
-                  <Box mt="auto">
-                    <Text fontSize="sm" color="gray.500" mb={2}>
-                      Image {selectedImage + 1} of {galleryItems.length}
-                    </Text>
-                    <Flex gap={2} direction={{ base: "column", md: "row" }} className="gallery-modal-buttons">
-                      <Box
-                        as="button"
-                        px={{ base: 4, md: 6 }}
-                        py={2}
-                        bg="brand.500"
-                        color="white"
-                        borderRadius="md"
-                        fontSize={{ base: "xs", md: "sm" }}
-                        fontWeight="medium"
-                        _hover={{ bg: "brand.400" }}
-                        w={{ base: "100%", md: "auto" }}
-                      >
-                        View Details
-                      </Box>
-                      <Box
-                        as="button"
-                        px={{ base: 4, md: 6 }}
-                        py={2}
-                        border="1px solid"
-                        borderColor="gray.600"
-                        color="gray.300"
-                        borderRadius="md"
-                        fontSize={{ base: "xs", md: "sm" }}
-                        fontWeight="medium"
-                        _hover={{ borderColor: "gray.500" }}
-                        w={{ base: "100%", md: "auto" }}
-                      >
-                        Contact Us
-                      </Box>
-                    </Flex>
-                  </Box>
-                </VStack>
-              </Box>
-            </Flex>
-          </DialogBody>
+          {/* Modal content here, implement as needed */}
         </DialogContent>
       </DialogRoot>
 

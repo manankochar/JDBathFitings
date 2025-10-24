@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Menu Test - JD Bath Fittings</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .test-title {
+            color: #1e293b;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .test-description {
+            color: #64748b;
+            margin-bottom: 15px;
+        }
+        
+        .status-indicator {
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .status-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+        
+        .test-steps {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        
+        .test-steps ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .test-steps li {
+            margin: 8px 0;
+            color: #374151;
+        }
+        
+        .mobile-preview {
+            background: #1e293b;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .navbar-preview {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .logo-preview {
+            width: 120px;
+            height: 40px;
+            background: #fbbf24;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e293b;
+            font-weight: bold;
+        }
+        
+        .hamburger-preview {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .hamburger-preview:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+        
+        .hamburger-lines {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        
+        .hamburger-line {
+            width: 20px;
+            height: 2px;
+            background: white;
+            border-radius: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .hamburger-preview.active .hamburger-line:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        
+        .hamburger-preview.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger-preview.active .hamburger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+        
+        .mobile-menu-preview {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 10px;
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.12);
+            transform: translateY(-10px);
+            opacity: 0;
+            transition: all 0.5s ease;
+            max-height: 0;
+            overflow: hidden;
+        }
+        
+        .mobile-menu-preview.show {
+            transform: translateY(0);
+            opacity: 1;
+            max-height: 500px;
+        }
+        
+        .menu-header {
+            background: linear-gradient(135deg, #1e293b 0%, #475569 50%, #64748b 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 8px 0;
+            border-radius: 12px;
+            background: rgba(100, 116, 139, 0.05);
+            border: 2px solid rgba(100, 116, 139, 0.15);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .menu-item:hover {
+            background: rgba(100, 116, 139, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .menu-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(100, 116, 139, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        .menu-text {
+            flex: 1;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .contact-section {
+            background: rgba(100, 116, 139, 0.03);
+            border-top: 1px solid rgba(100, 116, 139, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 12px;
+        }
+        
+        .cta-button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #1e293b 0%, #475569 50%, #fbbf24 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(30, 41, 59, 0.25);
+        }
+        
+        .test-button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .test-button:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+        
+        .test-button.secondary {
+            background: #6b7280;
+        }
+        
+        .test-button.secondary:hover {
+            background: #4b5563;
+        }
+        
+        @media (max-width: 768px) {
+            .test-container {
+                padding: 10px;
+            }
+            
+            .test-section {
+                margin: 15px 0;
+                padding: 15px;
+            }
+            
+            .test-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-section">
+            <h1 class="test-title">🔧 Mobile Hamburger Menu - FIXED!</h1>
+            <p class="test-description">
+                The mobile hamburger menu issue has been resolved. Here's what was fixed and how to test it.
+            </p>
+            
+            <div class="status-indicator status-success">
+                ✅ Status: Mobile menu button is now working correctly
+            </div>
+            
+            <div class="test-steps">
+                <h3>What was fixed:</h3>
+                <ol>
+                    <li><strong>Chakra UI Version Issue:</strong> Removed useDisclosure hook (not compatible with v3) and used useState instead</li>
+                    <li><strong>Missing Imports:</strong> Added all necessary Chakra UI components</li>
+                    <li><strong>Button Implementation:</strong> Properly implemented mobile menu button with correct styling</li>
+                    <li><strong>State Management:</strong> Fixed state management for menu open/close functionality</li>
+                    <li><strong>Event Handlers:</strong> Added proper click handlers for all menu interactions</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2 class="test-title">🧪 Interactive Test</h2>
+            <p class="test-description">Test the mobile menu functionality below:</p>
+            
+            <div class="mobile-preview">
+                <div class="navbar-preview">
+                    <div class="logo-preview">JD LOGO</div>
+                    <div class="hamburger-preview" id="hamburgerBtn">
+                        <div class="hamburger-lines">
+                            <div class="hamburger-line"></div>
+                            <div class="hamburger-line"></div>
+                            <div class="hamburger-line"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mobile-menu-preview" id="mobileMenu">
+                    <div class="menu-header">
+                        <h3 style="margin: 0 0 10px 0;">Menu</h3>
+                        <p style="margin: 0; opacity: 0.9; font-size: 14px;">Navigate to any section</p>
+                    </div>
+                    
+                    <div class="menu-item">
+                        <div class="menu-icon">🏠</div>
+                        <div class="menu-text">Home</div>
+                    </div>
+                    
+                    <div class="menu-item">
+                        <div class="menu-icon">ℹ️</div>
+                        <div class="menu-text">About</div>
+                    </div>
+                    
+                    <div class="menu-item">
+                        <div class="menu-icon">🖼️</div>
+                        <div class="menu-text">Products</div>
+                    </div>
+                    
+                    <div class="menu-item">
+                        <div class="menu-icon">📞</div>
+                        <div class="menu-text">Contact</div>
+                    </div>
+                    
+                    <div class="contact-section">
+                        <h4 style="margin: 0 0 15px 0; text-align: center; color: #1e293b;">Get In Touch</h4>
+                        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                            <button style="flex: 1; padding: 8px; border: 1px solid #3b82f6; background: white; color: #3b82f6; border-radius: 20px; font-size: 14px;">📞 Call Now</button>
+                            <button style="flex: 1; padding: 8px; border: 1px solid #8b5cf6; background: white; color: #8b5cf6; border-radius: 20px; font-size: 14px;">✉️ Email</button>
+                        </div>
+                        <button class="cta-button">🚀 Get Free Quote</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="test-button" onclick="toggleMenu()">Toggle Menu</button>
+                <button class="test-button secondary" onclick="resetMenu()">Reset</button>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2 class="test-title">📱 Testing Instructions</h2>
+            <div class="test-steps">
+                <h3>How to test on your website:</h3>
+                <ol>
+                    <li>Open your website at <strong>http://localhost:3000</strong></li>
+                    <li>Use browser developer tools (F12) and switch to mobile view</li>
+                    <li>Look for the hamburger menu button (☰) in the top-right corner</li>
+                    <li>Click/tap the hamburger button to open the mobile menu</li>
+                    <li>Verify the menu slides in smoothly with animations</li>
+                    <li>Test all navigation links and contact buttons</li>
+                    <li>Try closing the menu by clicking outside or the close button</li>
+                    <li>Test on different screen sizes (320px, 375px, 414px, etc.)</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2 class="test-title">✨ Key Features Implemented</h2>
+            <div class="test-steps">
+                <ul style="margin: 0; padding-left: 20px;">
+                    <li><strong>✅ Responsive Design:</strong> Works on all mobile screen sizes</li>
+                    <li><strong>✅ Smooth Animations:</strong> Slide-in effect with backdrop blur</li>
+                    <li><strong>✅ Touch-Friendly:</strong> Large touch targets for mobile devices</li>
+                    <li><strong>✅ Accessibility:</strong> Proper ARIA labels and keyboard navigation</li>
+                    <li><strong>✅ Visual Feedback:</strong> Hover effects and active states</li>
+                    <li><strong>✅ Contact Integration:</strong> Direct phone and email links</li>
+                    <li><strong>✅ Brand Consistency:</strong> Matches the website's design theme</li>
+                    <li><strong>✅ Performance:</strong> Optimized animations and transitions</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2 class="test-title">🔍 Technical Details</h2>
+            <div class="test-steps">
+                <h3>Code Changes Made:</h3>
+                <ul style="margin: 0; padding-left: 20px;">
+                    <li>Replaced <code>useDisclosure</code> with <code>useState</code> for Chakra UI v3 compatibility</li>
+                    <li>Added proper event handlers for menu toggle functionality</li>
+                    <li>Implemented responsive design with proper breakpoints</li>
+                    <li>Added z-index management for proper layering</li>
+                    <li>Created smooth animations with CSS transitions</li>
+                    <li>Added background scroll prevention when menu is open</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isMenuOpen = false;
+        
+        function toggleMenu() {
+            const hamburger = document.getElementById('hamburgerBtn');
+            const menu = document.getElementById('mobileMenu');
+            
+            isMenuOpen = !isMenuOpen;
+            
+            if (isMenuOpen) {
+                hamburger.classList.add('active');
+                menu.classList.add('show');
+            } else {
+                hamburger.classList.remove('active');
+                menu.classList.remove('show');
+            }
+        }
+        
+        function resetMenu() {
+            const hamburger = document.getElementById('hamburgerBtn');
+            const menu = document.getElementById('mobileMenu');
+            
+            isMenuOpen = false;
+            hamburger.classList.remove('active');
+            menu.classList.remove('show');
+        }
+        
+        // Add click event to hamburger button
+        document.getElementById('hamburgerBtn').addEventListener('click', toggleMenu);
+        
+        // Add click event to menu items
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                alert('Menu item clicked: ' + item.querySelector('.menu-text').textContent);
+            });
+        });
+        
+        // Add click event to CTA button
+        document.querySelector('.cta-button').addEventListener('click', () => {
+            alert('Get Free Quote button clicked!');
+        });
+    </script>
+</body>
+</html>

@@ -1,3 +1,6 @@
+html {
+  scroll-behavior: smooth;
+}
 /* Pure White Professional Theme - JD Sanitaryware */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
@@ -24,7 +27,7 @@
   --accent-secondary: #1e293b;
   --accent-tertiary: #475569;
   --accent-light: #f1f5f9;
-  --accent-gold: #fbbf24;
+  --accent-gold: #220438; /* updated brand accent */
   
   /* Clean Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -46,6 +49,19 @@
   padding: 0;
   box-sizing: border-box;
   scroll-behavior: smooth;
+}
+
+/* Prevent horizontal overflow on all devices */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
+#root {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
 }
 
 body {
@@ -94,6 +110,65 @@ body {
   * {
     max-width: 100%;
   }
+  
+  /* Mobile container fixes */
+  .chakra-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  
+  /* Prevent text overflow */
+  h1, h2, h3, h4, h5, h6, p {
+    word-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+  }
+  
+  /* Ensure images don't overflow */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* Fix any flex layouts */
+  .chakra-stack {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* Small mobile devices */
+@media screen and (max-width: 480px) {
+  .chakra-container {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+  
+  /* Ensure grids don't overflow */
+  .chakra-grid {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  /* Reduce font sizes on very small screens */
+  h1 { font-size: 1.8rem !important; }
+  h2 { font-size: 1.5rem !important; }
+  h3 { font-size: 1.3rem !important; }
+}
+
+/* Extra small devices */
+@media screen and (max-width: 375px) {
+  .chakra-container {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+  
+  /* Further reduce font sizes */
+  h1 { font-size: 1.6rem !important; }
+  h2 { font-size: 1.4rem !important; }
+  h3 { font-size: 1.2rem !important; }
 }
 
 /* Ensure proper spacing on all devices */

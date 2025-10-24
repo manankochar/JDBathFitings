@@ -1,0 +1,891 @@
+import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import {
+  Box,
+  Flex,
+  Image,
+  Link,
+} from '@chakra-ui/react';
+
+const Navbar = () => {
+
+  return (
+    <Box>
+      <Flex
+        bg="white"
+        minH="60px"
+        py={{ base: 2 }}
+        px={{ base: 4 }}
+        align="center"
+      >
+        <Flex flex={{ base: 1 }} justify="start">
+          <Link as={RouterLink} to="/">
+            <Image 
+              src="/jankidas-logo.png"
+              alt="JD Bath Fittings"
+              h="50px"
+              cursor="pointer"
+            />
+          </Link>
+        </Flex>
+
+        <Stack
+          direction="row"
+          spacing={6}
+          display={{ base: 'none', md: 'flex' }}
+        >
+          {navItems.map((item) => (
+            <NavLink 
+              key={item.name}
+              to={item.path} 
+              label={item.name} 
+              icon={item.icon}
+              isActive={location.pathname === item.path} 
+            />
+          ))}
+        </Stack>
+
+        <Box display={{ base: 'flex', md: 'none' }}>
+          <Button onClick={onToggle}>
+            {isOpen ? <FaTimes /> : <FaBars />}
+          </Button>
+        </Box>
+      </Flex>
+
+      <Box
+        display={{ base: isOpen ? 'block' : 'none', md: 'none' }}
+        bg="white"
+        p={4}
+      >
+        <VStack spacing={4}>
+          {navItems.map((item) => (
+            <NavLink 
+              key={item.name}
+              to={item.path} 
+              label={item.name} 
+              icon={item.icon}
+              isActive={location.pathname === item.path} 
+            />
+          ))}
+        </VStack>
+      </Box>
+    </Box>
+  );
+};
+
+export default Navbar;
+
+const navItems = [
+  { name: 'Home', path: '/', icon: FaHome },
+  { name: 'About', path: '/about', icon: FaInfoCircle },
+  { name: 'Products', path: '/products', icon: FaImages },
+  { name: 'Contact', path: '/contact', icon: FaAddressBook }
+];
+
+// Navigation Link Component
+const NavLink = ({ to, label, icon: Icon, isActive }) => (
+  <Link
+    as={RouterLink}
+    to={to}
+    px={4}
+    py={3}
+    rounded="xl"
+    color={isActive ? 'gray.800' : 'gray.600'}
+    _hover={{
+      textDecoration: 'none',
+      color: '#64748b',
+      bg: 'rgba(100, 116, 139, 0.08)',
+    }}
+  >
+    <HStack spacing={2}>
+      <Icon size="14px" />
+      <Text>{label}</Text>
+    </HStack>
+  </Link>
+);
+
+const Navbar = () => {
+  const { isOpen, onToggle } = useDisclosure();
+  const location = useLocation();
+
+  return (
+    <Box>
+      <Flex
+        bg="white"
+        minH="60px"
+        py={{ base: 2 }}
+        px={{ base: 4 }}
+        align="center"
+      >
+        <Flex flex={{ base: 1 }} justify="start">
+          <Link as={RouterLink} to="/">
+            <Image 
+              src="/jankidas-logo.png"
+              alt="JD Bath Fittings"
+              h="50px"
+              cursor="pointer"
+            />
+          </Link>
+        </Flex>
+
+        {/* Desktop Navigation Menu */}
+        <Stack
+          direction="row"
+          spacing={6}
+          display={{ base: 'none', md: 'flex' }}
+        >
+          {navItems.map((item) => (
+            <NavLink 
+              key={item.name}
+              to={item.path} 
+              label={item.name} 
+              icon={item.icon}
+              isActive={location.pathname === item.path} 
+            />
+          ))}
+        </Stack>
+
+        {/* Mobile Navigation Button */}
+        <Box display={{ base: 'flex', md: 'none' }}>
+          <Button onClick={onToggle}>
+            {isOpen ? <FaTimes /> : <FaBars />}
+          </Button>
+        </Box>
+      </Flex>
+
+      {/* Mobile Menu */}
+      <Box
+        display={{ base: isOpen ? 'block' : 'none', md: 'none' }}
+        bg="white"
+        p={4}
+      >
+        <VStack spacing={4}>
+          {navItems.map((item) => (
+            <NavLink 
+              key={item.name}
+              to={item.path} 
+              label={item.name} 
+              icon={item.icon}
+              isActive={location.pathname === item.path} 
+            />
+          ))}
+        </VStack>
+      </Box>
+    </Box>
+  );
+};
+
+export default Navbar;
+
+// Mobile Navigation Link Component
+const MobileNavLink = ({ to, label, icon, isActive, onClose, index }) => (
+  <RouterLink to={to} onClick={onClose}>
+    <Button
+      w="full"
+      variant="ghost"
+      colorScheme={isActive ? "blue" : "gray"}
+      justifyContent="flex-start"
+      leftIcon={icon}
+    >
+      {label}
+    </Button>
+  </RouterLink>
+);
+
+const Navbar = () => {
+  const location = useLocation();
+  const { isOpen, onToggle } = useDisclosure();
+
+  // Prevent background scrolling when mobile menu is open
+  React.useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
+  return (
+    <Box as="nav" bg="white" borderBottom="1px" borderColor="gray.200" pos="sticky" top="0" zIndex={10}>
+      <Box maxW="8xl" mx="auto" px={{ base: 4, sm: 6, lg: 8 }} h={{ base: "70px", md: "80px" }}>
+        <Flex h="100%" align="center" justify="space-between">
+          {/* Logo */}
+          <RouterLink to="/" style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+            <Box w={{ base: "120px", sm: "150px" }} h={{ base: "60px", sm: "75px" }}>
+              <Image
+                src="/jankidas-logo.png"
+                alt="Jankidas Sanitaryware Logo"
+                w="100%"
+                h="100%"
+                objectFit="contain"
+                objectPosition="center"
+                fallbackSrc="/logo.png"
+              />
+            </Box>
+          </RouterLink>
+
+          {/* Desktop Navigation Menu */}
+          <Box display={{ base: 'none', md: 'block' }}>
+            <HStack spacing={6}>
+              {navItems.map((item) => (
+                <NavLink 
+                  key={item.name}
+                  to={item.path} 
+                  label={item.name} 
+                  icon={item.icon}
+                  isActive={location.pathname === item.path} 
+                />
+              ))}
+            </HStack>
+          </Box>
+
+          {/* Mobile Menu Button */}
+          <Box display={{ base: 'block', md: 'none' }}>
+            <Button
+              onClick={onToggle}
+              variant="ghost"
+              aria-label="Toggle Navigation"
+            >
+              {isOpen ? <FaTimes /> : <FaBars />}
+            </Button>
+          </Box>
+        </Flex>
+
+        {/* Mobile Menu */}
+        {isOpen && (
+          <Box
+            pos="fixed"
+            top="0"
+            left="0"
+            right="0"
+            bottom="0"
+            bg="rgba(0, 0, 0, 0.7)"
+            zIndex={20}
+            display={{ base: 'block', md: 'none' }}
+          >
+            <Box
+              pos="absolute"
+              right="0"
+              top="0"
+              h="100vh"
+              w={{ base: 'full', sm: '400px' }}
+              bg="white"
+              shadow="xl"
+              p={4}
+              overflow="auto"
+            >
+              <VStack align="stretch" spacing={4}>
+                {/* Mobile Menu Header */}
+                <HStack justify="space-between">
+                  <Text fontSize="xl" fontWeight="bold">Menu</Text>
+                  <Button onClick={onToggle} variant="ghost">
+                    <FaTimes />
+                  </Button>
+                </HStack>
+                
+                {/* Mobile Menu Logo */}
+                <Box textAlign="center">
+                  <Box
+                    w={{ base: "120px", sm: "150px" }}
+                    h={{ base: "60px", sm: "75px" }}
+                    mx="auto"
+                  >
+                    <Image
+                      src="/jankidas-logo.png"
+                      alt="Jankidas Sanitaryware Logo"
+                      w="100%"
+                      h="100%"
+                      objectFit="contain"
+                      objectPosition="center"
+                      fallbackSrc="/logo.png"
+                    />
+                  </Box>
+                </Box>
+
+                {/* Mobile Navigation Links */}
+                <VStack align="stretch" spacing={2}>
+                  {navItems.map((item, index) => (
+                    <MobileNavLink
+                      key={item.name}
+                      to={item.path}
+                      label={item.name}
+                      icon={item.icon}
+                      isActive={location.pathname === item.path}
+                      onClose={onToggle}
+                      index={index}
+                    />
+                  ))}
+                </VStack>
+              </VStack>
+            </Box>
+          </Box>
+        )}
+      </Box>
+    </Box>
+  );
+};
+
+export default Navbar;
+  ];
+
+  return (
+    <Box
+      position="fixed"
+      top="0"
+      left="0"
+      right="0"
+      width="100%"
+      zIndex="1000"
+      transition="all 0.4s cubic-bezier(0.4, 0, 0.2, 1)"
+      bg={bgColor}
+      backdropFilter={scrolled ? 'blur(25px)' : 'blur(15px)'}
+      borderBottom={`1px solid ${borderColor}`}
+      boxShadow={scrolled ? '0 8px 32px rgba(0, 0, 0, 0.12)' : '0 4px 20px rgba(0, 0, 0, 0.08)'}
+      className="navbar-responsive"
+    >
+      <Box w="100%" px={{ base: 3, sm: 4, md: 6, lg: 8, xl: 12 }} className="container-responsive">
+        <Flex
+          color={textColor}
+          minH={{ base: '70px', md: '80px', lg: '85px' }}
+          align={'center'}
+          justify="space-between"
+          w="100%"
+          py={{ base: 1, md: 2 }}
+        >
+          {/* Enhanced Logo Section */}
+          <Flex flex={{ base: 1 }} justify="start" align="center">
+            <Link as={RouterLink} to="/" _hover={{ textDecoration: 'none' }}>
+              <Box
+                position="relative"
+                w={{ base: '60px', sm: '70px', md: '80px', lg: '85px' }}
+                h={{ base: '60px', sm: '70px', md: '80px', lg: '85px' }}
+                borderRadius="xl"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                overflow="hidden"
+                bg="transparent"
+                flexShrink={0}
+                transition="all 0.3s cubic-bezier(0.16, 1, 0.3, 1)"
+                _hover={{
+                  transform: 'scale(1.05)'
+                }}
+              >
+                <Image
+                  src="/jankidas-logo.png"
+                  alt="Jankidas Sanitaryware Logo"
+                  w="100%"
+                  h="100%"
+                  objectFit="contain"
+                  objectPosition="center"
+                  fallbackSrc="/logo.png"
+                  draggable={false}
+                  transition="all 0.3s ease"
+                />
+              </Box>
+            </Link>
+          </Flex>
+
+          {/* Desktop Navigation Menu */}
+          <Box display={{ base: 'none', md: 'block' }} ml="auto">
+            <HStack spacing={6}>
+              {navItems.map((item) => (
+                <NavLink 
+                  key={item.name}
+                  to={item.path} 
+                  label={item.name} 
+                  icon={item.icon}
+                  isActive={location.pathname === item.path} 
+                />
+              ))}
+            </HStack>
+          </Box>
+
+          {/* Mobile Menu Button */}
+          <Box display={{ base: 'flex', md: 'none' }}>
+            <Button
+              onClick={onToggle}
+              variant="ghost"
+              aria-label="Toggle Navigation"
+            >
+              {isOpen ? <FaTimes /> : <FaBars />}
+            </Button>
+          </Box>
+        </Flex>
+
+        {/* Mobile Menu */}
+        {isOpen && (
+          <Box
+            pos="fixed"
+            top="0"
+            left="0"
+            right="0"
+            bottom="0"
+            bg="rgba(0, 0, 0, 0.7)"
+            zIndex={20}
+            display={{ base: 'block', md: 'none' }}
+          >
+            <Box
+              pos="absolute"
+              right="0"
+              top="0"
+              h="100vh"
+              w={{ base: 'full', sm: '400px' }}
+              bg="white"
+              shadow="xl"
+              p={4}
+              overflow="auto"
+            >
+              <VStack align="stretch" spacing={4}>
+                {/* Mobile Menu Header */}
+                <HStack justify="space-between">
+                  <Text fontSize="xl" fontWeight="bold">Menu</Text>
+                  <Button onClick={onToggle} variant="ghost">
+                    <FaTimes />
+                  </Button>
+                </HStack>
+                
+                {/* Mobile Menu Logo */}
+                <Box textAlign="center">
+                  <Box
+                    w={{ base: "120px", sm: "150px" }}
+                    h={{ base: "60px", sm: "75px" }}
+                    mx="auto"
+                  >
+                    <Image
+                      src="/jankidas-logo.png"
+                      alt="Jankidas Sanitaryware Logo"
+                      w="100%"
+                      h="100%"
+                      objectFit="contain"
+                      objectPosition="center"
+                      fallbackSrc="/logo.png"
+                    />
+                  </Box>
+                </Box>
+
+                {/* Mobile Navigation Links */}
+                <VStack align="stretch" spacing={2}>
+                  {navItems.map((item, index) => (
+                    <MobileNavLink
+                      key={item.name}
+                      to={item.path}
+                      label={item.name}
+                      icon={item.icon}
+                      isActive={location.pathname === item.path}
+                      onClose={onToggle}
+                      index={index}
+                    />
+                  ))}
+                </VStack>
+              </VStack>
+            </Box>
+          </Box>
+        )}
+      </Box>
+          
+          {/* Mobile Menu Button */}
+          <Box display={{ base: 'flex', md: 'none' }}>
+            <Button
+              onClick={onToggle}
+              variant="ghost"
+              aria-label="Toggle Navigation"
+            >
+              {isOpen ? <FaTimes /> : <FaBars />}
+            </Button>
+          </Box>
+        </Flex>
+
+        {/* Mobile Menu Content */}
+        {isOpen && (
+          <Box
+            pos="fixed"
+            top="0"
+            left="0"
+            right="0"
+            bottom="0"
+            display={{ base: 'block', md: 'none' }}
+            bg="rgba(0, 0, 0, 0.7)"
+            zIndex={20}
+          >
+            <Box
+              bg="white"
+              w={{ base: '100%', sm: '400px' }}
+              h="100vh"
+              pos="absolute"
+              top="0"
+              right="0"
+              p={4}
+              overflow="auto"
+            >
+              {/* Mobile Menu Header */}
+              <VStack align="stretch" spacing={4}>
+                <HStack justify="space-between">
+                  <Text fontSize="xl" fontWeight="bold">Menu</Text>
+                  <Button size="sm" onClick={onToggle}>
+                    <FaTimes />
+                  </Button>
+                </HStack>
+
+                {/* Mobile Menu Navigation */}
+                <VStack align="stretch" spacing={2}>
+                  {navItems.map((item, index) => (
+                    <MobileNavLink
+                      key={item.name}
+                      to={item.path}
+                      label={item.name}
+                      icon={item.icon}
+                      isActive={location.pathname === item.path}
+                      onClose={onToggle}
+                      index={index}
+                    />
+                  ))}
+                </VStack>
+              </VStack>
+            </Box>
+          </Box>
+        )}
+      </Box>
+    </Box>
+  );
+};
+
+export default Navbar;
+                </Box>
+              </HStack>
+            </Link>
+          </Flex>
+
+          {/* Desktop Navigation */}
+          <Stack
+            flex={{ base: 1, md: 0 }}
+            justify={'flex-end'}
+            direction={'row'}
+            spacing={{ base: 4, lg: 6 }}
+            display={{ base: 'none', md: 'flex' }}
+            align="center"
+          >
+            {navItems.map((item) => (
+              <NavLink 
+                key={item.name}
+                to={item.path} 
+                label={item.name} 
+                icon={item.icon}
+                isActive={location.pathname === item.path} 
+              />
+            ))}
+            
+            {/* Enhanced CTA Button */}
+            <Button
+              as={RouterLink}
+              to="/contact"
+              display={{ base: 'none', md: 'inline-flex' }}
+              bgGradient="linear(135deg, #1e293b, #475569)"
+              color="white"
+              fontSize={'sm'}
+              fontWeight={700}
+              px={6}
+              py={3}
+              borderRadius="xl"
+              position="relative"
+              overflow="hidden"
+              _before={{
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: '-100%',
+                w: '100%',
+                h: '100%',
+                bg: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
+                transition: 'left 0.6s ease',
+              }}
+              _hover={{
+                transform: "translateY(-3px)",
+                boxShadow: "0 15px 35px rgba(30, 41, 59, 0.4)",
+                _before: { left: '100%' }
+              }}
+              transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+            >
+              Get Quote
+            </Button>
+          </Stack>
+
+          {/* Mobile Menu Button */}
+          <Flex
+            flex={{ base: 1, md: 'auto' }}
+            ml={{ base: 0 }}
+            display={{ base: 'flex', md: 'none' }}
+            justify="flex-end"
+          >
+            <Button
+              onClick={onToggle}
+              variant={'ghost'}
+              aria-label={'Toggle Navigation'}
+              color={textColor}
+              size="lg"
+              p={3}
+              borderRadius="xl"
+              bg="white"
+              border="1px solid"
+              borderColor="gray.200"
+              boxShadow="0 4px 10px rgba(0,0,0,0.06)"
+              zIndex={1100}
+              _hover={{ 
+                bg: 'rgba(100, 116, 139, 0.1)',
+                transform: 'scale(1.1)',
+              }}
+              transition="all 0.3s ease"
+            >
+              {isOpen ? <FaTimes color="#64748b" size={22} /> : <FaBars color="#64748b" size={22} />}
+            </Button>
+          </Flex>
+        </Flex>
+
+        {/* Modern Mobile Navigation */}
+        {isOpen && (
+          <Box
+            position="fixed"
+            top="0"
+            left="0"
+            right="0"
+            bottom="0"
+            bg="rgba(0, 0, 0, 0.5)"
+            backdropFilter="blur(10px)"
+            zIndex={999}
+            onClick={onToggle}
+          >
+            <Box
+              position="absolute"
+              top={{ base: "75px", sm: "80px", md: "85px" }}
+              right={{ base: "2", sm: "3" }}
+              left={{ base: "2", sm: "3" }}
+              maxH="calc(100vh - 85px)"
+              bg="linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.95) 100%)"
+              backdropFilter="blur(40px) saturate(180%)"
+              borderRadius={{ base: "2xl", sm: "3xl" }}
+              border="2px solid"
+              borderColor="rgba(255, 255, 255, 0.8)"
+              boxShadow="0 32px 80px rgba(15, 23, 42, 0.12), 0 8px 32px rgba(99, 102, 241, 0.08), 0 1px 0 rgba(255, 255, 255, 0.9) inset"
+              overflow="hidden"
+              overflowY="auto"
+              onClick={(e) => e.stopPropagation()}
+              transform="translateY(0)"
+              transition="all 0.5s cubic-bezier(0.16, 1, 0.3, 1)"
+              className="mobile-menu-responsive"
+              _before={{
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'linear-gradient(135deg, rgba(100, 116, 139, 0.03) 0%, rgba(251, 191, 36, 0.03) 100%)',
+                pointerEvents: 'none'
+              }}
+            >
+              {/* Website Theme Header */}
+              <Box
+                bgGradient="linear(135deg, #1e293b 0%, #475569 50%, #64748b 100%)"
+                p={{ base: 6, sm: 8 }}
+                color="white"
+                position="relative"
+                overflow="hidden"
+                _before={{
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  bg: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+                  opacity: 0.3
+                }}
+              >
+                <VStack spacing={4} align="stretch">
+                  <HStack justify="space-between" align="center">
+                    <VStack align="flex-start" spacing={1}>
+                      <Text fontSize="xl" fontWeight="800" letterSpacing="tight">
+                        Menu
+                      </Text>
+                      <Text fontSize="sm" opacity={0.9}>
+                        Navigate to any section
+                      </Text>
+                    </VStack>
+                    <Button
+                      onClick={onToggle}
+                      variant="ghost"
+                      size="sm"
+                      color="white"
+                      borderRadius="full"
+                      _hover={{ bg: 'rgba(255, 255, 255, 0.2)' }}
+                    >
+                      <FaTimes size={18} />
+                    </Button>
+                  </HStack>
+                  
+                  {/* Brand Logo */}
+                  <Box textAlign="center" py={4} px={2}>
+                    <Box
+                      w={{ base: "120px", sm: "150px" }}
+                      h={{ base: "60px", sm: "75px" }}
+                      mx="auto"
+                    >
+                      <Image
+                        src="/jankidas-logo.png"
+                        alt="Jankidas Sanitaryware Logo"
+                        w="100%"
+                        h="100%"
+                        objectFit="contain"
+                        objectPosition="center"
+                        fallbackSrc="/logo.png"
+                      />
+                    </Box>
+                  </Box>
+                </VStack>
+
+              {/* Navigation Grid */}
+              <Box p={{ base: 4, sm: 6 }}>
+                <VStack spacing={{ base: 1, sm: 2 }} align="stretch">
+                  {navItems.map((item, index) => (
+                    <MobileNavLink
+                      key={item.name}
+                      to={item.path}
+                      label={item.name}
+                      icon={item.icon}
+                      isActive={location.pathname === item.path}
+                      onClose={onToggle}
+                      index={index}
+                    />
+                  ))}
+                </VStack>
+              </Box>
+
+              {/* Quick Contact Section */}
+              <Box
+                bg="rgba(100, 116, 139, 0.03)"
+                borderTop="1px solid"
+                borderColor="rgba(100, 116, 139, 0.1)"
+                p={{ base: 4, sm: 6 }}
+              >
+                <Text
+                  fontSize="lg"
+                  fontWeight="700"
+                  color="gray.800"
+                  mb={4}
+                  textAlign="center"
+                >
+                  Get In Touch
+                </Text>
+                
+                <VStack spacing={4}>
+                  <HStack
+                    spacing={4}
+                    w="full"
+                    justify="center"
+                    flexWrap="wrap"
+                  >
+                    <Button
+                      as="a"
+                      href="tel:+91-8527161330"
+                      leftIcon={<FaPhone />}
+                      size="sm"
+                      variant="outline"
+                      colorScheme="blue"
+                      borderRadius="full"
+                      _hover={{ transform: 'translateY(-2px)' }}
+                    >
+                      Call Now
+                    </Button>
+                    <Button
+                      as="a"
+                      href="mailto:jd95royal@gmail.com"
+                      leftIcon={<FaEnvelope />}
+                      size="sm"
+                      variant="outline"
+                      colorScheme="purple"
+                      borderRadius="full"
+                      _hover={{ transform: 'translateY(-2px)' }}
+                    >
+                      Email
+                    </Button>
+                  </HStack>
+
+                  {/* Website Theme CTA */}
+                  <Button
+                    as={RouterLink}
+                    to="/contact"
+                    w="full"
+                    h={{ base: "56px", sm: "64px" }}
+                    bgGradient="linear(135deg, #1e293b 0%, #475569 50%, #fbbf24 100%)"
+                    color="white"
+                    fontSize={{ base: "md", sm: "lg" }}
+                    fontWeight={800}
+                    borderRadius="2xl"
+                    position="relative"
+                    overflow="hidden"
+                    border="2px solid"
+                    borderColor="rgba(251, 191, 36, 0.3)"
+                    boxShadow="0 8px 32px rgba(30, 41, 59, 0.25), 0 1px 0 rgba(255, 255, 255, 0.2) inset"
+                    _before={{
+                      content: '""',
+                      position: 'absolute',
+                      top: 0,
+                      left: '-100%',
+                      w: '100%',
+                      h: '100%',
+                      bg: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent)',
+                      transition: 'left 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+                    }}
+                    _hover={{
+                      transform: "translateY(-4px) scale(1.02)",
+                      bgGradient: "linear(135deg, #0f172a 0%, #1e293b 50%, #f59e0b 100%)",
+                      boxShadow: "0 16px 48px rgba(15, 23, 42, 0.35), 0 1px 0 rgba(255, 255, 255, 0.3) inset",
+                      _before: { left: '100%' }
+                    }}
+                    _active={{
+                      transform: "translateY(-2px) scale(0.98)"
+                    }}
+                    transition="all 0.4s cubic-bezier(0.16, 1, 0.3, 1)"
+                    onClick={onToggle}
+                  >
+                    <HStack spacing={3}>
+                      <FaRocket />
+                      <Text>Get Free Quote</Text>
+                    </HStack>
+                  </Button>
+                </VStack>
+              </Box>
+          </Box>
+        )}
+
+        {/* Desktop Navigation Menu */}
+        <Stack
+          flex={{ base: 1, md: 0 }}
+          justify={'flex-end'}
+          direction={'row'}
+          spacing={{ base: 4, lg: 6 }}
+          display={{ base: 'none', md: 'flex' }}
+          align="center"
+          marginLeft="auto"
+        >
+          {navItems.map((item) => (
+            <NavLink 
+              key={item.name}
+              to={item.path} 
+              label={item.name} 
+              icon={item.icon}
+              isActive={location.pathname === item.path} 
+            />
+          ))}
+        </Stack>
+      </Box>
+
+      </Box>
+    </Box>
+  );
+};
+
+export default Navbar;

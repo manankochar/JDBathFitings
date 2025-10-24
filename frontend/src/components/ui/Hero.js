@@ -1,159 +1,334 @@
 import React, { useEffect, useState } from 'react';
+import { colors, gradients, shadows } from '../../theme/colors';
 
 const Hero = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  // Rotating words for the animated heading
+  const rotatingWords = [
+    "Luxury Sanitaryware",
+    "Sustainable Design",
+    "Engineered to Endure",
+    "Inspired Living"
+  ];
+
+  // Product carousel data
+  const products = [
+    {
+      name: "ITA Blue Berry",
+      subtitle: "Vibrant Elegance",
+      description: "Bold blue tones with sophisticated design.",
+      image: "/images/ITA BLue Berry.png",
+      gradient: "linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)"
+    },
+    {
+      name: "Femina",
+      subtitle: "Graceful Beauty",
+      description: "Elegant curves with feminine sophistication.",
+      image: "/images/Femina.png",
+      gradient: "linear-gradient(135deg, #fce7f3 0%, #f3e8ff 100%)"
+    },
+    {
+      name: "Alaska",
+      subtitle: "Arctic Purity",
+      description: "Clean lines with pristine white finish.",
+      image: "/images/Alaska.png",
+      gradient: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)"
+    },
+    {
+      name: "Star",
+      subtitle: "Stellar Performance",
+      description: "Premium quality with star-rated efficiency.",
+      image: "/images/Star.png",
+      gradient: "linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)"
+    }
+  ];
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [wordIndex, setWordIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  // Auto-play carousel every 4 seconds
+  useEffect(() => {
+    if (!isPaused) {
+      const interval = setInterval(() => {
+        setCurrentSlide(prev => (prev + 1) % products.length);
+      }, 4000);
+      return () => clearInterval(interval);
+    }
+  }, [isPaused, products.length]);
+
+  // Cycle through rotatingWords every 2.5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWordIndex(prev => (prev + 1) % rotatingWords.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [rotatingWords.length]);
 
   useEffect(() => {
     setIsLoaded(true);
-    
-    const handleMouseMove = (e) => {
-      setMousePosition({
-        x: e.clientX / window.innerWidth,
-        y: e.clientY / window.innerHeight,
-      });
-    };
-    
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 480);
-    };
-    
-    // Initial check
-    handleResize();
-    
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('resize', handleResize);
-    };
   }, []);
-
-  // Elegant product carousel
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % 4);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const products = [
-    { 
-      name: "Luxury Basin Collection", 
-      subtitle: "Handcrafted Elegance",
-      description: "Premium ceramic basins with gold accents",
-      price: "₹25,000+",
-      gradient: "linear-gradient(135deg, #fef7cd 0%, #fde68a 100%)"
-    },
-    { 
-      name: "Smart Toilet Suite", 
-      subtitle: "Technology Meets Comfort",
-      description: "IoT-enabled intelligent bathroom systems",
-      price: "₹85,000+",
-      gradient: "linear-gradient(135deg, #dbeafe 0%, #c7d2fe 100%)"
-    },
-    { 
-      name: "Designer Faucets", 
-      subtitle: "Architectural Beauty",
-      description: "Precision-engineered water systems",
-      price: "₹15,000+",
-      gradient: "linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)"
-    },
-    { 
-      name: "Spa Shower Systems", 
-      subtitle: "Wellness Experience",
-      description: "Multi-function rainfall showers",
-      price: "₹45,000+",
-      gradient: "linear-gradient(135deg, #fae8ff 0%, #f3e8ff 100%)"
-    }
-  ];
 
   const features = [
     {
-      icon: "✨",
+      icon: "🪨",
       title: "Premium Materials",
-      description: "Finest ceramics and metals sourced globally",
-      detail: "German engineering standards"
+      description: "Finest ceramics & metals sourced globally",
+      detail: "German engineering, world-class quality"
     },
     {
-      icon: "🎯",
+      icon: "🛠️",
       title: "Precision Crafted",
       description: "Meticulous attention to every detail",
-      detail: "Handcrafted excellence"
+      detail: "Hand-finished, artisan excellence"
     },
     {
-      icon: "🌿",
+      icon: "🌱",
       title: "Eco Conscious",
-      description: "Sustainable and water-efficient designs",
-      detail: "Green technology"
+      description: "Sustainable, water-efficient innovation",
+      detail: "Advanced green technology"
     },
     {
-      icon: "🏆",
+      icon: "🥇",
       title: "Award Winning",
-      description: "Recognized for innovation and quality",
+      description: "Recognized for innovation & quality",
       detail: "Industry leader since 1995"
     }
   ];
+    
+  const handleResize = () => {
+    setIsMobile(window.innerWidth < 768);
+  };
 
+  useEffect(() => {
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+  
   const styles = {
     container: {
       position: 'relative',
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 25%, #e2e8f0 100%)',
+      minHeight: 'auto',
+      width: '100%',
+      maxWidth: '100vw',
+      boxSizing: 'border-box',
       overflow: 'hidden',
-      paddingBottom: '80px'
+      paddingBottom: '80px',
+      zIndex: 1,
+      backgroundColor: '#FFF' // solid background for lower half when video ends
     },
-    backgroundPattern: {
+    // New wrapper that limits video height to upper portion only
+    videoContainer: {
       position: 'absolute',
       top: 0,
       left: 0,
-      right: 0,
-      bottom: 0,
-      opacity: 0.02,
-      backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%2364748b' stroke-width='0.5'%3E%3Cpath d='M60 0L0 0 0 60'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+      width: '100%',
+      height: '50vh', // video occupies upper 50%
+      overflow: 'hidden',
+      zIndex: 0,
+      '@media (max-width: 768px)': {
+        height: '45vh'
+      },
+      '@media (max-width: 480px)': {
+        height: '40vh'
+      }
     },
-    mouseGradient: {
+    videoBg: {
       position: 'absolute',
       top: 0,
       left: 0,
-      right: 0,
+      width: '100%',
+      height: '100%', // now fills only the videoContainer
+      objectFit: 'cover',
+      zIndex: 0,
+      // Removed brightness filter to show original video colors
+    },
+    videoGradientOverlay: {
+      position: 'absolute',
       bottom: 0,
-      background: `radial-gradient(circle at ${mousePosition.x * 100}% ${mousePosition.y * 100}%, rgba(59,130,246,0.05) 0%, transparent 50%)`,
-      transition: 'background 0.3s ease'
+      left: 0,
+      right: 0,
+      height: '160px',
+      // background: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.85) 60%, #000 100%)',
+      pointerEvents: 'none',
+      zIndex: 1
     },
     floatingParticle: {
       position: 'absolute',
       width: '4px',
       height: '4px',
-      background: 'linear-gradient(45deg, #fbbf24, #f59e0b)',
+      background: gradients.accentLinear,
       borderRadius: '50%',
-      opacity: 0.6
+      opacity: 0.55
     },
     mainContent: {
       position: 'relative',
       zIndex: 10,
-      maxWidth: '1280px',
       margin: '0 auto',
-      padding: '80px 16px 64px',
+      padding: '0 16px 64px',
+      marginTop: '45vh',
       width: '100%',
+      maxWidth: '100vw',
       boxSizing: 'border-box',
+      overflow: 'hidden',
       '@media (max-width: 768px)': {
-        padding: '60px 12px 48px'
+        padding: '0 16px 60px',
+        marginTop: '40vh',
+        maxWidth: '100vw',
+        overflow: 'hidden'
       },
       '@media (max-width: 480px)': {
-        padding: '40px 8px 32px'
+        padding: '0 12px 48px',
+        marginTop: '35vh',
+        maxWidth: '100vw',
+        overflow: 'hidden'
       }
+    },
+    futuristicSection: {
+      position: 'relative',
+      minHeight: 'auto',
+      display: 'grid',
+      gridTemplateColumns: '1.2fr 0.8fr',
+      gap: '60px',
+      alignItems: 'center',
+      padding: '60px 0 40px',
+      '@media (max-width: 980px)': {
+        gridTemplateColumns: '1fr',
+        gap: '40px',
+        padding: '40px 0 30px',
+        minHeight: 'auto'
+      },
+      '@media (max-width: 768px)': {
+        padding: '30px 0 25px',
+        gap: '30px'
+      },
+      '@media (max-width: 600px)': {
+        padding: '25px 0 20px',
+        gap: '25px'
+      },
+      '@media (max-width: 480px)': {
+        padding: '20px 0 15px',
+        gap: '20px'
+      }
+    },
+    heroLeft: {
+      position: 'relative',
+      padding: '0 12px'
+    },
+    futuristicHeading: {
+      fontSize: 'clamp(2.8rem,7vw,5rem)',
+      fontWeight: 800,
+      letterSpacing: '0.05em',
+      lineHeight: 0.95,
+      margin: 0,
+      background: gradients.accentText,
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      position: 'relative',
+      filter: 'drop-shadow(0 4px 18px rgba(255,255,255,0.08))'
+    },
+    scanLine: {
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      height: '100%',
+      width: '100%',
+      background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%)',
+      mixBlendMode: 'overlay',
+      animation: 'scanMove 5s linear infinite'
+    },
+    subDeck: {
+      marginTop: '28px',
+      fontSize: 'clamp(1.05rem,2vw,1.45rem)',
+      color: '#475569',
+      fontWeight: 300,
+      lineHeight: 1.5,
+      maxWidth: '640px'
+    },
+    rotatingContainer: {
+      marginTop: '34px',
+      letterSpacing: '0.6rem',
+      fontSize: 'clamp(0.85rem,1.4vw,1.1rem)',
+      fontWeight: 500,
+      display: 'flex',
+      gap: '14px',
+      flexWrap: 'wrap'
+    },
+    rotatingWord: {
+      position: 'relative',
+      minWidth: '220px',
+      textAlign: 'left',
+      fontSize: 'clamp(1.1rem,2vw,1.6rem)',
+      letterSpacing: '0.5rem',
+      fontWeight: 400,
+      color: '#0f172a'
+    },
+    rotatingWordInner: {
+      display: 'inline-block',
+      animation: 'wordFade 2.6s ease-in-out forwards',
+      background: `linear-gradient(90deg,#1e293b,#0f172a,${colors.accent})`,
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent'
+    },
+    heroRight: {
+      position: 'relative',
+      display: 'grid',
+      gap: '20px',
+      gridTemplateColumns: 'repeat(auto-fill,minmax(160px,1fr))'
+    },
+    rightCard: {
+      position: 'relative',
+      padding: '14px',
+      borderRadius: '8px',
+      border: '1px solid rgba(226,232,240,0.8)',
+      background: '#ffffff',
+      boxShadow: '0 6px 18px rgba(15,23,42,0.06)',
+      overflow: 'hidden',
+      width: '100%',
+      aspectRatio: '1 / 1',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    rightCardAccent: {
+      position: 'absolute',
+      inset: 0,
+      background: `radial-gradient(circle at 30% 20%, ${colors.accentGlow}, transparent 60%)`,
+      opacity: 0,
+      transition: 'opacity .5s'
+    },
+    rightCardTitle: {
+      fontSize: '0.68rem',
+      letterSpacing: '0.18rem',
+      fontWeight: 600,
+      color: '#475569',
+      marginBottom: '8px'
+    },
+    rightCardValue: {
+      fontSize: '2rem',
+      fontWeight: 800,
+      letterSpacing: '0.01em',
+      color: '#0f172a'
+    },
+    rightCardFoot: {
+      fontSize: '0.65rem',
+      letterSpacing: '0.3rem',
+      textTransform: 'uppercase',
+      marginTop: '14px',
+      color: '#475569'
     },
     header: {
       textAlign: 'center',
       marginBottom: '80px',
       '@media (max-width: 768px)': {
-        marginBottom: '60px'
+        marginBottom: '80px'
       },
       '@media (max-width: 480px)': {
-        marginBottom: '40px'
+        marginBottom: '60px'
       }
     },
     badge: {
@@ -173,7 +348,7 @@ const Hero = () => {
     pulsingDot: {
       width: '8px',
       height: '8px',
-      background: '#fbbf24',
+      background: colors.accent,
       borderRadius: '50%',
       animation: 'pulse 2s infinite'
     },
@@ -183,7 +358,8 @@ const Hero = () => {
       color: '#1e293b',
       lineHeight: '0.9',
       letterSpacing: '-0.02em',
-      marginBottom: '32px'
+      marginBottom: '32px',
+      display: 'none' // hidden since hero text removed
     },
     gradientText: {
       background: 'linear-gradient(135deg, #64748b 0%, #1e293b 50%, #64748b 100%)',
@@ -197,7 +373,7 @@ const Hero = () => {
       fontWeight: '300',
       fontStyle: 'italic',
       position: 'relative',
-      display: 'inline-block'
+      display: 'none'
     },
     description: {
       fontSize: 'clamp(1.125rem, 2vw, 1.5rem)',
@@ -205,49 +381,133 @@ const Hero = () => {
       maxWidth: '800px',
       margin: '0 auto',
       lineHeight: '1.6',
-      fontWeight: '300'
+      fontWeight: '300',
+      display: 'none'
     },
     gridContainer: {
       display: 'grid',
       gridTemplateColumns: '2fr 3fr',
       gap: '64px',
       alignItems: 'start',
+      width: '100%',
+      maxWidth: '100%',
+      boxSizing: 'border-box',
+      overflow: 'hidden',
       '@media (max-width: 1024px)': {
         gridTemplateColumns: '1fr',
-        gap: '48px'
+        gap: '48px',
+        width: '100%',
+        maxWidth: '100%'
       },
       '@media (max-width: 768px)': {
         gridTemplateColumns: '1fr',
-        gap: '32px'
+        gap: '32px',
+        width: '100%',
+        maxWidth: '100%'
       },
       '@media (max-width: 480px)': {
         gridTemplateColumns: '1fr',
-        gap: '24px'
+        gap: '20px',
+        width: '100%',
+        maxWidth: '100%'
       }
     },
     featureCard: {
       position: 'relative',
-      background: 'rgba(255, 255, 255, 0.7)',
-      backdropFilter: 'blur(20px)',
-      border: '1px solid rgba(226, 232, 240, 0.5)',
+      background: '#ffffff',
+      border: '1px solid rgba(226,232,240,0.8)',
       borderRadius: '16px',
-      padding: '24px',
+      padding: '24px 20px 20px 20px',
       marginBottom: '24px',
-      transition: 'all 0.3s ease',
-      cursor: 'pointer'
+      transition: 'transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, opacity 0.6s ease, filter 0.35s ease',
+      cursor: 'pointer',
+      boxShadow: '0 10px 25px rgba(15,23,42,0.06)',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      minHeight: '180px',
+      textAlign: 'center',
+      overflow: 'hidden',
+    },
+    featureBorder: {
+      position: 'absolute',
+      inset: 0,
+      padding: '1px',
+      borderRadius: '16px',
+      background: 'conic-gradient(from 0deg, #0ea5e9, #a855f7, #f59e0b, #0ea5e9)',
+      WebkitMask: 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+      WebkitMaskComposite: 'xor',
+      maskComposite: 'exclude',
+      animation: 'borderSpin 6s linear infinite',
+      pointerEvents: 'none'
+    },
+    featureAccent: {
+      position: 'absolute',
+      inset: 0,
+      background: `radial-gradient(60% 60% at 50% 0%, ${colors.accent}15 0%, transparent 60%)`,
+      opacity: 0,
+      transition: 'opacity .35s ease',
+      pointerEvents: 'none'
+    },
+    featureHoloSheen: {
+      position: 'absolute',
+      top: 0,
+      left: '-120%',
+      width: '120%',
+      height: '100%',
+      background: 'linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.28) 45%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0.28) 55%, transparent 100%)',
+      transform: 'skewX(-18deg)',
+      filter: 'blur(0.5px)',
+      animation: 'sheen 3.2s ease-in-out infinite',
+      pointerEvents: 'none'
+    },
+    featureCornerOrb: {
+      position: 'absolute',
+      right: '-16px',
+      bottom: '-16px',
+      width: '72px',
+      height: '72px',
+      borderRadius: '50%',
+      background: `radial-gradient(circle at 30% 30%, ${colors.accent} 0%, ${colors.accent}66 30%, transparent 70%)`,
+      filter: 'blur(8px) saturate(130%)',
+      opacity: 0.25,
+      animation: 'glow 4.8s ease-in-out infinite',
+      pointerEvents: 'none'
     },
     featureIcon: {
-      width: '56px',
-      height: '56px',
-      background: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
-      borderRadius: '12px',
+      width: '64px',
+      height: '64px',
+      background: 'linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%)',
+      borderRadius: '14px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      fontSize: '24px',
-      marginRight: '20px',
-      flexShrink: 0,
-      boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+      fontSize: '2.2rem',
+      marginBottom: '18px',
+      boxShadow: '0 6px 18px rgba(15,23,42,0.08)',
+      color: '#1e293b',
+      animation: 'bob 3.2s ease-in-out infinite'
+    },
+    featureTitle: {
+      fontSize: '1.18rem',
+      fontWeight: 700,
+      color: '#1e293b',
+      marginBottom: '7px',
+      letterSpacing: '0.01em',
+    },
+    featureDescription: {
+      fontSize: '1.01rem',
+      color: '#475569',
+      fontWeight: 400,
+      marginBottom: '4px',
+      lineHeight: 1.4,
+    },
+    featureDetail: {
+      fontSize: '0.97rem',
+      color: '#64748b',
+      fontWeight: 500,
+      marginTop: '2px',
+      lineHeight: 1.3,
     },
     productShowcase: {
       position: 'relative',
@@ -264,13 +524,25 @@ const Hero = () => {
       height: '320px',
       marginBottom: '32px',
       overflow: 'hidden',
-      borderRadius: '16px'
+      borderRadius: '16px',
+      cursor: 'grab',
+      userSelect: 'none',
+      touchAction: 'pan-y',
+      '@media (max-width: 768px)': {
+        height: '320px',
+        marginBottom: '32px'
+      },
+      '@media (max-width: 480px)': {
+        height: '280px',
+        marginBottom: '28px'
+      }
     },
     carouselSlide: {
       display: 'flex',
       height: '100%',
       transform: `translateX(-${currentSlide * 100}%)`,
-      transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)'
+      transition: 'transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+      willChange: 'transform'
     },
     slideContent: {
       minWidth: '100%',
@@ -306,7 +578,16 @@ const Hero = () => {
       background: '#cbd5e1',
       cursor: 'pointer',
       transition: 'all 0.5s ease',
-      border: 'none'
+      border: 'none',
+      minWidth: '44px',
+      minHeight: '44px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      '@media (max-width: 480px)': {
+        minWidth: '48px',
+        minHeight: '48px'
+      }
     },
     indicatorActive: {
       background: '#64748b',
@@ -324,7 +605,17 @@ const Hero = () => {
       transition: 'all 0.3s ease',
       boxShadow: '0 8px 25px rgba(30,41,59,0.3)',
       position: 'relative',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      minHeight: '48px',
+      '@media (max-width: 768px)': {
+        padding: '16px 28px',
+        minHeight: '56px'
+      },
+      '@media (max-width: 480px)': {
+        padding: '14px 24px',
+        minHeight: '60px',
+        fontSize: '16px'
+      }
     },
     buttonSecondary: {
       background: 'rgba(255, 255, 255, 0.8)',
@@ -335,7 +626,17 @@ const Hero = () => {
       padding: '16px 32px',
       borderRadius: '12px',
       cursor: 'pointer',
-      transition: 'all 0.3s ease'
+      transition: 'all 0.3s ease',
+      minHeight: '48px',
+      '@media (max-width: 768px)': {
+        padding: '16px 28px',
+        minHeight: '56px'
+      },
+      '@media (max-width: 480px)': {
+        padding: '14px 24px',
+        minHeight: '60px',
+        fontSize: '16px'
+      }
     },
     statsGrid: {
       display: 'grid',
@@ -355,32 +656,37 @@ const Hero = () => {
     },
     statCard: {
       textAlign: 'center',
-      background: 'rgba(255, 255, 255, 0.6)',
-      backdropFilter: 'blur(20px)',
-      border: '1px solid rgba(226, 232, 240, 0.5)',
-      borderRadius: '16px',
-      padding: '24px',
-      transition: 'all 0.3s ease'
+      background: '#ffffff',
+      border: '1px solid rgba(226, 232, 240, 0.8)',
+      borderRadius: '8px',
+      padding: '10px',
+      transition: 'all 0.3s ease',
+      aspectRatio: 'unset',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      boxShadow: '0 6px 18px rgba(15,23,42,0.06)'
     },
     ctaSection: {
       textAlign: 'center',
       marginTop: '96px',
-      marginBottom: '64px'
+      marginBottom: '24px'
     },
     ctaContainer: {
       display: 'inline-flex',
       alignItems: 'center',
       gap: '24px',
-      background: 'linear-gradient(135deg, #fef7cd 0%, #fde68a 100%)',
+      background: gradients.ctaPill,
       backdropFilter: 'blur(20px)',
-      border: '1px solid rgba(251, 191, 36, 0.3)',
+      border: `1px solid ${colors.accent}55`,
       borderRadius: '50px',
       padding: '24px 48px',
-      boxShadow: '0 20px 40px rgba(251, 191, 36, 0.2)',
+      boxShadow: '0 20px 40px rgba(34,4,56,0.25)',
       position: 'relative'
     },
     ctaButton: {
-      background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+      background: gradients.accentLinear,
       color: 'white',
       fontWeight: '600',
       padding: '12px 32px',
@@ -388,89 +694,23 @@ const Hero = () => {
       border: 'none',
       cursor: 'pointer',
       transition: 'all 0.3s ease',
-      boxShadow: '0 8px 25px rgba(251, 191, 36, 0.3)'
+      boxShadow: shadows?.accentSoft || '0 8px 25px rgba(34,4,56,0.3)'
     }
   };
 
-  // Floating particles animation
-  const FloatingParticles = () => {
-    const [particles, setParticles] = useState([]);
-
-    useEffect(() => {
-      const newParticles = [];
-      for (let i = 0; i < 12; i++) {
-        newParticles.push({
-          id: i,
-          x: Math.random() * window.innerWidth,
-          y: window.innerHeight + 10,
-          delay: Math.random() * 8,
-          duration: 15 + Math.random() * 10
-        });
-      }
-      setParticles(newParticles);
-    }, []);
-
-    return (
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, overflow: 'hidden', pointerEvents: 'none' }}>
-        {particles.map(particle => (
-          <div
-            key={particle.id}
-            style={{
-              ...styles.floatingParticle,
-              left: `${particle.x}px`,
-              animationName: 'floatUp',
-              animationDuration: `${particle.duration}s`,
-              animationDelay: `${particle.delay}s`,
-              animationIterationCount: 'infinite',
-              animationTimingFunction: 'linear'
-            }}
-          />
-        ))}
-      </div>
-    );
-  };
-
-  // Floating geometric shapes
-  const FloatingShapes = () => {
-    const shapes = [];
-    for (let i = 0; i < 8; i++) {
-      shapes.push({
-        id: i,
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        size: 20 + Math.random() * 20,
-        isCircle: i % 2 === 0
-      });
-    }
-
-    return (
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, overflow: 'hidden', pointerEvents: 'none', opacity: 0.05 }}>
-        {shapes.map(shape => (
-          <div
-            key={shape.id}
-            style={{
-              position: 'absolute',
-              left: `${shape.x}px`,
-              top: `${shape.y}px`,
-              width: `${shape.size}px`,
-              height: `${shape.size}px`,
-              border: '2px solid #64748b',
-              borderRadius: shape.isCircle ? '50%' : '0',
-              transform: shape.isCircle ? 'none' : 'rotate(45deg)',
-              animationName: 'floatRotate',
-              animationDuration: `${20 + Math.random() * 10}s`,
-              animationIterationCount: 'infinite',
-              animationTimingFunction: 'linear'
-            }}
-          />
-        ))}
-      </div>
-    );
-  };
 
   return (
     <>
       <style jsx>{`
+        * {
+          box-sizing: border-box;
+        }
+        
+        html, body {
+          overflow-x: hidden;
+          max-width: 100vw;
+        }
+        
         @keyframes pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.5; }
@@ -510,52 +750,84 @@ const Hero = () => {
             transform: translateX(100%) skewX(-12deg);
           }
         }
+        @keyframes scanMove { 0% { transform: translateY(-100%);} 100% { transform: translateY(100%);} }
+        @keyframes wordFade { 0% { opacity:0; transform:translateY(12px);} 15% {opacity:1; transform:translateY(0);} 85% {opacity:1;} 100% {opacity:0; transform:translateY(-10px);} }
+        @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
         
         @media (max-width: 768px) {
           .grid-responsive {
             grid-template-columns: 1fr !important;
-            gap: 32px !important;
+            gap: 48px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+            display: flex !important;
+            flex-direction: column !important;
           }
           .text-responsive {
-            font-size: clamp(2rem, 8vw, 4rem) !important;
+            font-size: clamp(2.5rem, 10vw, 5rem) !important;
           }
           .main-content {
-            padding: 60px 12px 40px !important;
+            padding: 80px 16px 60px !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
           }
           .hero-heading {
-            font-size: clamp(2.5rem, 9vw, 5rem) !important;
-            line-height: 0.95 !important;
+            font-size: clamp(3.5rem, 12vw, 7rem) !important;
+            line-height: 0.9 !important;
             word-break: break-word !important;
             overflow-wrap: break-word !important;
-            margin-bottom: 24px !important;
-          }
-          .hero-subtitle {
-            font-size: clamp(1rem, 4vw, 1.4rem) !important;
-            padding: 0 8px !important;
-          }
-          .hero-description {
-            font-size: clamp(0.9rem, 3vw, 1.2rem) !important;
-            padding: 0 8px !important;
             margin-bottom: 32px !important;
           }
+          .hero-subtitle {
+            font-size: clamp(1.2rem, 5vw, 1.8rem) !important;
+            padding: 0 12px !important;
+          }
+          .hero-description {
+            font-size: clamp(1rem, 4vw, 1.4rem) !important;
+            padding: 0 12px !important;
+            margin-bottom: 48px !important;
+          }
           .feature-cards {
-            margin-bottom: 24px !important;
+            margin-bottom: 32px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 16px !important;
+            order: 2 !important;
           }
           
           .feature-card {
-            padding: 16px !important;
-            margin-bottom: 12px !important;
-            border-radius: 12px !important;
+            padding: 20px !important;
+            margin-bottom: 0 !important;
+            border-radius: 16px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+            min-height: 140px !important;
           }
           
           .feature-icon {
-            width: 44px !important;
-            height: 44px !important;
+            width: 48px !important;
+            height: 48px !important;
             margin-right: 12px !important;
+            flex-shrink: 0 !important;
           }
           
           .contact-card {
             padding: 12px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+            grid-column: 1 / -1 !important;
           }
           
           .contact-card h4 {
@@ -577,387 +849,354 @@ const Hero = () => {
             line-height: 1.3 !important;
           }
           .product-showcase {
-            margin-top: 24px !important;
-            padding: 0 8px !important;
+            margin-top: 32px !important;
+            padding: 0 12px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+            order: 1 !important;
           }
           
           .product-showcase h3 {
-            font-size: 20px !important;
-            margin-bottom: 8px !important;
+            font-size: 24px !important;
+            margin-bottom: 12px !important;
           }
           
           .product-showcase p {
-            font-size: 12px !important;
-            padding: 0 4px !important;
+            font-size: 14px !important;
+            padding: 0 8px !important;
           }
           
           .carousel-container {
-            height: 220px !important;
-            margin-bottom: 20px !important;
+            height: 320px !important;
+            margin-bottom: 32px !important;
           }
           
           .slide-content h4 {
-            font-size: 18px !important;
-            margin-bottom: 6px !important;
-          }
-          
-          .slide-content .subtitle {
-            font-size: 12px !important;
+            font-size: 22px !important;
             margin-bottom: 8px !important;
           }
           
+          .slide-content .subtitle {
+            font-size: 14px !important;
+            margin-bottom: 10px !important;
+          }
+          
           .slide-content .description {
-            font-size: 11px !important;
-            margin-bottom: 12px !important;
-            line-height: 1.4 !important;
+            font-size: 13px !important;
+            margin-bottom: 16px !important;
+            line-height: 1.5 !important;
           }
           
           .slide-content .price {
-            font-size: 12px !important;
+            font-size: 14px !important;
+          }
+          
+          .responsive-button-grid {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
           }
         }
         
         @media (max-width: 480px) {
           .grid-responsive {
-            gap: 24px !important;
+            gap: 32px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+            display: flex !important;
+            flex-direction: column !important;
           }
           .main-content {
-            padding: 40px 8px 32px !important;
+            padding: 60px 12px 48px !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
           }
           .hero-heading {
-            font-size: clamp(2rem, 8vw, 4rem) !important;
-            line-height: 1 !important;
-            margin-bottom: 20px !important;
+            font-size: clamp(2.5rem, 10vw, 5rem) !important;
+            line-height: 0.95 !important;
+            margin-bottom: 28px !important;
           }
           .hero-subtitle {
-            font-size: clamp(0.9rem, 3.5vw, 1.2rem) !important;
-            padding: 0 4px !important;
+            font-size: clamp(1rem, 4vw, 1.4rem) !important;
+            padding: 0 8px !important;
           }
           .hero-description {
-            font-size: clamp(0.85rem, 2.5vw, 1.1rem) !important;
-            padding: 0 4px !important;
-            margin-bottom: 24px !important;
+            font-size: clamp(0.9rem, 3vw, 1.2rem) !important;
+            padding: 0 8px !important;
+            margin-bottom: 40px !important;
           }
           .badge-mobile {
-            padding: 8px 16px !important;
-            margin-bottom: 20px !important;
-            font-size: 12px !important;
-            max-width: 90% !important;
+            padding: 12px 20px !important;
+            margin-bottom: 24px !important;
+            font-size: 13px !important;
+            max-width: 95% !important;
             flex-wrap: wrap !important;
             justify-content: center !important;
           }
           .cta-section {
-            margin-top: 48px !important;
+            margin-top: 60px !important;
           }
           .responsive-button-grid {
             grid-template-columns: 1fr !important;
-            gap: 12px !important;
+            gap: 16px !important;
+          }
+          .carousel-container {
+            height: 280px !important;
+            margin-bottom: 28px !important;
+          }
+          .slide-content h4 {
+            font-size: 20px !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+          }
+          .slide-content .description {
+            font-size: 12px !important;
+            padding: 0 12px !important;
+          }
+          .contact-card {
+            padding: 16px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+            grid-column: 1 / -1 !important;
+          }
+          .feature-card {
+            padding: 16px !important;
+            margin-bottom: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+            min-height: 120px !important;
+          }
+          .feature-icon {
+            width: 44px !important;
+            height: 44px !important;
+            margin-right: 12px !important;
+            flex-shrink: 0 !important;
+          }
+          .feature-cards {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 14px !important;
+            order: 2 !important;
           }
         }
         
         @media (max-width: 320px) {
           .main-content {
-            padding: 32px 6px 24px !important;
+            padding: 48px 8px 36px !important;
           }
           .hero-heading {
-            font-size: clamp(1.75rem, 7vw, 3rem) !important;
+            font-size: clamp(2rem, 8vw, 4rem) !important;
           }
           .grid-responsive {
-            gap: 20px !important;
+            gap: 28px !important;
           }
           .responsive-button-grid {
-            gap: 10px !important;
+            gap: 14px !important;
           }
           .product-showcase {
-            padding: 0 4px !important;
+            padding: 0 8px !important;
           }
           .slide-content h4 {
-            font-size: 16px !important;
+            font-size: 18px !important;
             word-wrap: break-word !important;
             overflow-wrap: break-word !important;
           }
           .slide-content .description {
-            font-size: 10px !important;
-            padding: 0 8px !important;
+            font-size: 11px !important;
+            padding: 0 10px !important;
           }
           .contact-card {
-            padding: 8px !important;
+            padding: 12px !important;
           }
         }
       `}</style>
       
       <div style={styles.container}>
-        
-        {/* Background Elements */}
-        <div style={styles.backgroundPattern} />
-        <div style={styles.mouseGradient} />
-        <FloatingShapes />
-        <FloatingParticles />
+        {/* Limited Height Video Background (upper portion only) */}
+        <div style={styles.videoContainer}>
+          <video
+            style={styles.videoBg}
+            autoPlay
+            loop
+            muted
+            playsInline
+          >
+            <source src={require('../../assets/bgVideo.mp4')} type="video/mp4" />
+          </video>
+          {/* Gradient fade so lower half is solid background */}
+          <div style={styles.videoGradientOverlay} />
+          {/* Minimal overlay hint */}
+          <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',pointerEvents:'none'}}>
+            <div style={{
+              fontSize:'clamp(2.5rem,6vw,5rem)',
+              fontWeight:900,
+              letterSpacing:'0.6rem',
+              background:`linear-gradient(90deg, rgba(255,255,255,0.85), rgba(255,255,255,0.65), ${colors.accent}E6)`,
+              WebkitBackgroundClip:'text',
+              WebkitTextFillColor:'transparent',
+              mixBlendMode:'overlay',
+              opacity:0.25,
+              textAlign:'center'
+            }}></div>
+          </div>
+        </div>
 
         <div style={styles.mainContent} className="main-content">
-          
-          {/* Elegant Header */}
-          <div style={styles.header}>
-            
-            {/* Premium Badge */}
-            <div 
-              className="badge-mobile"
-              style={{
-                ...styles.badge,
-                opacity: isLoaded ? 1 : 0,
-                transform: isLoaded ? 'scale(1)' : 'scale(0.8)',
-                transition: 'all 0.8s ease',
-                flexWrap: 'wrap',
-                justifyContent: 'center'
-              }}
-            >
-              <div style={styles.pulsingDot} />
-              <span style={{ 
-                color: '#475569', 
-                fontWeight: '500', 
-                letterSpacing: '0.025em',
-                fontSize: 'clamp(11px, 2.5vw, 14px)',
-                textAlign: 'center'
-              }}>
-                Crafting Luxury Since 1995
-              </span>
-              <div style={{ 
-                height: '12px', 
-                width: '1px', 
-                background: '#cbd5e1',
-                display: isMobile ? 'none' : 'block'
-              }} />
-              <div style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '3px',
-                flexWrap: 'wrap',
-                justifyContent: 'center'
-              }}>
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} style={{ 
-                    color: '#fbbf24', 
-                    fontSize: 'clamp(10px, 2vw, 12px)' 
-                  }}>★</span>
-                ))}
-                <span style={{ 
-                  color: '#64748b', 
-                  fontSize: 'clamp(10px, 2vw, 12px)', 
-                  marginLeft: '4px', 
-                  fontWeight: '500' 
-                }}>4.9</span>
-              </div>
-            </div>
-
-            {/* Elegant Main Heading */}
-            <div style={{
-              opacity: isLoaded ? 1 : 0,
-              transform: isLoaded ? 'translateY(0)' : 'translateY(40px)',
-              transition: 'all 1s ease 0.3s',
-              marginBottom: '32px'
-            }}>
-              <h1 style={styles.mainHeading} className="hero-heading">
-                <div style={{ position: 'relative' }}>
-                  JANKIDAS
-                  <div style={{
-                    position: 'absolute',
-                    bottom: '-8px',
-                    left: 0,
-                    right: 0,
-                    height: '1px',
-                    background: 'linear-gradient(90deg, transparent, #fbbf24, transparent)',
-                    opacity: isLoaded ? 1 : 0,
-                    transition: 'opacity 1.5s ease 1s'
-                  }} />
-                </div>
-                <div style={styles.gradientText}>
-                  SANITARYWARE
-                </div>
-                <div style={{
-                  ...styles.gradientText,
-                  fontSize: 'clamp(2rem, 8vw, 4rem)',
-                  marginTop: '16px',
-                  background: 'linear-gradient(135deg, #64748b 0%, #1e293b 50%, #fbbf24 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  fontWeight: '800',
-                  letterSpacing: '-0.02em'
-                }}>
-                  AND BATH FITTINGS
-                </div>
-              </h1>
+          {/* Futuristic Statement Section */}
+          <section style={{
+            ...styles.futuristicSection,
+            gridTemplateColumns: isMobile ? '1fr' : '1.2fr 0.8fr',
+            gap: isMobile ? '30px' : '60px',
+            padding: isMobile ? '30px 0 25px' : '60px 0 40px'
+          }}>
+            <div style={styles.heroLeft}>
               
-              <div style={{
-                position: 'relative',
-                display: 'inline-block',
-                opacity: isLoaded ? 1 : 0,
-                transform: isLoaded ? 'scale(1)' : 'scale(0.8)',
-                transition: 'all 0.8s ease 0.8s'
-              }}>
-                <p style={styles.subtitle} className="hero-subtitle">
-                  Crafting Luxury Since 1995
-                </p>
-                <div style={{
-                  position: 'absolute',
-                  top: '-16px',
-                  right: '-32px',
-                  fontSize: '32px',
-                  opacity: 0.2,
-                  transform: 'rotate(12deg)'
-                }}>
-                  ✨
+               <div style={styles.rotatingContainer}>
+                <div style={styles.rotatingWord}>
+                  <span key={wordIndex} style={styles.rotatingWordInner}>{rotatingWords[wordIndex]}</span>
                 </div>
               </div>
+              <p style={styles.subDeck}>
+                Elevating everyday rituals with precision-crafted luxury sanitaryware engineered to endure and inspire. Where design intelligence fuses with sustainable performance.
+              </p>
+             {/* <h1
+                style={{
+                  ...styles.futuristicHeading,
+                  transform: `translate3d(${(mousePosition.x-0.5)*16}px, ${(mousePosition.y-0.5)*12}px,0)`
+                }}
+              >
+                R DIAMOND
+                <span style={styles.scanLine} />
+              </h1> */}
+              <div style={{display:'flex', gap:'18px', marginTop:'20px', flexWrap:'wrap'}}>
+                <button
+                  style={{
+                    background:'linear-gradient(135deg,#1e293b,#0f172a)',
+                    color:'#fff',
+                    border:'1px solid #334155',
+                    padding:'16px 34px',
+                    fontSize:'0.85rem',
+                    letterSpacing:'0.25rem',
+                    borderRadius:'14px',
+                    fontWeight:600,
+                    position:'relative',
+                    overflow:'hidden',
+                    cursor:'pointer'
+                  }}
+                  onMouseEnter={(e)=>{e.currentTarget.querySelector('.shine').style.left='120%';}}
+                  onMouseLeave={(e)=>{e.currentTarget.querySelector('.shine').style.left='-120%';}}
+                >
+                  <span className='shine' style={{position:'absolute',top:0,left:'-120%',height:'100%',width:'120%',background:'linear-gradient(115deg, transparent, rgba(255,255,255,0.25), transparent)',transform:'skewX(-20deg)',transition:'left .8s ease'}} />
+                  EXPLORE FUTURE →
+                </button>
+                <button
+                  style={{
+                    background:'rgba(255,255,255,0.55)',
+                    backdropFilter:'blur(14px)',
+                    border:'1px solid rgba(255,255,255,0.4)',
+                    padding:'16px 34px',
+                    fontSize:'0.85rem',
+                    letterSpacing:'0.25rem',
+                    borderRadius:'14px',
+                    fontWeight:600,
+                    color:'#0f172a',
+                    cursor:'pointer',
+                    position:'relative'
+                  }}
+                >VISIT SHOWROOM</button>
+              </div>
             </div>
-
-            {/* Sophisticated Description */}
-            <p style={{
-              ...styles.description,
-              opacity: isLoaded ? 1 : 0,
-              transform: isLoaded ? 'translateY(0)' : 'translateY(30px)',
-              transition: 'all 0.8s ease 0.6s'
-            }} className="hero-description">
-              Where <em style={{ color: '#1e293b', fontWeight: '500' }}>German precision</em> meets 
-              <em style={{ color: '#1e293b', fontWeight: '500' }}> timeless design</em>. 
-              Experience sanitaryware that transforms bathrooms into sanctuaries of luxury and comfort.
-            </p>
-          </div>
+            <div style={{
+              ...styles.heroRight,
+              gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill,minmax(160px,1fr))',
+              gap: isMobile ? '10px' : styles.heroRight.gap,
+              width: '100%',
+              maxWidth: '100%',
+              boxSizing: 'border-box',
+              padding: isMobile ? '0 12px' : undefined,
+              justifyItems: isMobile ? 'stretch' : 'center',
+              alignItems: 'stretch',
+              justifyContent: 'center',
+              overflow: 'hidden'
+            }}>
+              {[{t:'YEARS',v:'28'},{t:'COLLECTIONS',v:'45+'},{t:'CLIENTS',v:'15K+'},{t:'WATER SAVINGS',v:'30%'}].map((itm,i)=>(
+                <div key={i} style={styles.rightCard}
+                  onMouseEnter={(e)=>{e.currentTarget.querySelector('.accent').style.opacity=1;}}
+                  onMouseLeave={(e)=>{e.currentTarget.querySelector('.accent').style.opacity=0;}}
+                >
+                  <div className='accent' style={styles.rightCardAccent} />
+                  <div style={styles.rightCardTitle}>{itm.t}</div>
+                  <div style={styles.rightCardValue}>{itm.v}</div>
+                  {!isMobile && <div style={styles.rightCardFoot}>ELEVATED</div>}
+                </div>
+              ))}
+            </div>
+          </section>
 
           {/* Main Content Layout */}
           <div style={styles.gridContainer} className="grid-responsive">
             
             {/* Left Column - Features */}
-            <div className="feature-cards">
-              {features.map((feature, index) => (
+            {/* Redesigned Feature Cards */}
+            <div className="feature-cards" style={{display:'grid',gap:isMobile?'14px':'18px',gridTemplateColumns:isMobile?'1fr 1fr':'1fr 1fr',width:'100%',marginTop:isMobile?'8px':'16px',padding:isMobile?'0 8px':'0 16px',boxSizing:'border-box'}}>
+              {features.map((f, i) => (
                 <div
-                  key={feature.title}
-                  className="feature-card"
+                  key={i}
                   style={{
                     ...styles.featureCard,
                     opacity: isLoaded ? 1 : 0,
-                    transform: isLoaded ? 'translateX(0)' : 'translateX(-40px)',
-                    transitionDelay: `${0.8 + index * 0.15}s`,
-                    display: 'flex',
-                    alignItems: 'flex-start'
+                    transform: isLoaded ? 'translateY(0)' : 'translateY(16px)',
+                    transitionDelay: `${i * 80}ms`
                   }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.9)';
-                    e.currentTarget.style.borderColor = 'rgba(203, 213, 225, 0.5)';
-                    e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.1)';
-                    e.currentTarget.style.transform = 'translateY(-5px)';
+                  onMouseMove={(e)=>{
+                    const card = e.currentTarget;
+                    const rect = card.getBoundingClientRect();
+                    const px = (e.clientX - rect.left) / rect.width - 0.5;
+                    const py = (e.clientY - rect.top) / rect.height - 0.5;
+                    const rotateX = (-py) * 10; // tilt up/down
+                    const rotateY = (px) * 10;  // tilt left/right
+                    card.style.transform = `translateY(-6px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                    card.style.filter = 'drop-shadow(0 12px 28px rgba(15,23,42,0.18))';
                   }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.7)';
-                    e.currentTarget.style.borderColor = 'rgba(226, 232, 240, 0.5)';
-                    e.currentTarget.style.boxShadow = 'none';
-                    e.currentTarget.style.transform = 'translateY(0)';
+                  onMouseEnter={(e)=>{
+                    const card=e.currentTarget; 
+                    card.style.transform='translateY(-6px)';
+                    card.style.boxShadow='0 18px 40px rgba(15,23,42,0.12)';
+                    const acc=card.querySelector('.f-accent');
+                    if(acc) acc.style.opacity=1;
+                  }}
+                  onMouseLeave={(e)=>{
+                    const card=e.currentTarget; 
+                    card.style.transform='translateY(0) rotateX(0deg) rotateY(0deg)';
+                    card.style.boxShadow='0 10px 25px rgba(15,23,42,0.06)';
+                    card.style.filter = 'none';
+                    const acc=card.querySelector('.f-accent');
+                    if(acc) acc.style.opacity=0;
                   }}
                 >
-                  <div style={styles.featureIcon} className="feature-icon">
-                    {feature.icon}
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <h3 style={{ 
-                      fontSize: '20px', 
-                      fontWeight: '600', 
-                      color: '#1e293b', 
-                      marginBottom: '8px',
-                      transition: 'color 0.3s ease'
-                    }}>
-                      {feature.title}
-                    </h3>
-                    <p style={{ 
-                      color: '#64748b', 
-                      marginBottom: '12px', 
-                      lineHeight: '1.6' 
-                    }}>
-                      {feature.description}
-                    </p>
-                    <div style={{ 
-                      display: 'inline-flex', 
-                      alignItems: 'center', 
-                      gap: '8px', 
-                      fontSize: '14px', 
-                      fontWeight: '500', 
-                      color: '#f59e0b' 
-                    }}>
-                      <div style={{ 
-                        width: '6px', 
-                        height: '6px', 
-                        background: '#fbbf24', 
-                        borderRadius: '50%' 
-                      }} />
-                      {feature.detail}
-                    </div>
-                  </div>
+                  <div style={styles.featureBorder} />
+                  <div className='f-accent' style={styles.featureAccent} />
+                  <div style={styles.featureHoloSheen} />
+                  <div style={styles.featureCornerOrb} />
+                  <div style={styles.featureIcon}>{f.icon}</div>
+                  <div style={styles.featureTitle}>{f.title}</div>
+                  <div style={styles.featureDescription}>{f.description}</div>
+                  <div style={styles.featureDetail}>{f.detail}</div>
                 </div>
               ))}
-
-              {/* Contact Information */}
-              <div 
-                className="feature-card contact-card"
-                style={{
-                  ...styles.featureCard,
-                  background: 'linear-gradient(135deg, #fef7cd 0%, #fde68a 100%)',
-                  border: '1px solid rgba(251, 191, 36, 0.3)',
-                  opacity: isLoaded ? 1 : 0,
-                  transform: isLoaded ? 'translateY(0)' : 'translateY(30px)',
-                  transitionDelay: '1.4s',
-                  position: 'relative'
-                }}>
-                <div style={{
-                  position: 'absolute',
-                  top: '16px',
-                  right: '16px',
-                  fontSize: '48px',
-                  opacity: 0.1,
-                  transform: 'rotate(12deg)'
-                }}>
-                  📞
-                </div>
-                <h4 style={{ 
-                  fontSize: '18px', 
-                  fontWeight: '600', 
-                  color: '#1e293b', 
-                  marginBottom: '16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}>
-                  <span style={{ fontSize: '24px' }}>✨</span> 
-                  Expert Consultation Available
-                </h4>
-                <div style={{ fontSize: '14px' }}>
-                  {[
-                    { label: 'Phone', value: '+91-8527161330' },
-                    { label: 'Email', value: 'jd95royal@gmail.com' },
-                    { label: 'Showroom', value: 'Chawri Bazar, Delhi' }
-                  ].map((contact, i) => (
-                    <div key={i} className="contact-item" style={{ 
-                      display: 'flex', 
-                      flexDirection: isMobile ? 'column' : 'row',
-                      alignItems: isMobile ? 'flex-start' : 'center',
-                      justifyContent: isMobile ? 'flex-start' : 'space-between',
-                      marginBottom: i < 2 ? '12px' : '0',
-                      gap: isMobile ? '2px' : '8px'
-                    }}>
-                      <span style={{ 
-                        color: '#64748b',
-                        fontSize: isMobile ? '11px' : '14px',
-                        fontWeight: '600'
-                      }}>{contact.label}:</span>
-                      <span style={{ 
-                        color: '#1e293b', 
-                        fontWeight: '500',
-                        fontSize: isMobile ? '11px' : '14px',
-                        wordBreak: 'break-all',
-                        lineHeight: '1.3'
-                      }}>{contact.value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
 
             {/* Right Column - Product Showcase */}
@@ -1001,9 +1240,32 @@ const Hero = () => {
                   {/* Elegant Product Carousel */}
                   <div style={{
                     ...styles.carouselContainer,
-                    height: isMobile ? '280px' : '320px',
+                    height: isMobile ? '240px' : '320px',
                     marginBottom: isMobile ? '20px' : '32px'
-                  }} className="carousel-container">
+                  }} 
+                  className="carousel-container"
+                  onMouseEnter={() => setIsPaused(true)}
+                  onMouseLeave={() => setIsPaused(false)}
+                  onTouchStart={(e) => {
+                    setIsPaused(true);
+                    const touchStart = e.touches[0].clientX;
+                    e.currentTarget.touchStartX = touchStart;
+                  }}
+                  onTouchEnd={(e) => {
+                    setIsPaused(false);
+                    const touchEnd = e.changedTouches[0].clientX;
+                    const touchStart = e.currentTarget.touchStartX;
+                    const swipeThreshold = 50;
+                    
+                    if (touchStart - touchEnd > swipeThreshold) {
+                      // Swipe left - next slide
+                      setCurrentSlide(prev => (prev + 1) % products.length);
+                    } else if (touchEnd - touchStart > swipeThreshold) {
+                      // Swipe right - previous slide
+                      setCurrentSlide(prev => prev === 0 ? products.length - 1 : prev - 1);
+                    }
+                  }}
+                  >
                     <div style={styles.carouselSlide}>
                       {products.map((product, index) => (
                         <div key={index} style={styles.slideContent} className="slide-content">
@@ -1030,68 +1292,148 @@ const Hero = () => {
                               margin: '0 auto',
                               padding: isMobile ? '0 12px' : '0 20px',
                               wordWrap: 'break-word',
-                              overflowWrap: 'break-word'
+                              overflowWrap: 'break-word',
+                              height: '100%',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              justifyContent: 'space-between'
                             }}>
+                              {/* Product Image */}
                               <div style={{ 
-                                fontSize: isMobile ? '40px' : '64px', 
-                                marginBottom: isMobile ? '16px' : '24px', 
-                                opacity: 0.2 
+                                flex: '1',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginBottom: isMobile ? '12px' : '16px'
                               }}>
-                                {index === 0 ? '🚿' : index === 1 ? '🚽' : index === 2 ? '🚰' : '💧'}
+                                <img 
+                                  src={product.image} 
+                                  alt={product.name}
+                                  style={{
+                                    maxWidth: '80%',
+                                    maxHeight: '180px',
+                                    objectFit: 'contain',
+                                    filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))'
+                                  }}
+                                />
                               </div>
-                              <h4 style={{ 
-                                fontSize: isMobile ? '18px' : '24px', 
-                                fontWeight: '500', 
-                                marginBottom: isMobile ? '6px' : '8px',
-                                wordWrap: 'break-word',
-                                overflowWrap: 'break-word',
-                                lineHeight: '1.2'
-                              }}>
-                                {product.name}
-                              </h4>
-                              <p className="subtitle" style={{ 
-                                color: '#475569', 
-                                marginBottom: isMobile ? '8px' : '12px', 
-                                fontWeight: '300', 
-                                fontStyle: 'italic',
-                                fontSize: isMobile ? '12px' : '16px',
-                                lineHeight: '1.3'
-                              }}>
-                                {product.subtitle}
-                              </p>
-                              <p className="description" style={{ 
-                                color: '#64748b', 
-                                fontSize: isMobile ? '11px' : '14px',
-                                marginBottom: isMobile ? '12px' : '16px', 
-                                lineHeight: isMobile ? '1.4' : '1.6',
-                                wordWrap: 'break-word',
-                                overflowWrap: 'break-word'
-                              }}>
-                                {product.description}
-                              </p>
-                              <div style={{ 
-                                display: 'inline-flex', 
-                                alignItems: 'center', 
-                                gap: isMobile ? '4px' : '8px', 
-                                background: 'rgba(255,255,255,0.5)', 
-                                backdropFilter: 'blur(10px)', 
-                                padding: isMobile ? '6px 12px' : '8px 16px', 
-                                borderRadius: '50px', 
-                                border: '1px solid rgba(255,255,255,0.3)' 
-                              }}>
-                                <span className="price" style={{ 
-                                  color: '#1e293b', 
-                                  fontWeight: '600',
-                                  fontSize: isMobile ? '12px' : '16px'
+                              
+                              {/* Product Info */}
+                              <div>
+                                <h4 style={{ 
+                                  fontSize: isMobile ? '18px' : '24px', 
+                                  fontWeight: '500', 
+                                  marginBottom: isMobile ? '6px' : '8px',
+                                  wordWrap: 'break-word',
+                                  overflowWrap: 'break-word',
+                                  lineHeight: '1.2'
                                 }}>
-                                  {product.price}
-                                </span>
+                                  {product.name}
+                                </h4>
+                                <p className="subtitle" style={{ 
+                                  color: '#475569', 
+                                  marginBottom: isMobile ? '8px' : '12px', 
+                                  fontWeight: '300', 
+                                  fontStyle: 'italic',
+                                  fontSize: isMobile ? '12px' : '16px',
+                                  lineHeight: '1.3'
+                                }}>
+                                  {product.subtitle}
+                                </p>
+                                <p className="description" style={{ 
+                                  color: '#64748b', 
+                                  fontSize: isMobile ? '11px' : '14px',
+                                  lineHeight: isMobile ? '1.4' : '1.6',
+                                  wordWrap: 'break-word',
+                                  overflowWrap: 'break-word'
+                                }}>
+                                  {product.description}
+                                </p>
                               </div>
                             </div>
                           </div>
                         </div>
                       ))}
                     </div>
+                  </div>
+                  
+                  {/* Navigation Arrows */}
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '20px',
+                    marginBottom: isMobile ? '15px' : '20px'
+                  }}>
+                    <button
+                      onClick={() => {
+                        setCurrentSlide(prev => prev === 0 ? products.length - 1 : prev - 1);
+                        setIsPaused(true);
+                        setTimeout(() => setIsPaused(false), 3000);
+                      }}
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.9)',
+                        border: 'none',
+                        borderRadius: '50%',
+                        width: '44px',
+                        height: '44px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                        transition: 'all 0.3s ease',
+                        fontSize: '18px',
+                        color: '#4a5568'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.background = 'rgba(255, 255, 255, 1)';
+                        e.target.style.transform = 'scale(1.1)';
+                        e.target.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.2)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.background = 'rgba(255, 255, 255, 0.9)';
+                        e.target.style.transform = 'scale(1)';
+                        e.target.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.15)';
+                      }}
+                    >
+                      ←
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        setCurrentSlide(prev => (prev + 1) % products.length);
+                        setIsPaused(true);
+                        setTimeout(() => setIsPaused(false), 3000);
+                      }}
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.9)',
+                        border: 'none',
+                        borderRadius: '50%',
+                        width: '44px',
+                        height: '44px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                        transition: 'all 0.3s ease',
+                        fontSize: '18px',
+                        color: '#4a5568'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.background = 'rgba(255, 255, 255, 1)';
+                        e.target.style.transform = 'scale(1.1)';
+                        e.target.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.2)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.background = 'rgba(255, 255, 255, 0.9)';
+                        e.target.style.transform = 'scale(1)';
+                        e.target.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.15)';
+                      }}
+                    >
+                      →
+                    </button>
                   </div>
                   
                   {/* Elegant Slide Indicators */}
@@ -1106,11 +1448,11 @@ const Hero = () => {
                         style={{
                           ...styles.indicator,
                           ...(index === currentSlide ? styles.indicatorActive : {}),
-                          width: isMobile ? '6px' : '8px',
-                          height: isMobile ? '6px' : '8px',
-                          minHeight: isMobile ? '44px' : 'auto',
-                          minWidth: isMobile ? '44px' : 'auto',
-                          padding: isMobile ? '18px' : '0'
+                          width: isMobile ? '8px' : '8px',
+                          height: isMobile ? '8px' : '8px',
+                          minHeight: isMobile ? '48px' : '44px',
+                          minWidth: isMobile ? '48px' : '44px',
+                          padding: isMobile ? '20px' : '18px'
                         }}
                         onClick={() => setCurrentSlide(index)}
                         onMouseEnter={(e) => {
@@ -1208,51 +1550,64 @@ const Hero = () => {
               </div>
 
               {/* Elegant Stats Grid */}
-              <div style={{
-                ...styles.statsGrid,
-                opacity: isLoaded ? 1 : 0,
-                transform: isLoaded ? 'translateY(0)' : 'translateY(20px)',
-                transition: 'all 0.8s ease 1.6s'
-              }}>
-                {[
-                  { number: "500+", label: "Premium Products", icon: "✨" },
-                  { number: "28", label: "Years Excellence", icon: "🏆" },
-                  { number: "15K+", label: "Satisfied Clients", icon: "💎" }
-                ].map((stat, index) => (
-                  <div 
-                    key={index} 
-                    style={styles.statCard}
-                    onMouseEnter={(e) => {
-                      e.target.style.background = 'rgba(255, 255, 255, 0.8)';
-                      e.target.style.transform = 'translateY(-5px)';
-                      e.target.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.background = 'rgba(255, 255, 255, 0.6)';
-                      e.target.style.transform = 'translateY(0)';
-                      e.target.style.boxShadow = 'none';
-                    }}
-                  >
-                    <div style={{ fontSize: '24px', marginBottom: '8px', opacity: 0.3 }}>
-                      {stat.icon}
+              <div style={{display:'flex',alignItems:'stretch',gap: isMobile ? '16px' : '32px',marginTop: isMobile ? '20px' : '32px',opacity: isLoaded ? 1 : 0,transform: isLoaded ? 'translateY(0)' : 'translateY(20px)',transition: 'all 0.8s ease 1.6s'}}>
+                {/* Decorative vertical accent and heading */}
+                <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'flex-start',minWidth:'70px',paddingTop:'8px'}}>
+                  <div style={{width:'6px',height:'72px',borderRadius:'8px',background:colors.accent,marginBottom:'14px',boxShadow:`0 0 16px 2px ${colors.accent}44`}} />
+                  <span style={{writingMode:'vertical-rl',textOrientation:'mixed',fontWeight:700,letterSpacing:'0.1em',fontSize:'1.1rem',color:'#2d225a',opacity:0.7}}>OUR IMPACT</span>
+                </div>
+                <div style={{
+                  flex:1,
+                  display:'grid',
+                  gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+                  gap: isMobile ? '8px' : '16px'
+                }}>
+                  {[
+                    { number: "500+", label: "Premium Products", icon: "✨" },
+                    { number: "28", label: "Years Excellence", icon: "🏆" },
+                    { number: "15K+", label: "Satisfied Clients", icon: "💎" },
+                    { number: "30%", label: "Water Savings", icon: "💧" }
+                  ].map((stat, index) => (
+                    <div 
+                      key={index} 
+                      style={{
+                        ...styles.statCard,
+                        padding: isMobile ? '10px' : styles.statCard.padding,
+                        aspectRatio: isMobile ? 'unset' : styles.statCard.aspectRatio,
+                        minHeight: isMobile ? '120px' : undefined
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.background = 'rgba(255, 255, 255, 0.8)';
+                        e.target.style.transform = 'translateY(-5px)';
+                        e.target.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.background = 'rgba(255, 255, 255, 0.6)';
+                        e.target.style.transform = 'translateY(0)';
+                        e.target.style.boxShadow = 'none';
+                      }}
+                    >
+                    <div style={{ fontSize: isMobile ? '18px' : '20px', marginBottom: '4px', opacity: 0.3 }}>
+                        {stat.icon}
+                      </div>
+                      <div style={{ 
+                      fontSize: isMobile ? '18px' : '22px', 
+                        fontWeight: '300', 
+                        color: '#1e293b', 
+                      marginBottom: isMobile ? '4px' : '6px' 
+                      }}>
+                        {stat.number}
+                      </div>
+                      <div style={{ 
+                        color: '#64748b', 
+                      fontSize: isMobile ? '11px' : '12px', 
+                        fontWeight: '500' 
+                      }}>
+                        {stat.label}
+                      </div>
                     </div>
-                    <div style={{ 
-                      fontSize: '28px', 
-                      fontWeight: '300', 
-                      color: '#1e293b', 
-                      marginBottom: '8px' 
-                    }}>
-                      {stat.number}
-                    </div>
-                    <div style={{ 
-                      color: '#64748b', 
-                      fontSize: '14px', 
-                      fontWeight: '500' 
-                    }}>
-                      {stat.label}
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -1276,21 +1631,31 @@ const Hero = () => {
                 background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent)',
                 borderRadius: '50px'
               }} />
-              <div style={{ 
+                <div style={{ 
                 position: 'relative', 
                 display: 'flex', 
                 alignItems: 'center', 
                 gap: '24px',
                 flexWrap: 'wrap',
-                justifyContent: 'center'
+                justifyContent: 'flex-start'
               }}>
+                {/* Tagline and icon for left empty space */}
+                <div style={{display:'flex',alignItems:'center',gap:'10px',marginRight:'18px',minWidth:'170px'}}>
+                  <span style={{fontSize:'28px',color:colors.accent,opacity:0.7,verticalAlign:'middle'}}>💎</span>
+                  <span style={{fontWeight:600,fontSize:'1.1rem',color:'#2d225a',letterSpacing:'0.02em',opacity:0.85,whiteSpace:'nowrap'}}>Luxury. Innovation. Trust.</span>
+                </div>
                 <div style={{ 
-                  width: '12px', 
-                  height: '12px', 
-                  background: '#fbbf24', 
+                  width: '18px',
+                  height: '18px',
+                  background: `radial-gradient(circle at 60% 40%, ${colors.accent} 70%, #fff0 100%)`,
                   borderRadius: '50%',
-                  animation: 'pulse 2s infinite',
-                  boxShadow: '0 2px 8px rgba(251, 191, 36, 0.3)' 
+                  animation: 'pulse 1.2s cubic-bezier(0.4,0,0.2,1) infinite',
+                  boxShadow: `0 0 0 4px ${colors.accent}33, 0 2px 12px 0 ${colors.accent}55`,
+                  border: `2px solid ${colors.accent}`,
+                  transition: 'box-shadow 0.3s, background 0.3s',
+                  filter: 'drop-shadow(0 0 6px #fff8)',
+                  display: 'block',
+                  margin: '0 auto'
                 }} />
                 <span style={{ 
                   color: '#1e293b', 
@@ -1335,9 +1700,21 @@ const Hero = () => {
           0%, 100% { transform: translateX(0); }
           50% { transform: translateX(5px); }
         }
+        @keyframes sheen {
+          0% { left: -120%; }
+          60% { left: 120%; }
+          100% { left: 120%; }
+        }
+        @keyframes glow {
+          0%,100% { opacity: 0.2; transform: scale(0.98); }
+          50% { opacity: 0.35; transform: scale(1.04); }
+        }
+        @keyframes borderSpin {
+          0% { filter: hue-rotate(0deg); }
+          100% { filter: hue-rotate(360deg); }
+        }
       `}</style>
     </>
   );
-};
-
+}
 export default Hero;

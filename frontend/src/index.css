@@ -8,8 +8,10 @@ html {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  /* Enable smooth scrolling */
+  /* Enable premium smooth scrolling */
   scroll-behavior: smooth;
+  /* Enhanced scrolling on all browsers */
+  scroll-padding-top: 80px; /* Offset for fixed headers */
 }
 
 body {
@@ -26,8 +28,12 @@ body {
   /* Better text rendering on mobile */
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
-  /* Better touch scrolling on iOS */
+  /* Premium touch scrolling */
   -webkit-overflow-scrolling: touch;
+  /* Enhanced scroll performance */
+  scroll-behavior: smooth;
+  /* Momentum scrolling for iOS */
+  -webkit-scroll-behavior: smooth;
 }
 
 #root {
@@ -97,4 +103,58 @@ code {
 
 .text-responsive-sm {
   font-size: clamp(0.875rem, 2vw, 1.125rem);
+}
+
+/* Premium Smooth Scrolling Enhancements */
+* {
+  /* Smooth transitions for all scrollable elements */
+  scroll-behavior: smooth;
+}
+
+/* Enhanced scrolling for containers */
+.scroll-smooth {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Premium scroll animations */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Smooth scroll with easing */
+  .scroll-premium {
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(100, 116, 139, 0.3) transparent;
+  }
+  
+  /* Custom scrollbar for webkit browsers */
+  .scroll-premium::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .scroll-premium::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scroll-premium::-webkit-scrollbar-thumb {
+    background: rgba(100, 116, 139, 0.3);
+    border-radius: 3px;
+    transition: background 0.3s ease;
+  }
+  
+  .scroll-premium::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 116, 139, 0.5);
+  }
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto;
+  }
 }

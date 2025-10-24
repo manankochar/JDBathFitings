@@ -1,7 +1,8 @@
 import React from 'react';
-import { Box, Container, Heading, Text, SimpleGrid, Stack, Flex, Icon, HStack, VStack, Badge, Button } from '@chakra-ui/react';
+import { colors } from '../../theme/colors';
+import { Box, Container, Heading, Text, SimpleGrid, Stack, VStack, Badge, Button } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-import { FaAward, FaTools, FaHandshake, FaLeaf, FaStar, FaUsers, FaShoppingCart, FaClock } from 'react-icons/fa';
+// icons removed (using emoji icons in data)
 import { Link } from 'react-router-dom';
 
 const MotionBox = motion(Box);
@@ -50,7 +51,7 @@ const About = () => {
   return (
     <Box 
       py={{ base: 20, md: 28 }} 
-      bg="linear-gradient(135deg, #ffffff 0%, #fefce8 15%, #f8fafc 25%, #fef3c7 35%, #e2e8f0 100%)"
+      bg={`linear-gradient(135deg, #ffffff 0%, ${colors.accent}0A 15%, #f8fafc 25%, ${colors.accent}14 35%, #e2e8f0 100%)`}
       position="relative"
       overflow="hidden"
     >
@@ -63,9 +64,9 @@ const About = () => {
         bottom="0"
         backgroundImage={`
           radial-gradient(circle at 25% 25%, rgba(100,116,139,0.05) 0%, transparent 50%),
-          radial-gradient(circle at 75% 75%, rgba(251,191,36,0.08) 0%, transparent 50%),
-          radial-gradient(circle at 50% 10%, rgba(245,158,11,0.03) 0%, transparent 40%),
-          radial-gradient(circle at 10% 80%, rgba(251,191,36,0.04) 0%, transparent 45%)
+          radial-gradient(circle at 75% 75%, ${colors.accent}14 0%, transparent 50%),
+          radial-gradient(circle at 50% 10%, ${colors.accent}0D 0%, transparent 40%),
+          radial-gradient(circle at 10% 80%, ${colors.accent}0F 0%, transparent 45%)
         `}
         opacity={0.7}
       />
@@ -86,7 +87,7 @@ const About = () => {
           w="100%"
           h="100%"
           borderRadius="63% 37% 54% 46% / 55% 48% 52% 45%"
-          bg="linear-gradient(45deg, #fbbf24, #64748b)"
+          bg={`linear-gradient(45deg, ${colors.accent}, #64748b)`}
           animation="float 8s ease-in-out infinite reverse"
         />
       </Box>
@@ -97,7 +98,7 @@ const About = () => {
           w="100%"
           h="100%"
           borderRadius="40% 60% 60% 40% / 60% 40% 60% 40%"
-          bg="linear-gradient(45deg, #fef3c7, #f59e0b)"
+          bg={`linear-gradient(45deg, ${colors.accent}22, ${colors.accent})`}
           animation="float 10s ease-in-out infinite"
         />
       </Box>
@@ -107,7 +108,7 @@ const About = () => {
           w="100%"
           h="100%"
           borderRadius="50%"
-          bg="linear-gradient(45deg, #fefce8, #fbbf24)"
+          bg={`linear-gradient(45deg, ${colors.accent}18, ${colors.accent})`}
           animation="float 7s ease-in-out infinite reverse"
         />
       </Box>
@@ -156,8 +157,7 @@ const About = () => {
               </Text>
               <Text 
                 as="span" 
-                bgGradient="linear(45deg, #64748b, #1e293b, #fbbf24)"
-               
+                bgGradient={`linear(45deg, #64748b, #1e293b, ${colors.accent})`}
                 position="relative"
                 _after={{
                   content: '""',
@@ -167,7 +167,7 @@ const About = () => {
                   transform: 'translateX(-50%)',
                   w: { base: '120px', sm: '150px', md: '180px' },
                   h: { base: '3px', md: '4px' },
-                  bg: 'linear-gradient(90deg, #64748b, #1e293b, #fbbf24)',
+                  bg: `linear-gradient(90deg, #64748b, #1e293b, ${colors.accent})`,
                   borderRadius: '2px'
                 }}
               >
@@ -210,6 +210,8 @@ const About = () => {
             >
               {stats.map((stat, index) => (
                 <MotionBox
+             marginX="1rem"
+
                   key={index}
                   textAlign="center"
                   p={{ base: 3, sm: 4, md: 6, lg: 8 }}
@@ -268,6 +270,8 @@ const About = () => {
           >
             {features.map((feature, index) => (
               <MotionBox
+             margin="1rem"
+
                 key={index}
                 p={{ base: 4, sm: 5, md: 6, lg: 8 }}
                 bg="rgba(255,255,255,0.9)"
@@ -317,6 +321,7 @@ const About = () => {
               >
                 <VStack spacing={{ base: 6, md: 8 }} position="relative" zIndex={2}>
                   <Box
+                  
                     p={4}
                     borderRadius="2xl"
                     bgGradient={feature.gradient}
@@ -435,7 +440,7 @@ const About = () => {
                 fontStyle="italic"
                 position="relative"
                 _before={{
-                  content: '"\"\"\"',
+                  content: '"“"',
                   position: 'absolute',
                   left: '-30px',
                   top: '-10px',
@@ -444,7 +449,7 @@ const About = () => {
                   opacity: 0.3
                 }}
                 _after={{
-                  content: '"\"\"\"',
+                  content: '"”"',
                   position: 'absolute',
                   right: '-30px',
                   bottom: '-10px',

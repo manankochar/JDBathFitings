@@ -3,48 +3,65 @@ import { Link as RouterLink, useLocation } from 'react-router-dom';
 import {
   Box,
   Flex,
+  Image,
+  Link,
+  HStack,
   Text,
   Stack,
-  Link,
   Button,
-  Image,
   VStack,
-  HStack,
-  Badge,
 } from '@chakra-ui/react';
 import { 
-  FaBars, 
-  FaTimes, 
-  FaPhone, 
-  FaEnvelope, 
-  FaMapMarkerAlt,
-  FaRocket,
   FaHome,
   FaInfoCircle,
   FaImages,
-  FaAddressBook
+  FaAddressBook,
+  FaBars,
+  FaTimes,
+  FaPhone,
+  FaEnvelope,
+  FaRocket,
 } from 'react-icons/fa';
 
+const navItems = [
+  { name: 'Home', path: '/', icon: FaHome },
+  { name: 'About', path: '/about', icon: FaInfoCircle },
+  { name: 'Products', path: '/products', icon: FaImages },
+  { name: 'Contact', path: '/contact', icon: FaAddressBook }
+];
+
+const NavLink = ({ to, label, icon: Icon, isActive, scrolled }) => (
+  <Link
+    as={RouterLink}
+    to={to}
+    px={4}
+    py={3}
+    rounded="xl"
+    color={scrolled ? (isActive ? 'gray.800' : 'gray.700') : 'whiteAlpha.900'}
+    _hover={{
+      textDecoration: 'none',
+      color: scrolled ? 'gray.900' : 'white',
+      bg: scrolled ? 'blackAlpha.50' : 'whiteAlpha.200',
+      transform: 'translateY(-2px)',
+    }}
+    transition="all 0.2s"
+  >
+    <HStack spacing={2}>
+      <Icon size="14px" />
+      <Text fontWeight={isActive ? '600' : '500'}>{label}</Text>
+    </HStack>
+  </Link>
+);
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   
-  // Debug logging
-  console.log('Navbar render - isOpen:', isOpen);
-  
-  const onToggle = () => {
-    console.log('onToggle called, current isOpen:', isOpen);
+  const handleToggle = () => {
     setIsOpen(!isOpen);
   };
   
-  // Hero-matching color values
-  const bgColor = scrolled ? 'rgba(248, 250, 252, 0.98)' : 'rgba(255, 255, 255, 0.95)';
-  const textColor = '#1e293b';
-  const borderColor = 'rgba(100, 116, 139, 0.2)';
-  const accentColor = '#64748b';
-
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
@@ -65,33 +82,13 @@ const Navbar = () => {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflowX = 'hidden';
     } else {
       document.body.style.overflow = '';
-      document.documentElement.style.overflowX = '';
     }
-
     return () => {
       document.body.style.overflow = '';
-      document.documentElement.style.overflowX = '';
     };
   }, [isOpen]);
-
-  // Navigation items with icons
-  const navItems = [
-    { name: 'Home', path: '/', icon: FaHome },
-    { name: 'About', path: '/about', icon: FaInfoCircle },
-    { name: 'Products', path: '/all-products', icon: FaImages },
-    { name: 'Contact', path: '/contact', icon: FaAddressBook },
-  ];
-
-  // Contact info for mobile menu
-  const contactInfo = [
-    { icon: FaPhone, text: '+91-8527161330', label: 'Primary' },
-    { icon: FaPhone, text: '+91-8826455039', label: 'Secondary' },
-    { icon: FaEnvelope, text: 'jd95royal@gmail.com', label: 'Email' },
-    { icon: FaMapMarkerAlt, text: 'Chawri Bazar, Delhi', label: 'Location' },
-  ];
 
   return (
     <Box
@@ -100,239 +97,133 @@ const Navbar = () => {
       left="0"
       right="0"
       width="100%"
+      bg={scrolled ? 'white' : 'rgba(0,0,0,0.15)'}
+      boxShadow={scrolled ? 'lg' : 'none'}
+      transition="all 0.3s ease-in-out"
       zIndex="1000"
-      transition="all 0.4s cubic-bezier(0.4, 0, 0.2, 1)"
-      bg={bgColor}
-      backdropFilter={scrolled ? 'blur(25px)' : 'blur(15px)'}
-      borderBottom={`1px solid ${borderColor}`}
-      boxShadow={scrolled ? '0 8px 32px rgba(0, 0, 0, 0.12)' : '0 4px 20px rgba(0, 0, 0, 0.08)'}
-      className="navbar-responsive"
+      backdropFilter={scrolled ? 'blur(10px)' : 'blur(4px)'}
+      borderBottom={scrolled ? '1px solid' : 'none'}
+      borderColor="gray.200"
     >
-      <Box w="100%" px={{ base: 3, sm: 4, md: 6, lg: 8, xl: 12 }} className="container-responsive">
-        <Flex
-          color={textColor}
-          minH={{ base: '70px', md: '80px', lg: '85px' }}
-          align={'center'}
-          justify="space-between"
-          w="100%"
-          py={{ base: 1, md: 2 }}
-        >
-          {/* Enhanced Logo Section */}
-          <Flex flex={{ base: 1 }} justify="start" align="center">
-            <Link as={RouterLink} to="/" _hover={{ textDecoration: 'none' }}>
-              <HStack spacing={{ base: 2, md: 3 }} cursor="pointer" align="center">
-                <Box
-                  position="relative"
-                  w={{ base: '60px', sm: '70px', md: '80px', lg: '85px' }}
-                  h={{ base: '60px', sm: '70px', md: '80px', lg: '85px' }}
-                  borderRadius="xl"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  overflow="hidden"
-                  bg="transparent"
-                  flexShrink={0}
-                  transition="all 0.3s cubic-bezier(0.16, 1, 0.3, 1)"
-                  _hover={{
-                    transform: 'scale(1.05)'
-                  }}
-                >
-                  <Image
-                    src="/jankidas-logo.png"
-                    alt="Jankidas Sanitaryware Logo"
-                    w="100%"
-                    h="100%"
-                    objectFit="contain"
-                    objectPosition="center"
-                    fallbackSrc="/logo.png"
-                    draggable={false}
-                    transition="all 0.3s ease"
-                  />
-                </Box>
-                <VStack align="flex-start" spacing={{ base: 0.5, md: 2 }} display={{ base: "flex" }}>
-                  <Text
-                    fontFamily="Inter"
-                    fontWeight="900"
-                    fontSize={{ base: 'sm', sm: 'md', md: 'xl', lg: '2xl' }}
-                    color="#1e293b"
-                    lineHeight="0.9"
-                    zIndex="2"
-                    position="relative"
-                    letterSpacing="-0.02em"
-                    noOfLines={1}
-                    transition="all 0.3s ease"
-                    _hover={{
-                      color: "#0f172a",
-                      transform: "scale(1.02)"
-                    }}
-                  >
-                    JANKIDAS
-                  </Text>
-                  <Text
-                    fontSize={{ base: '2xs', sm: 'xs', md: 'sm', lg: 'md' }}
-                    color="#fbbf24"
-                    fontWeight="800"
-                    textTransform="uppercase"
-                    letterSpacing="0.1em"
-                    zIndex="2"
-                    position="relative"
-                    noOfLines={1}
-                    _hover={{
-                      color: "#f59e0b"
-                    }}
-                  >
-                    SANITARYWARE
-                  </Text>
-                </VStack>
-              </HStack>
-            </Link>
-          </Flex>
-
-          {/* Desktop Navigation */}
-          <Stack
-            flex={{ base: 1, md: 0 }}
-            justify={'flex-end'}
-            direction={'row'}
-            spacing={{ base: 4, lg: 6 }}
-            display={{ base: 'none', md: 'flex' }}
-            align="center"
-          >
-            {navItems.map((item) => (
-              <NavLink 
-                key={item.name}
-                to={item.path} 
-                label={item.name} 
-                icon={item.icon}
-                isActive={location.pathname === item.path} 
-              />
-            ))}
-            
-            {/* Enhanced CTA Button */}
-            <Button
-              as={RouterLink}
-              to="/contact"
-              display={{ base: 'none', md: 'inline-flex' }}
-              bgGradient="linear(135deg, #1e293b, #475569)"
-              color="white"
-              fontSize={'sm'}
-              fontWeight={700}
-              px={6}
-              py={3}
-              borderRadius="xl"
-              position="relative"
-              overflow="hidden"
-              _before={{
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: '-100%',
-                w: '100%',
-                h: '100%',
-                bg: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
-                transition: 'left 0.6s ease',
-              }}
-              _hover={{
-                transform: "translateY(-3px)",
-                boxShadow: "0 15px 35px rgba(30, 41, 59, 0.4)",
-                _before: { left: '100%' }
-              }}
-              transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-            >
-              Get Quote
-            </Button>
-          </Stack>
-
-          {/* Mobile Menu Button */}
-          <Flex
-            flex={{ base: 1, md: 'auto' }}
-            ml={{ base: 0 }}
-            display={{ base: 'flex', md: 'none' }}
-            justify="flex-end"
-          >
-            <Button
-              onClick={onToggle}
-              variant={'ghost'}
-              aria-label={'Toggle Navigation'}
-              color={textColor}
-              size="lg"
-              p={3}
-              borderRadius="xl"
-              bg="white"
-              border="1px solid"
-              borderColor="gray.200"
-              boxShadow="0 4px 10px rgba(0,0,0,0.06)"
-              zIndex={1100}
-              _hover={{ 
-                bg: 'rgba(100, 116, 139, 0.1)',
-                transform: 'scale(1.1)',
-              }}
-              transition="all 0.3s ease"
-            >
-              {isOpen ? <FaTimes color="#64748b" size={22} /> : <FaBars color="#64748b" size={22} />}
-            </Button>
-          </Flex>
-        </Flex>
-
-        {/* Modern Mobile Navigation */}
-        {isOpen && (
-          <Box
-            position="fixed"
-            top="0"
-            left="0"
-            right="0"
-            bottom="0"
-            bg="rgba(0, 0, 0, 0.5)"
-            backdropFilter="blur(10px)"
-            zIndex={999}
-            onClick={onToggle}
+      <Flex
+        maxW="8xl"
+        mx="auto"
+        px={{ base: 4, sm: 6, lg: 8 }}
+        h={{ base: "70px", md: "80px" }}
+        align="center"
+        justify="space-between"
+      >
+        {/* Logo */}
+        <Box>
+          <Link 
+            as={RouterLink} 
+            to="/" 
+            display="flex" 
+            alignItems="center" 
+            _hover={{ transform: 'scale(1.05)' }}
+            transition="transform 0.2s ease-in-out"
           >
             <Box
-              position="absolute"
-              top={{ base: "75px", sm: "80px", md: "85px" }}
-              right={{ base: "2", sm: "3" }}
-              left={{ base: "2", sm: "3" }}
-              maxH="calc(100vh - 85px)"
-              bg="linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.95) 100%)"
-              backdropFilter="blur(40px) saturate(180%)"
-              borderRadius={{ base: "2xl", sm: "3xl" }}
-              border="2px solid"
-              borderColor="rgba(255, 255, 255, 0.8)"
-              boxShadow="0 32px 80px rgba(15, 23, 42, 0.12), 0 8px 32px rgba(99, 102, 241, 0.08), 0 1px 0 rgba(255, 255, 255, 0.9) inset"
-              overflow="hidden"
-              overflowY="auto"
-              onClick={(e) => e.stopPropagation()}
-              transform="translateY(0)"
-              transition="all 0.5s cubic-bezier(0.16, 1, 0.3, 1)"
-              className="mobile-menu-responsive"
-              _before={{
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: 'linear-gradient(135deg, rgba(100, 116, 139, 0.03) 0%, rgba(251, 191, 36, 0.03) 100%)',
-                pointerEvents: 'none'
-              }}
+              w={{ base: "120px", sm: "150px" }}
+              h={{ base: "60px", sm: "75px" }}
+              position="relative"
             >
-              {/* Website Theme Header */}
-              <Box
-                bgGradient="linear(135deg, #1e293b 0%, #475569 50%, #64748b 100%)"
-                p={{ base: 6, sm: 8 }}
-                color="white"
-                position="relative"
-                overflow="hidden"
-                _before={{
-                  content: '""',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  bg: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
-                  opacity: 0.3
-                }}
-              >
+              <Image
+                src="/jankidas-logo.png"
+                alt="JD Bath Fittings"
+                w="100%"
+                h="100%"
+                objectFit="contain"
+                objectPosition="center"
+                fallbackSrc="/logo.png"
+              />
+            </Box>
+          </Link>
+        </Box>
+
+        {/* Desktop Navigation */}
+        <Stack
+          direction="row"
+          spacing={6}
+          display={{ base: 'none', md: 'flex' }}
+          align="center"
+        >
+          {navItems.map((item) => (
+            <NavLink 
+              key={item.name}
+              to={item.path} 
+              label={item.name} 
+              icon={item.icon}
+              isActive={location.pathname === item.path} 
+              scrolled={scrolled}
+            />
+          ))}
+        </Stack>
+
+        {/* Mobile Menu Button */}
+        <Box display={{ base: 'flex', md: 'none' }}>
+          <Button
+            onClick={handleToggle}
+            variant="ghost"
+            aria-label="Toggle Navigation"
+            color={scrolled ? 'gray.800' : 'white'}
+            size="lg"
+            p={3}
+            borderRadius="xl"
+            bg={scrolled ? 'white' : 'rgba(255,255,255,0.2)'}
+            border="1px solid"
+            borderColor={scrolled ? 'gray.200' : 'rgba(255,255,255,0.3)'}
+            boxShadow={scrolled ? '0 4px 10px rgba(0,0,0,0.06)' : '0 4px 10px rgba(0,0,0,0.1)'}
+            _hover={{ 
+              bg: scrolled ? 'rgba(100, 116, 139, 0.1)' : 'rgba(255,255,255,0.3)',
+              transform: 'scale(1.1)',
+            }}
+            transition="all 0.3s ease"
+            zIndex={1001}
+            position="relative"
+          >
+            {isOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
+          </Button>
+        </Box>
+      </Flex>
+
+      {/* Mobile Menu */}
+      {isOpen && (
+        <Box
+          position="fixed"
+          top="0"
+          left="0"
+          right="0"
+          bottom="0"
+          bg="rgba(0, 0, 0, 0.5)"
+          backdropFilter="blur(10px)"
+          zIndex={999}
+          onClick={handleToggle}
+        >
+          <Box
+            position="absolute"
+            top={{ base: "75px", sm: "80px" }}
+            right={{ base: "2", sm: "3" }}
+            left={{ base: "2", sm: "3" }}
+            maxH="calc(100vh - 85px)"
+            bg="white"
+            borderRadius={{ base: "2xl", sm: "3xl" }}
+            border="2px solid"
+            borderColor="gray.200"
+            boxShadow="0 32px 80px rgba(0, 0, 0, 0.12)"
+            overflow="hidden"
+            overflowY="auto"
+            onClick={(e) => e.stopPropagation()}
+            transform="translateY(0)"
+            transition="all 0.5s cubic-bezier(0.16, 1, 0.3, 1)"
+          >
+            {/* Mobile Menu Header */}
+            <Box
+              bgGradient="linear(135deg, #1e293b 0%, #475569 50%, #64748b 100%)"
+              p={{ base: 6, sm: 8 }}
+              color="white"
+            >
+              <VStack spacing={4} align="stretch">
                 <HStack justify="space-between" align="center">
                   <VStack align="flex-start" spacing={1}>
                     <Text fontSize="xl" fontWeight="800" letterSpacing="tight">
@@ -343,7 +234,7 @@ const Navbar = () => {
                     </Text>
                   </VStack>
                   <Button
-                    onClick={onToggle}
+                    onClick={handleToggle}
                     variant="ghost"
                     size="sm"
                     color="white"
@@ -353,251 +244,137 @@ const Navbar = () => {
                     <FaTimes size={18} />
                   </Button>
                 </HStack>
-              </Box>
-
-              {/* Navigation Grid */}
-              <Box p={{ base: 4, sm: 6 }}>
-                <VStack spacing={{ base: 1, sm: 2 }} align="stretch">
-                  {navItems.map((item, index) => (
-                    <MobileNavLink
-                      key={item.name}
-                      to={item.path}
-                      label={item.name}
-                      icon={item.icon}
-                      isActive={location.pathname === item.path}
-                      onClose={onToggle}
-                      index={index}
-                    />
-                  ))}
-                </VStack>
-              </Box>
-
-              {/* Quick Contact Section */}
-              <Box
-                bg="rgba(100, 116, 139, 0.03)"
-                borderTop="1px solid"
-                borderColor="rgba(100, 116, 139, 0.1)"
-                p={{ base: 4, sm: 6 }}
-              >
-                <Text
-                  fontSize="lg"
-                  fontWeight="700"
-                  color="gray.800"
-                  mb={4}
-                  textAlign="center"
-                >
-                  Get In Touch
-                </Text>
                 
-                <VStack spacing={4}>
-                  <HStack
-                    spacing={4}
-                    w="full"
-                    justify="center"
-                    flexWrap="wrap"
+                {/* Brand Logo */}
+                <Box textAlign="center" py={4} px={2}>
+                  <Box
+                    w={{ base: "120px", sm: "150px" }}
+                    h={{ base: "60px", sm: "75px" }}
+                    mx="auto"
                   >
-                    <Button
-                      as="a"
-                      href="tel:+91-8527161330"
-                      leftIcon={<FaPhone />}
-                      size="sm"
-                      variant="outline"
-                      colorScheme="blue"
-                      borderRadius="full"
-                      _hover={{ transform: 'translateY(-2px)' }}
-                    >
-                      Call Now
-                    </Button>
-                    <Button
-                      as="a"
-                      href="mailto:jd95royal@gmail.com"
-                      leftIcon={<FaEnvelope />}
-                      size="sm"
-                      variant="outline"
-                      colorScheme="purple"
-                      borderRadius="full"
-                      _hover={{ transform: 'translateY(-2px)' }}
-                    >
-                      Email
-                    </Button>
-                  </HStack>
+                    <Image
+                      src="/jankidas-logo.png"
+                      alt="Jankidas Sanitaryware Logo"
+                      w="100%"
+                      h="100%"
+                      objectFit="contain"
+                      objectPosition="center"
+                      fallbackSrc="/logo.png"
+                    />
+                  </Box>
+                </Box>
+              </VStack>
+            </Box>
 
-                  {/* Website Theme CTA */}
+            {/* Navigation Links */}
+            <Box p={{ base: 4, sm: 6 }}>
+              <VStack spacing={{ base: 1, sm: 2 }} align="stretch">
+                {navItems.map((item, index) => (
+                  <MobileNavLink
+                    key={item.name}
+                    to={item.path}
+                    label={item.name}
+                    icon={item.icon}
+                    isActive={location.pathname === item.path}
+                    onClose={handleToggle}
+                    index={index}
+                  />
+                ))}
+              </VStack>
+            </Box>
+
+            {/* Quick Contact Section */}
+            <Box
+              bg="rgba(100, 116, 139, 0.03)"
+              borderTop="1px solid"
+              borderColor="rgba(100, 116, 139, 0.1)"
+              p={{ base: 4, sm: 6 }}
+            >
+              <Text
+                fontSize="lg"
+                fontWeight="700"
+                color="gray.800"
+                mb={4}
+                textAlign="center"
+              >
+                Get In Touch
+              </Text>
+              
+              <VStack spacing={4}>
+                <HStack
+                  spacing={4}
+                  w="full"
+                  justify="center"
+                  flexWrap="wrap"
+                >
                   <Button
-                    as={RouterLink}
-                    to="/contact"
-                    w="full"
-                    h={{ base: "56px", sm: "64px" }}
-                    bgGradient="linear(135deg, #1e293b 0%, #475569 50%, #fbbf24 100%)"
-                    color="white"
-                    fontSize={{ base: "md", sm: "lg" }}
-                    fontWeight={800}
-                    borderRadius="2xl"
-                    position="relative"
-                    overflow="hidden"
-                    border="2px solid"
-                    borderColor="rgba(251, 191, 36, 0.3)"
-                    boxShadow="0 8px 32px rgba(30, 41, 59, 0.25), 0 1px 0 rgba(255, 255, 255, 0.2) inset"
-                    _before={{
-                      content: '""',
-                      position: 'absolute',
-                      top: 0,
-                      left: '-100%',
-                      w: '100%',
-                      h: '100%',
-                      bg: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent)',
-                      transition: 'left 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
-                    }}
-                    _hover={{
-                      transform: "translateY(-4px) scale(1.02)",
-                      bgGradient: "linear(135deg, #0f172a 0%, #1e293b 50%, #f59e0b 100%)",
-                      boxShadow: "0 16px 48px rgba(15, 23, 42, 0.35), 0 1px 0 rgba(255, 255, 255, 0.3) inset",
-                      _before: { left: '100%' }
-                    }}
-                    _active={{
-                      transform: "translateY(-2px) scale(0.98)"
-                    }}
-                    transition="all 0.4s cubic-bezier(0.16, 1, 0.3, 1)"
-                    onClick={onToggle}
+                    as="a"
+                    href="tel:+91-8527161330"
+                    leftIcon={<FaPhone />}
+                    size="sm"
+                    variant="outline"
+                    colorScheme="blue"
+                    borderRadius="full"
+                    _hover={{ transform: 'translateY(-2px)' }}
                   >
-                    <HStack spacing={3}>
-                      <FaRocket />
-                      <Text>Get Free Quote</Text>
-                    </HStack>
+                    Call Now
                   </Button>
-                </VStack>
-              </Box>
+                  <Button
+                    as="a"
+                    href="mailto:jd95royal@gmail.com"
+                    leftIcon={<FaEnvelope />}
+                    size="sm"
+                    variant="outline"
+                    colorScheme="purple"
+                    borderRadius="full"
+                    _hover={{ transform: 'translateY(-2px)' }}
+                  >
+                    Email
+                  </Button>
+                </HStack>
+
+                {/* CTA Button */}
+                <Button
+                  as={RouterLink}
+                  to="/contact"
+                  w="full"
+                  h={{ base: "56px", sm: "64px" }}
+                  bgGradient="linear(135deg, #1e293b 0%, #475569 50%, #fbbf24 100%)"
+                  color="white"
+                  fontSize={{ base: "md", sm: "lg" }}
+                  fontWeight={800}
+                  borderRadius="2xl"
+                  position="relative"
+                  overflow="hidden"
+                  border="2px solid"
+                  borderColor="rgba(251, 191, 36, 0.3)"
+                  boxShadow="0 8px 32px rgba(30, 41, 59, 0.25)"
+                  _hover={{
+                    transform: "translateY(-4px) scale(1.02)",
+                    bgGradient: "linear(135deg, #0f172a 0%, #1e293b 50%, #f59e0b 100%)",
+                    boxShadow: "0 16px 48px rgba(15, 23, 42, 0.35)",
+                  }}
+                  _active={{
+                    transform: "translateY(-2px) scale(0.98)"
+                  }}
+                  transition="all 0.4s cubic-bezier(0.16, 1, 0.3, 1)"
+                  onClick={handleToggle}
+                >
+                  <HStack spacing={3}>
+                    <FaRocket />
+                    <Text>Get Free Quote</Text>
+                  </HStack>
+                </Button>
+              </VStack>
             </Box>
           </Box>
-        )}
-      </Box>
-
-      {/* Custom Animations and Responsive Styles */}
-      <style jsx>{`
-        @keyframes borderRotate {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        
-        @keyframes slideInRight {
-          0% {
-            opacity: 0;
-            transform: translateX(20px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-        
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-            transform: scale(1);
-          }
-          50% {
-            opacity: 0.7;
-            transform: scale(1.2);
-          }
-        }
-        
-        @keyframes fadeIn {
-          0% {
-            opacity: 0;
-            transform: scale(0.95) translateY(-10px);
-          }
-          100% {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-          }
-        }
-        
-        /* Additional responsive fixes */
-        @media (max-width: 768px) {
-          .navbar-responsive {
-            min-height: 70px !important;
-          }
-          
-          .mobile-menu-responsive {
-            max-height: calc(100vh - 75px) !important;
-            -webkit-overflow-scrolling: touch;
-          }
-        }
-        
-        @media (max-width: 480px) {
-          .navbar-responsive {
-            min-height: 65px !important;
-          }
-          
-          .mobile-menu-responsive {
-            border-radius: 16px !important;
-            margin: 8px !important;
-            left: 8px !important;
-            right: 8px !important;
-            top: 65px !important;
-            max-height: calc(100vh - 75px) !important;
-          }
-        }
-        
-        @media (max-width: 320px) {
-          .mobile-menu-responsive {
-            margin: 4px !important;
-            left: 4px !important;
-            right: 4px !important;
-          }
-        }
-      `}</style>
+        </Box>
+      )}
     </Box>
   );
 };
 
-// Desktop Navigation Link Component
-const NavLink = ({ to, label, icon: Icon, isActive }) => (
-  <Link
-    as={RouterLink}
-    to={to}
-    px={4}
-    py={3}
-    rounded={'xl'}
-    position="relative"
-    fontWeight={600}
-    fontSize="sm"
-    fontFamily="Inter"
-    color={isActive ? 'gray.800' : 'gray.600'}
-    transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-    _hover={{
-      textDecoration: 'none',
-      color: '#64748b',
-      transform: 'translateY(-2px)',
-      bg: 'rgba(100, 116, 139, 0.08)',
-    }}
-    _after={{
-      content: '""',
-      position: 'absolute',
-      width: isActive ? '80%' : '0%',
-      height: '3px',
-      bottom: '-2px',
-      left: '50%',
-      transform: 'translateX(-50%)',
-      bg: 'linear-gradient(90deg, #64748b, #fbbf24)',
-      borderRadius: '2px',
-      transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-    }}
-    sx={{
-      '&:hover::after': {
-        width: '80%',
-      },
-    }}
-  >
-    <HStack spacing={2}>
-      <Icon size="14px" />
-      <Text>{label}</Text>
-    </HStack>
-  </Link>
-);
-
-// Modern Mobile Navigation Link Component
+// Mobile Navigation Link Component
 const MobileNavLink = ({ to, label, icon: Icon, isActive, onClose, index = 0 }) => (
   <Link
     as={RouterLink}
@@ -607,12 +384,6 @@ const MobileNavLink = ({ to, label, icon: Icon, isActive, onClose, index = 0 }) 
     p={0}
     textDecoration="none"
     _hover={{ textDecoration: 'none' }}
-    style={{
-      animationDelay: `${index * 0.1}s`,
-      animation: 'slideInRight 0.5s ease-out forwards',
-      opacity: 0,
-      transform: 'translateX(20px)'
-    }}
   >
     <Box
       py={5}
@@ -647,21 +418,6 @@ const MobileNavLink = ({ to, label, icon: Icon, isActive, onClose, index = 0 }) 
           ? '0 12px 40px rgba(15, 23, 42, 0.35), 0 1px 0 rgba(255, 255, 255, 0.3) inset' 
           : '0 8px 32px rgba(100, 116, 139, 0.15), 0 1px 0 rgba(255, 255, 255, 0.6) inset',
         borderColor: 'rgba(100, 116, 139, 0.3)'
-      }}
-      _before={!isActive ? {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: '-100%',
-        w: '100%',
-        h: '100%',
-        bg: 'linear-gradient(90deg, transparent, rgba(100, 116, 139, 0.15), transparent)',
-        transition: 'left 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
-      } : {}}
-      sx={{
-        '&:hover::before': !isActive ? {
-          left: '100%'
-        } : {}
       }}
     >
       <HStack spacing={4} align="center">

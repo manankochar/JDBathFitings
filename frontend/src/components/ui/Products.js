@@ -1,12 +1,12 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { Box, Container, Heading, Text, SimpleGrid, Stack, Button, Flex, Image, Badge, VStack, HStack, Icon } from '@chakra-ui/react';
+import { colors, gradients } from '../../theme/colors';
+import { Box, Container, Heading, Text, SimpleGrid, Stack, Button, Flex, Badge, VStack, HStack, Icon } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaEye, FaShoppingCart, FaFire, FaArrowRight } from 'react-icons/fa';
+// Removed framer-motion wrappers to avoid runtime element type issues
+import { FaEye, FaShoppingCart, FaFire, FaArrowRight, FaSearch } from 'react-icons/fa';
 import { productsData, categories } from '../../data/productsData';
 
-const MotionBox = motion(Box);
-const MotionSimpleGrid = motion(SimpleGrid);
+// Using Chakra components directly instead of motion wrappers
 
 // Fallback component for failed images
 const ProductImageFallback = ({ productName }) => (
@@ -85,16 +85,12 @@ const GalleryImage = ({ image, title, description, index }) => {
   const [hasError, setHasError] = useState(false);
 
   return (
-    <MotionBox
+    <Box
       className="clean-card"
       overflow="hidden"
       bg="white"
       borderRadius="xl"
       boxShadow="0 4px 20px rgba(0,0,0,0.1)"
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      viewport={{ once: true }}
       _hover={{
         transform: 'translateY(-5px)',
         boxShadow: '0 8px 30px rgba(0,0,0,0.15)'
@@ -115,17 +111,13 @@ const GalleryImage = ({ image, title, description, index }) => {
             <Text color="gray.600" fontSize="sm">{title}</Text>
           </Box>
         ) : (
-          <Image
+          <Box as="img"
             src={image}
             alt={title}
-            w="100%"
-            h="250px"
-            objectFit="cover"
-            transition="all 0.3s ease"
+            width="100%"
+            height="250px"
+            style={{ objectFit: 'cover', transition: 'all 0.3s ease' }}
             onError={() => setHasError(true)}
-            _hover={{
-              transform: 'scale(1.05)'
-            }}
           />
         )}
         <Box
@@ -145,12 +137,14 @@ const GalleryImage = ({ image, title, description, index }) => {
           </Text>
         </Box>
       </Box>
-    </MotionBox>
+    </Box>
   );
 };
 
 const Products = () => {
   const [activeCategory, setActiveCategory] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('relevance');
   
   // Memoize categories calculation
   const categoryList = useMemo(() => {
@@ -175,14 +169,30 @@ const Products = () => {
     return categoryList;
   }, []);
   
-  // Memoize filtered products
+  // Memoize filtered + searched + sorted products
   const filteredItems = useMemo(() => {
     if (!productsData || productsData.length === 0) return [];
-    
-    return activeCategory === 'all' 
-      ? productsData.slice(0, 12) // Show first 12 for "all" view
+
+    const base = activeCategory === 'all'
+      ? productsData
       : productsData.filter(item => item.category === activeCategory);
-  }, [activeCategory]);
+
+    const searched = searchQuery.trim().length === 0
+      ? base
+      : base.filter(item => {
+          const haystack = `${item.name ?? ''} ${item.description ?? ''} ${item.type ?? ''}`.toLowerCase();
+          return haystack.includes(searchQuery.toLowerCase());
+        });
+
+    const sorted = [...searched];
+    if (sortBy === 'name_asc') {
+      sorted.sort((a, b) => (a.name ?? '').localeCompare(b.name ?? ''));
+    } else if (sortBy === 'name_desc') {
+      sorted.sort((a, b) => (b.name ?? '').localeCompare(a.name ?? ''));
+    }
+
+    return sorted;
+  }, [activeCategory, searchQuery, sortBy]);
 
   // Gallery data
   const galleryData = useMemo(() => [
@@ -210,7 +220,7 @@ const Products = () => {
   return (
     <Box 
       id="products"
-      py={{ base: 20, md: 28 }} 
+      py={{ base: 16, md: 20 }} 
       bg="linear-gradient(135deg, #ffffff 0%, #f8fafc 25%, #e2e8f0 100%)"
       position="relative"
       overflow="hidden"
@@ -225,7 +235,7 @@ const Products = () => {
         bottom="0"
         backgroundImage={`
           radial-gradient(circle at 20% 80%, rgba(100,116,139,0.05) 0%, transparent 50%),
-          radial-gradient(circle at 80% 20%, rgba(251,191,36,0.05) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, ${colors.accent}14 0%, transparent 50%),
           radial-gradient(circle at 40% 40%, rgba(30,41,59,0.03) 0%, transparent 50%)
         `}
         opacity={0.8}
@@ -246,7 +256,7 @@ const Products = () => {
           w="100%"
           h="100%"
           borderRadius="30% 70% 70% 30% / 30% 30% 70% 70%"
-          bg="linear-gradient(45deg, #64748b, #fbbf24)"
+          bg={`linear-gradient(45deg, #64748b, ${colors.accent})`}
           animation="float 8s ease-in-out infinite"
         />
       </Box>
@@ -258,15 +268,9 @@ const Products = () => {
         px={{ base: 4, sm: 6, md: 8, lg: 10, xl: 12 }}
         className="container-responsive"
       >
-        <Stack spacing={{ base: 12, md: 16, lg: 20 }}>
+        <Stack spacing={{ base: 8, md: 12, lg: 16 }}>
           {/* Enhanced Section Header */}
-          <MotionBox
-            textAlign="center"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
+          <Box textAlign="center" mb={8}>
             <Badge
               bg="rgba(100,116,139,0.1)"
               color="#64748b"
@@ -280,13 +284,14 @@ const Products = () => {
               border="1px solid"
               borderColor="rgba(100,116,139,0.2)"
               mb={6}
+              mt={8}
             >
               Product Collection
             </Badge>
             
-            <VStack spacing={4} align="center" mb={6}>
+            <VStack spacing={3} align="center" mb={6}>
               <Text
-                fontSize={{ base: "xl", sm: "2xl", md: "3xl", lg: "4xl" }}
+                fontSize={{ base: "lg", sm: "xl", md: "2xl", lg: "3xl" }}
                 fontWeight="800"
                 color="gray.800"
                 textAlign="center"
@@ -300,7 +305,7 @@ const Products = () => {
               </Text>
               <Heading
                 as="h2"
-                fontSize={{ base: "3xl", sm: "4xl", md: "5xl", lg: "6xl" }}
+                fontSize={{ base: "2xl", sm: "3xl", md: "4xl", lg: "5xl" }}
                 fontWeight="900"
                 color="gray.800"
                 lineHeight="1.1"
@@ -313,18 +318,18 @@ const Products = () => {
                 _after={{
                   content: '""',
                   position: 'absolute',
-                  bottom: '-15px',
+                  bottom: '-10px',
                   left: '50%',
                   transform: 'translateX(-50%)',
-                  w: { base: '150px', sm: '180px', md: '200px' },
-                  h: { base: '3px', md: '4px' },
-                  bg: 'linear-gradient(90deg, #64748b, #fbbf24, #1e293b)',
+                  w: { base: '120px', sm: '150px', md: '180px' },
+                  h: { base: '2px', md: '3px' },
+                  bg: `linear-gradient(90deg, #64748b, ${colors.accent}, #1e293b)`,
                   borderRadius: '2px'
                 }}
               >
                 <Text 
                   as="span" 
-                  bgGradient="linear(45deg, #64748b, #fbbf24, #1e293b)"
+                  bgGradient={`linear(45deg, #64748b, ${colors.accent}, #1e293b)`}
                 >
                   Product Collection
                 </Text>
@@ -332,11 +337,11 @@ const Products = () => {
             </VStack>
             
             <Text
-              fontSize={{ base: "md", sm: "lg", md: "xl" }}
+              fontSize={{ base: "sm", sm: "md", md: "lg" }}
               color="gray.600"
-              maxW="700px"
+              maxW="600px"
               mx="auto"
-              lineHeight="1.8"
+              lineHeight="1.7"
               fontWeight="400"
               px={{ base: 2, md: 0 }}
               wordBreak="break-word"
@@ -344,34 +349,77 @@ const Products = () => {
               Discover our comprehensive range of bathroom fittings, sanitaryware, and accessories. 
               Each product is carefully selected for quality, durability, and aesthetic appeal.
             </Text>
-          </MotionBox>
+          </Box>
+
+          {/* Controls: Search + Sort (sticky on scroll) */}
+          <Box
+            mb={{ base: 2, md: 4 }}
+            position="sticky"
+            top={{ base: '64px', md: '72px' }}
+            zIndex={3}
+            bg="rgba(255,255,255,0.85)"
+            backdropFilter="blur(8px)"
+            border="1px solid"
+            borderColor="#e2e8f0"
+            borderRadius="xl"
+            px={{ base: 3, md: 4 }}
+            py={{ base: 2, md: 3 }}
+            boxShadow="0 6px 24px rgba(15,23,42,0.06)"
+          >
+            <Flex direction={{ base: 'column', md: 'row' }} gap={{ base: 3, md: 4 }} align="stretch">
+              <Box flex="1" position="relative">
+                <Icon as={FaSearch} color="gray.400" position="absolute" left={3} top="50%" transform="translateY(-50%)" pointerEvents="none" />
+                <Box as="input"
+                  size="lg"
+                  style={{ paddingLeft: '40px' }}
+                  placeholder="Search products..."
+                  bg="white"
+                  borderColor="#e2e8f0"
+                  _hover={{ borderColor: '#cbd5e1' }}
+                  _focus={{ borderColor: '#64748b', boxShadow: '0 0 0 3px rgba(100,116,139,0.2)' }}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </Box>
+              <Flex gap={3} align="center" justify={{ base: 'space-between', md: 'flex-end' }}>
+                <Box as="select"
+                  size="lg"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  bg="white"
+                  borderColor="#e2e8f0"
+                  _hover={{ borderColor: '#cbd5e1' }}
+                  _focus={{ borderColor: '#64748b', boxShadow: '0 0 0 3px rgba(100,116,139,0.2)' }}
+                  minW={{ base: '50%', md: '240px' }}
+                >
+                  <option value="relevance">Sort: Relevance</option>
+                  <option value="name_asc">Sort: Name (A–Z)</option>
+                  <option value="name_desc">Sort: Name (Z–A)</option>
+                </Box>
+              </Flex>
+            </Flex>
+          </Box>
+          <Box borderBottom="1px solid #e2e8f0" />
 
           {/* Enhanced Category Filters */}
-          <MotionBox
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
+          <Box mt={{ base: 2, md: 3 }}>
             <Flex 
-              justify="center" 
-              wrap="wrap" 
+              justify={{ base: "flex-start", md: "center" }} 
+              wrap={{ base: "nowrap", md: "wrap" }} 
               gap={{ base: 2, sm: 3, md: 4 }} 
               align="center"
               maxW="100%"
               overflowX={{ base: "auto", md: "visible" }}
               px={{ base: 3, sm: 4, md: 0 }}
               pb={{ base: 2, md: 0 }}
+              mb={{ base: 4, md: 6 }}
               className="category-filters-responsive"
+              bg={{ base: 'white', md: 'transparent' }}
+              borderRadius="lg"
+              boxShadow={{ base: 'inset 0 -1px 0 #e2e8f0', md: 'none' }}
             >
               {categoryList.slice(0, 8).map((category, index) => (
-                <MotionBox
-                  key={category.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3, delay: index * 0.05 }}
-                  viewport={{ once: true }}
-                >
+                <Box key={category.id}>
                   <Button
                     onClick={() => handleCategoryChange(category.id)}
                     bg={activeCategory === category.id 
@@ -383,9 +431,9 @@ const Products = () => {
                       ? "none" 
                       : "2px solid #e2e8f0"
                     }
-                    size={{ base: "sm", md: "md" }}
-                    px={{ base: 3, md: 5 }}
-                    py={{ base: 2, md: 3 }}
+                    size={{ base: "xs", md: "md" }}
+                    px={{ base: 2, md: 5 }}
+                    py={{ base: 1, md: 3 }}
                     borderRadius="full"
                     fontWeight="600"
                     fontSize={{ base: "xs", md: "sm" }}
@@ -411,7 +459,7 @@ const Products = () => {
                     minW={{ base: "80px", md: "120px" }}
                     flexShrink={0}
                   >
-                    <HStack spacing={{ base: 1, md: 2 }} justify="center" flexWrap="wrap">
+                    <HStack spacing={{ base: 1, md: 2 }} justify="center" flexWrap="nowrap" alignItems="center">
                       {activeCategory === category.id && <Icon as={FaFire} boxSize={{ base: 2, md: 3 }} />}
                       <Text 
                         fontWeight="600" 
@@ -427,41 +475,35 @@ const Products = () => {
                           : "#64748b"
                         }
                         color={activeCategory === category.id ? "white" : "white"}
-                        fontSize={{ base: "2xs", md: "xs" }}
-                        px={{ base: 1, md: 2 }}
-                        py={1}
+                        fontSize={{ base: "10px", md: "11px" }}
+                        px={{ base: 2, md: 2 }}
+                        py={0.5}
                         borderRadius="full"
                         fontWeight="700"
-                        minW="20px"
+                        minW="22px"
                         textAlign="center"
                       >
                         {category.count}
                       </Badge>
                     </HStack>
                   </Button>
-                </MotionBox>
+                </Box>
               ))}
             </Flex>
-          </MotionBox>
+          </Box>
 
           {/* Products Grid */}
-          <AnimatePresence mode="wait">
-            <MotionSimpleGrid
-              key={activeCategory}
-              columns={{ base: 1, sm: 2, md: 3, lg: 4, xl: 5 }}
-              spacing={{ base: 4, sm: 5, md: 6, lg: 7 }}
-              px={{ base: 3, sm: 4, md: 0 }}
-              w="100%"
-              maxW="100%"
-              className="responsive-grid"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
-            >
+          <SimpleGrid
+            columns={{ base: 1, sm: 2, md: 3, lg: 4, xl: 5 }}
+            spacing={{ base: 4, sm: 5, md: 6, lg: 7 }}
+            px={{ base: 3, sm: 4, md: 0 }}
+            w="100%"
+            maxW="100%"
+            className="responsive-grid"
+          >
               {filteredItems.length > 0 ? (
                 filteredItems.map((item, index) => (
-                  <MotionBox
+                  <Box
                     key={`${item.id}-${activeCategory}`}
                     bg="rgba(255,255,255,0.95)"
                     backdropFilter="blur(20px)"
@@ -472,16 +514,12 @@ const Products = () => {
                     overflow="hidden"
                     cursor="pointer"
                     position="relative"
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    whileHover={{ y: -8 }}
                       _hover={{
                         boxShadow: "0 25px 50px rgba(100,116,139,0.2)",
                         borderColor: "rgba(100,116,139,0.3)"
                       }}
                     role="group"
-                    minH={{ base: "350px", sm: "380px", md: "420px", lg: "450px" }}
+                    minH={{ base: "320px", sm: "360px", md: "380px", lg: "400px" }}
                     display="flex"
                     flexDirection="column"
                     w="100%"
@@ -492,7 +530,7 @@ const Products = () => {
                     {/* Image Container */}
                     <Box
                       position="relative"
-                      height={{ base: "180px", sm: "200px", md: "220px", lg: "250px" }}
+                      height={{ base: "180px", sm: "200px", md: "220px", lg: "240px" }}
                       overflow="hidden"
                       borderRadius="xl"
                       mb={{ base: 2, sm: 3, md: 4 }}
@@ -517,49 +555,33 @@ const Products = () => {
                         left="0"
                         right="0"
                         bottom="0"
-                        bg="linear-gradient(135deg, rgba(100,116,139,0.9), rgba(30,41,59,0.9))"
+                        bg="linear-gradient(135deg, rgba(100,116,139,0.95), rgba(30,41,59,0.95))"
                         opacity="0"
                         transition="all 0.4s ease"
                         display="flex"
                         flexDirection="column"
                         alignItems="center"
                         justifyContent="center"
-                        gap={3}
+                        gap={4}
                         _groupHover={{ opacity: 1 }}
+                        borderRadius="xl"
                       >
-                        <VStack spacing={3}>
-                          <HStack spacing={3}>
-                            <Button
-                              as={RouterLink}
-                              to={`/product/${item.id}`}
-                              size="sm"
-                              bg="rgba(255,255,255,0.9)"
-                              color="#64748b"
-                              fontWeight="700"
-                              leftIcon={<Icon as={FaEye} />}
-                              borderRadius="xl"
-                              _hover={{
-                                transform: "scale(1.05)",
-                                bg: "white"
-                              }}
-                            >
-                              View
+                        <VStack spacing={4}>
+                          <Text
+                            color="white"
+                            fontSize="lg"
+                            fontWeight="700"
+                            textAlign="center"
+                            mb={2}
+                          >
+                            {item.name}
+                          </Text>
+                          <HStack spacing={4}>
+                            <Button as={RouterLink} to={`/product/${item.id}`} size="md" bg={gradients.accentLinear} color="white" fontWeight="800" borderRadius="2xl" px={6} py={3} transition="all 0.3s ease">
+                              <Icon as={FaEye} mr={2} /> View Details
                             </Button>
-                            <Button
-                              as={RouterLink}
-                              to={`/product/${item.id}`}
-                              size="sm"
-                              bg="rgba(255,255,255,0.9)"
-                              color="#fbbf24"
-                              fontWeight="700"
-                              leftIcon={<Icon as={FaShoppingCart} />}
-                              borderRadius="xl"
-                              _hover={{
-                                transform: "scale(1.05)",
-                                bg: "white"
-                              }}
-                            >
-                              Inquire
+                            <Button as={RouterLink} to={`/product/${item.id}`} size="md" bg="rgba(255,255,255,0.9)" color="#64748b" fontWeight="700" borderRadius="2xl" px={6} py={3} transition="all 0.3s ease">
+                              <Icon as={FaShoppingCart} mr={2} /> Contact Us
                             </Button>
                           </HStack>
                         </VStack>
@@ -590,7 +612,7 @@ const Products = () => {
                           position="absolute"
                           top="4"
                           right="4"
-                          bg="linear-gradient(135deg, #fbbf24, #f59e0b)"
+                          bg={gradients.accentLinear}
                           color="white"
                           px={2}
                           py={1}
@@ -600,18 +622,18 @@ const Products = () => {
                         >
                           <HStack spacing={1}>
                             <Icon as={FaFire} boxSize={2} />
-                            <Text>Popular</Text>
+                          
                           </HStack>
                         </Badge>
                       )}
                     </Box>
 
                     {/* Enhanced Product Info */}
-                    <VStack spacing={{ base: 3, md: 4 }} p={{ base: 4, md: 6 }} align="stretch" flex="1">
-                      <VStack spacing={3} align="stretch" flex="1">
+                    <VStack spacing={{ base: 2, md: 3 }} p={{ base: 3, md: 4 }} align="stretch" flex="1">
+                      <VStack spacing={2} align="stretch" flex="1">
                         <Heading
                           as="h3"
-                          fontSize={{ base: "md", md: "lg" }}
+                          fontSize={{ base: "sm", md: "md" }}
                           fontWeight="800"
                           color="gray.800"
                           fontFamily="Inter"
@@ -625,8 +647,8 @@ const Products = () => {
                           fontSize={{ base: "xs", md: "sm" }}
                           color="gray.600"
                           fontWeight="500"
-                          noOfLines={{ base: 2, md: 3 }}
-                          lineHeight="1.6"
+                          noOfLines={{ base: 2, md: 2 }}
+                          lineHeight="1.5"
                           flex="1"
                         >
                           {item.description}
@@ -637,26 +659,26 @@ const Products = () => {
                         as={RouterLink}
                         to={`/product/${item.id}`}
                         variant="ghost"
-                        size={{ base: "xs", md: "sm" }}
+                        size="xs"
                         color="#64748b"
                         fontWeight="700"
-                        rightIcon={<Icon as={FaArrowRight} boxSize={{ base: 3, md: 4 }} />}
+                        rightIcon={<Icon as={FaArrowRight} boxSize={3} />}
                         p={0}
                         h="auto"
-                        fontSize={{ base: "xs", md: "sm" }}
+                        fontSize="xs"
                         _hover={{
                           bg: "transparent",
-                          color: "#fbbf24",
+                          color: colors.accent,
                           transform: "translateX(4px)"
                         }}
                         transition="all 0.3s ease"
                         justifyContent="flex-start"
                         mt="auto"
                       >
-                        Learn More
+                        View Details
                       </Button>
                     </VStack>
-                  </MotionBox>
+                  </Box>
                 ))
               ) : (
                 <Box
@@ -676,17 +698,10 @@ const Products = () => {
                   </Button>
                 </Box>
               )}
-            </MotionSimpleGrid>
-          </AnimatePresence>
+          </SimpleGrid>
 
           {/* Gallery Images Section */}
-          <MotionBox
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            mt={16}
-          >
+          <Box mt={16}>
             <Box textAlign="center" mb={12}>
               <Heading
                 as="h3"
@@ -718,7 +733,7 @@ const Products = () => {
                 />
               ))}
             </SimpleGrid>
-          </MotionBox>
+          </Box>
 
           {/* View All Button */}
           {productsData && productsData.length > 0 && (
@@ -740,8 +755,9 @@ const Products = () => {
                   boxShadow: "0 20px 40px rgba(100,116,139,0.4)"
                 }}
                 transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+                rightIcon={<Icon as={FaArrowRight} />}
               >
-                View All {productsData.length} Products →
+                View All {productsData.length} Products
               </Button>
             </Flex>
           )}
@@ -749,7 +765,7 @@ const Products = () => {
       </Container>
       
       {/* CSS Animations and Responsive Styles */}
-      <style jsx>{`
+      <style>{`
         @keyframes float {
           0%, 100% {
             transform: translateY(0) rotate(0deg);
@@ -767,6 +783,20 @@ const Products = () => {
         }
         
         /* Enhanced Responsive Styles */
+        .category-filters-responsive {
+          display: flex !important;
+          flex-direction: row !important;
+          flex-wrap: nowrap !important;
+          overflow-x: auto !important;
+          white-space: nowrap !important;
+          scroll-snap-type: x mandatory !important;
+          -webkit-overflow-scrolling: touch !important;
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+        .category-filters-responsive::-webkit-scrollbar { display: none !important; }
+        .category-filters-responsive > * { scroll-snap-align: center !important; }
+        
         @media (max-width: 768px) {
           .responsive-grid {
             gap: 16px !important;
@@ -777,11 +807,19 @@ const Products = () => {
           }
           
           .category-filters-responsive {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
             overflow-x: auto !important;
             scroll-snap-type: x mandatory !important;
             -webkit-overflow-scrolling: touch !important;
             scrollbar-width: none !important;
             -ms-overflow-style: none !important;
+            white-space: nowrap !important;
+            justify-content: flex-start !important;
+            align-items: center !important;
+            gap: 8px !important;
+            padding: 0 12px !important;
           }
           
           .category-filters-responsive::-webkit-scrollbar {
@@ -791,6 +829,8 @@ const Products = () => {
           .category-filters-responsive > * {
             scroll-snap-align: center !important;
             flex-shrink: 0 !important;
+            white-space: nowrap !important;
+            min-width: fit-content !important;
           }
         }
         
@@ -806,7 +846,13 @@ const Products = () => {
           }
           
           .category-filters-responsive {
-            gap: 8px !important;
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            gap: 6px !important;
+            padding: 0 8px !important;
+            overflow-x: auto !important;
+            justify-content: flex-start !important;
           }
         }
         

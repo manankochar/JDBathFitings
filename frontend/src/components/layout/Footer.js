@@ -1,4 +1,5 @@
 import React from 'react';
+import { colors } from '../../theme/colors';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   Box,
@@ -13,7 +14,6 @@ import {
   Button,
   Icon,
   Image,
-  useColorModeValue,
 } from '@chakra-ui/react';
 import { FaTwitter, FaYoutube, FaInstagram, FaFacebook, FaMapMarkerAlt, FaPhone, FaEnvelope } from 'react-icons/fa';
 import logoImage from '../../assets/logo.png';
@@ -48,7 +48,7 @@ const Footer = () => {
         width="400px"
         height="400px"
         borderRadius="full"
-        bg="rgba(251, 191, 36, 0.06)"
+        bg={`${colors.accent}10`}
         filter="blur(100px)"
         zIndex="-1"
       />
@@ -268,7 +268,7 @@ const Footer = () => {
                 <Icon 
                   as={FaPhone} 
                   mr={3} 
-                  color="#fbbf24" 
+                  color={colors.accent} 
                   fontSize="lg"
                 />
                 <Text fontWeight="500">+91-8527161330</Text>
@@ -277,7 +277,7 @@ const Footer = () => {
                 <Icon 
                   as={FaPhone} 
                   mr={3} 
-                  color="#fbbf24" 
+                  color={colors.accent} 
                   fontSize="lg"
                 />
                 <Text fontWeight="500">+91-8826455039</Text>
@@ -289,7 +289,7 @@ const Footer = () => {
                   color="#1e293b" 
                   fontSize="lg"
                 />
-                <Text fontWeight="500">jd95royal@gmail.com</Text>
+                <Text fontWeight="500">rdiamond2423@gmail.com</Text>
               </Flex>
             </Stack>
             

@@ -9,487 +9,863 @@ import {
   Button,
   VStack,
   HStack,
-  Badge,
+  Grid,
+  GridItem,
+  AspectRatio,
   SimpleGrid,
-  Stack,
-  Icon,
   Flex,
-  Spinner,
-  Center
+  Center,
+  Badge,
+  Icon
 } from '@chakra-ui/react';
+import { 
+  FaArrowLeft, 
+  FaPhone, 
+  FaEnvelope, 
+  FaWhatsapp, 
+  FaMapMarkerAlt, 
+  FaStar,
+  FaTools,
+  FaHeart,
+  FaShare,
+  FaBookmark,
+  FaShieldAlt,
+  FaAward,
+  FaPlay,
+  FaExpand,
+  FaCheckCircle,
+  FaGem,
+  FaCrown,
+  FaMagic
+} from 'react-icons/fa';
 import { motion } from 'framer-motion';
-import { FaArrowLeft, FaShoppingCart, FaHeart, FaShare, FaCheck, FaStar, FaPhone, FaEnvelope } from 'react-icons/fa';
 import { productsData } from '../data/productsData';
+import { colors, gradients, shadows } from '../theme/colors';
 
 const MotionBox = motion(Box);
+const MotionText = motion(Text);
+const MotionHeading = motion(Heading);
 
 const ProductDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedImage, setSelectedImage] = useState(0);
-  const [quantity, setQuantity] = useState(1);
+  const [isLiked, setIsLiked] = useState(false);
+  
+  // Elegant dark theme matching website
+  const bgGradient = `linear-gradient(135deg, ${colors.dark} 0%, ${colors.darkAlt} 50%, ${colors.accent} 100%)`;
+  const cardBg = 'rgba(255, 255, 255, 0.08)';
+  const glassBg = 'rgba(255, 255, 255, 0.05)';
+  const subtleBg = 'rgba(255, 255, 255, 0.03)';
 
   useEffect(() => {
-    // Find product by ID
-    const foundProduct = productsData.find(p => p.id === parseInt(id));
-    if (foundProduct) {
-      setProduct(foundProduct);
-      // Add additional product details
-      setProduct({
-        ...foundProduct,
-        specifications: {
-          material: 'Premium Ceramic',
-          dimensions: '650mm x 400mm x 750mm',
-          weight: '45kg',
-          waterUsage: '3.5L per flush',
-          installation: 'Floor mounted',
-          warranty: '5 years',
-          color: 'White',
-          finish: 'Glossy'
-        },
-        features: [
-          'Water-saving technology',
-          'Easy-clean surface',
-          'Soft-close seat',
-          'Dual flush system',
-          'Anti-bacterial coating',
-          'Quiet operation'
-        ],
-        additionalImages: [
-          foundProduct.image,
-          foundProduct.image, // In real app, these would be different angles
-          foundProduct.image,
-          foundProduct.image
-        ],
-        price: {
-          original: 25000,
-          discounted: 22000,
-          currency: 'INR'
-        },
-        rating: 4.5,
-        reviews: 128,
-        inStock: true
-      });
-    }
-    setLoading(false);
+    const fetchProduct = () => {
+      try {
+        const productId = parseInt(id, 10);
+        const foundProduct = productsData.find(p => p.id === productId);
+        
+        if (foundProduct) {
+          setProduct(foundProduct);
+        } else {
+          setProduct(null);
+        }
+      } catch (error) {
+        console.error('Error fetching product:', error);
+        setProduct(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
   }, [id]);
 
-  const handleInquiry = () => {
-    alert("Inquiry Sent! Our team will contact you within 24 hours.");
-  };
-
-  const handleAddToWishlist = () => {
-    alert(`${product.name} has been added to your wishlist.`);
-  };
-
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: product.name,
-        text: product.description,
-        url: window.location.href,
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert("Product link has been copied to clipboard.");
+  const handleContactClick = (type) => {
+    const message = `Hi! I'm interested in the ${product?.name} product. Could you please provide more details?`;
+    
+    switch (type) {
+      case 'whatsapp':
+        window.open(`https://wa.me/919876543210?text=${encodeURIComponent(message)}`, '_blank');
+        break;
+      case 'phone':
+        window.open('tel:+919876543210', '_self');
+        break;
+      case 'email':
+        window.open(`mailto:rdiamond2423@gmail.com?subject=Inquiry about ${product?.name}&body=${encodeURIComponent(message)}`, '_blank');
+        break;
+      default:
+        break;
     }
   };
 
   if (loading) {
     return (
-      <Center minH="50vh">
-        <Spinner size="xl" color="purple.500" />
-      </Center>
+      <Box 
+        minH="100vh" 
+        bg={bgGradient}
+        display="flex" 
+        alignItems="center" 
+        justifyContent="center"
+        position="relative"
+        overflow="hidden"
+        pt={{ base: 20, md: 24 }}
+      >
+        {/* Elegant background pattern */}
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          right="0"
+          bottom="0"
+          opacity="0.1"
+          backgroundImage="radial-gradient(circle at 20px 20px, rgba(255,255,255,0.1) 1px, transparent 1px)"
+          backgroundSize="40px 40px"
+        />
+        
+        <VStack spacing={8} position="relative" zIndex={1}>
+          <Box
+            w={16}
+            h={16}
+            border="3px solid"
+            borderColor="rgba(255,255,255,0.2)"
+            borderTopColor={colors.accentTint}
+            borderRadius="full"
+            animation="spin 1s linear infinite"
+          />
+          <MotionText
+            color="white"
+            fontSize="xl"
+            fontWeight="600"
+            textAlign="center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            Loading Premium Product...
+          </MotionText>
+        </VStack>
+      </Box>
     );
   }
 
   if (!product) {
     return (
-      <Container maxW="container.xl" py={20}>
-        <VStack spacing={6}>
-          <Heading>Product Not Found</Heading>
-          <Text>The product you're looking for doesn't exist.</Text>
-          <Button onClick={() => navigate('/products')} leftIcon={<Icon as={FaArrowLeft} />}>
-            Back to Products
-          </Button>
-        </VStack>
-      </Container>
+      <Box minH="100vh" bg={bgGradient} position="relative" overflow="hidden" pt={{ base: 20, md: 24 }}>
+        {/* Elegant background pattern */}
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          right="0"
+          bottom="0"
+          opacity="0.05"
+          backgroundImage="radial-gradient(circle at 20px 20px, rgba(255,255,255,0.1) 1px, transparent 1px)"
+          backgroundSize="40px 40px"
+        />
+        
+        <Container maxW="container.xl" py={20} pt={{ base: 24, md: 28 }}>
+          <Center>
+            <MotionBox 
+              maxW="lg" 
+              bg={cardBg}
+              backdropFilter="blur(20px)"
+              boxShadow={shadows.accentStrong}
+              borderRadius="2xl" 
+              p={16} 
+              textAlign="center"
+              border="1px solid rgba(255,255,255,0.2)"
+              initial={{ opacity: 0, y: 50, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              <Box fontSize="8xl" mb={8} opacity="0.8">💎</Box>
+              <MotionHeading 
+                fontSize="4xl" 
+                color={colors.dark}
+                fontWeight="800" 
+                mb={6}
+                bgGradient={gradients.accentText}
+                bgClip="text"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                Product Not Found
+              </MotionHeading>
+              <MotionText 
+                fontSize="xl" 
+                color={colors.grayText} 
+                mb={10} 
+                lineHeight="1.6"
+                fontWeight="500"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                The premium product you're looking for doesn't exist or has been removed from our collection.
+              </MotionText>
+              <MotionBox
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+              >
+                <Button
+                  onClick={() => navigate('/all-products')}
+                  leftIcon={<FaArrowLeft />}
+                  bg={gradients.accentLinear}
+                  color="white"
+                  size="xl"
+                  borderRadius="xl"
+                  px={10}
+                  py={8}
+                  fontWeight="700"
+                  fontSize="lg"
+                  boxShadow={shadows.accentMedium}
+                  _hover={{ 
+                    transform: "translateY(-3px)",
+                    boxShadow: shadows.accentStrong
+                  }}
+                  transition="all 0.3s ease"
+                >
+                  Explore Our Collection
+                </Button>
+              </MotionBox>
+            </MotionBox>
+          </Center>
+        </Container>
+      </Box>
     );
   }
 
   return (
-    <Box bg="gray.50" minH="100vh">
-      <Container maxW="container.xl" py={8}>
-        {/* Breadcrumb */}
-        <HStack mb={8} fontSize="sm" spacing={2}>
-          <Button variant="link" onClick={() => navigate('/')} p={0} h="auto" fontSize="sm">
-            Home
-          </Button>
-          <Text>/</Text>
-          <Button variant="link" onClick={() => navigate('/products')} p={0} h="auto" fontSize="sm">
-            Products
-          </Button>
-          <Text>/</Text>
-          <Text fontWeight="600">{product.name}</Text>
-        </HStack>
+    <Box minH="100vh" bg={bgGradient} position="relative" overflow="hidden"  px={10}>
+      {/* Elegant background pattern */}
+      <Box
+        position="absolute"
+        top="0"
+        left="0"
+        right="0"
+        bottom="0"
+        opacity="0.03"
+        backgroundImage="radial-gradient(circle at 20px 20px, rgba(255,255,255,0.1) 1px, transparent 1px)"
+        backgroundSize="40px 40px"
+      />
+      
+      {/* Floating accent elements */}
+      <Box
+        position="absolute"
+        top="10%"
+        right="10%"
+        w="200px"
+        h="200px"
+        borderRadius="full"
+        bg={gradients.accentRadialSoft}
+        opacity="0.1"
+        filter="blur(40px)"
+      />
+      <Box
+        position="absolute"
+        bottom="20%"
+        left="5%"
+        w="150px"
+        h="150px"
+        borderRadius="full"
+        bg={gradients.accentRadialSoft}
+        opacity="0.08"
+        filter="blur(30px)"
+      />
 
-        <MotionBox
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={12} mb={16}>
-            {/* Product Images */}
-            <VStack spacing={4} align="stretch">
-              {/* Main Image */}
-              <Box
-                bg="white"
-                borderRadius="2xl"
-                p={6}
-                boxShadow="0 4px 20px rgba(0,0,0,0.1)"
-                position="relative"
-                overflow="hidden"
+      {/* Navigation Header */}
+      <Box position="relative" zIndex={2} py={8} pt={{ base: 24, md: 28 }}>
+        <Container maxW="container.xl">
+          <MotionBox
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Flex align="center" justify="space-between" mb={12}>
+              <Button
+                onClick={() => navigate('/all-products')}
+                leftIcon={<FaArrowLeft />}
+                bg={glassBg}
+                backdropFilter="blur(20px)"
+                color="white"
+                size="lg"
+                fontWeight="600"
+                borderRadius="xl"
+                border="1px solid rgba(255,255,255,0.2)"
+                _hover={{ 
+                  bg: "rgba(255,255,255,0.15)",
+                  transform: "translateX(-4px)",
+                  boxShadow: shadows.accentSoft
+                }}
+                transition="all 0.3s ease"
               >
-                <Image
-                  src={product.additionalImages[selectedImage]}
-                  alt={product.name}
-                  w="100%"
-                  h="500px"
-                  objectFit="contain"
+                Back to Collection
+              </Button> 
+              
+              <HStack spacing={4}>
+                <Button
+                  leftIcon={<FaShare />}
+                  bg={glassBg}
+                  backdropFilter="blur(20px)"
+                  color="white"
+                  size="lg"
                   borderRadius="xl"
-                />
-                
-                {/* Image Navigation */}
-                <HStack
-                  position="absolute"
-                  bottom="4"
-                  left="50%"
-                  transform="translateX(-50%)"
-                  bg="rgba(0,0,0,0.7)"
-                  borderRadius="full"
-                  p={2}
-                  spacing={2}
+                  border="1px solid rgba(255,255,255,0.2)"
+                  _hover={{ 
+                    bg: "rgba(255,255,255,0.15)",
+                    boxShadow: shadows.accentSoft
+                  }}
+                  transition="all 0.3s ease"
                 >
-                  {product.additionalImages.map((_, index) => (
-                    <Button
-                      key={index}
-                      size="sm"
-                      variant="ghost"
-                      color="white"
-                      bg={selectedImage === index ? "purple.500" : "transparent"}
-                      onClick={() => setSelectedImage(index)}
-                      minW="40px"
-                      h="40px"
-                      borderRadius="full"
-                    >
-                      {index + 1}
-                    </Button>
-                  ))}
-                </HStack>
-              </Box>
-
-              {/* Thumbnail Images */}
-              <HStack spacing={3} justify="center">
-                {product.additionalImages.map((image, index) => (
-                  <Box
-                    key={index}
-                    w="80px"
-                    h="80px"
-                    borderRadius="lg"
-                    overflow="hidden"
-                    cursor="pointer"
-                    border={selectedImage === index ? "3px solid" : "1px solid"}
-                    borderColor={selectedImage === index ? "purple.500" : "gray.200"}
-                    onClick={() => setSelectedImage(index)}
-                    _hover={{ borderColor: "purple.300" }}
-                  >
-                    <Image
-                      src={image}
-                      alt={`${product.name} view ${index + 1}`}
-                      w="100%"
-                      h="100%"
-                      objectFit="cover"
-                    />
-                  </Box>
-                ))}
+                  Share
+                </Button>
+                <Button
+                  leftIcon={isLiked ? <FaHeart /> : <FaBookmark />}
+                  bg={glassBg}
+                  backdropFilter="blur(20px)"
+                  color={isLiked ? colors.accentTint : "white"}
+                  size="lg"
+                  borderRadius="xl"
+                  border="1px solid rgba(255,255,255,0.2)"
+                  _hover={{ 
+                    bg: "rgba(255,255,255,0.15)",
+                    boxShadow: shadows.accentSoft
+                  }}
+                  onClick={() => setIsLiked(!isLiked)}
+                  transition="all 0.3s ease"
+                >
+                  {isLiked ? 'Saved' : 'Save'}
+                </Button>
               </HStack>
-            </VStack>
+            </Flex>
+          </MotionBox>
 
-            {/* Product Details */}
-            <VStack spacing={6} align="stretch">
-              {/* Product Header */}
-              <VStack spacing={4} align="stretch">
-                <HStack justify="space-between" align="flex-start">
-                  <VStack align="stretch" spacing={2} flex="1">
+          {/* Main Product Display */}
+          <Grid templateColumns={{ base: "1fr", xl: "1fr 1fr" }} gap={{ base: 8, xl: 20 }} align="start" mt={{ base: 4, md: 8 }}>
+            
+            {/* Product Image Gallery */}
+            <GridItem>
+              <MotionBox
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
+                <Box 
+                  bg={cardBg}
+                  backdropFilter="blur(30px)"
+                  boxShadow="0 20px 40px rgba(0,0,0,0.3)"
+                  borderRadius="3xl" 
+                  overflow="hidden" 
+                  position="relative"
+                  border="1px solid rgba(255,255,255,0.1)"
+                >
+                  {/* Premium Badge */}
+                  <Box position="absolute" top={8} left={8} zIndex={3}>
                     <Badge
-                      bg="linear-gradient(135deg, #8b5cf6, #06b6d4)"
+                      bg={gradients.accentLinear}
                       color="white"
-                      px={3}
-                      py={1}
                       borderRadius="full"
+                      px={6}
+                      py={3}
                       fontSize="sm"
                       fontWeight="700"
                       textTransform="uppercase"
-                      w="fit-content"
+                      letterSpacing="1px"
+                      boxShadow={shadows.accentMedium}
                     >
-                      {product.type}
+                      <Icon as={FaGem} mr={2} />
+                      {product.type || product.category}
                     </Badge>
-                    
-                    <Heading
-                      as="h1"
-                      fontSize={{ base: "2xl", md: "3xl" }}
-                      fontWeight="800"
-                      color="gray.800"
-                      lineHeight="1.2"
-                    >
-                      {product.name}
-                    </Heading>
-                    
-                    <HStack spacing={4}>
-                      <HStack spacing={1}>
-                        {[...Array(5)].map((_, i) => (
-                          <Icon
-                            key={i}
-                            as={FaStar}
-                            color={i < Math.floor(product.rating) ? "yellow.400" : "gray.300"}
-                            boxSize={4}
-                          />
-                        ))}
-                        <Text fontSize="sm" color="gray.600">
-                          ({product.reviews} reviews)
-                        </Text>
-                      </HStack>
-                    </HStack>
-                  </VStack>
-
-                  <HStack spacing={2}>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleAddToWishlist}
-                      leftIcon={<Icon as={FaHeart} />}
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleShare}
-                      leftIcon={<Icon as={FaShare} />}
-                    >
-                      Share
-                    </Button>
-                  </HStack>
-                </HStack>
-
-                <Text
-                  fontSize="lg"
-                  color="gray.600"
-                  lineHeight="1.6"
-                >
-                  {product.description}
-                </Text>
-
-                {/* Price */}
-                <HStack spacing={4} align="baseline">
-                  <Text
-                    fontSize="3xl"
-                    fontWeight="800"
-                    color="purple.600"
-                  >
-                    ₹{product.price.discounted.toLocaleString()}
-                  </Text>
-                  <Text
-                    fontSize="xl"
-                    color="gray.500"
-                    textDecoration="line-through"
-                  >
-                    ₹{product.price.original.toLocaleString()}
-                  </Text>
-                  <Badge
-                    bg="red.100"
-                    color="red.600"
-                    px={2}
-                    py={1}
-                    borderRadius="md"
-                    fontSize="sm"
-                    fontWeight="700"
-                  >
-                    Save ₹{(product.price.original - product.price.discounted).toLocaleString()}
-                  </Badge>
-                </HStack>
-
-                {/* Stock Status */}
-                <HStack spacing={2}>
-                  <Icon as={FaCheck} color="green.500" />
-                  <Text color="green.600" fontWeight="600">
-                    {product.inStock ? 'In Stock' : 'Out of Stock'}
-                  </Text>
-                </HStack>
-              </VStack>
-
-              <Box h="1px" bg="gray.200" my={4} />
-
-              {/* Key Features */}
-              <VStack spacing={4} align="stretch">
-                <Heading size="md" color="gray.800">
-                  Key Features
-                </Heading>
-                <SimpleGrid columns={2} spacing={3}>
-                  {product.features.map((feature, index) => (
-                    <HStack key={index} spacing={2}>
-                      <Icon as={FaCheck} color="green.500" boxSize={3} />
-                      <Text fontSize="sm" color="gray.600">
-                        {feature}
-                      </Text>
-                    </HStack>
-                  ))}
-                </SimpleGrid>
-              </VStack>
-
-              <Box h="1px" bg="gray.200" my={4} />
-
-              {/* Action Buttons */}
-              <VStack spacing={4} align="stretch">
-                <HStack spacing={4}>
-                  <Button
-                    size="lg"
-                    bg="linear-gradient(135deg, #8b5cf6, #06b6d4)"
-                    color="white"
-                    _hover={{
-                      bg: "linear-gradient(135deg, #7c3aed, #0891b2)",
-                      transform: "translateY(-2px)",
-                      boxShadow: "0 10px 25px rgba(139,92,246,0.3)"
-                    }}
-                    leftIcon={<Icon as={FaShoppingCart} />}
-                    onClick={handleInquiry}
-                    isDisabled={!product.inStock}
-                    flex="1"
-                  >
-                    {product.inStock ? 'Request Quote' : 'Out of Stock'}
-                  </Button>
-                  
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    borderColor="purple.500"
-                    color="purple.500"
-                    _hover={{
-                      bg: "purple.50",
-                      borderColor: "purple.600"
-                    }}
-                    leftIcon={<Icon as={FaPhone} />}
-                    flex="1"
-                  >
-                    Call Now
-                  </Button>
-                </HStack>
-
-                <Button
-                  size="lg"
-                  variant="ghost"
-                  color="purple.600"
-                  _hover={{
-                    bg: "purple.50"
-                  }}
-                  leftIcon={<Icon as={FaEnvelope} />}
-                >
-                  Send Inquiry via Email
-                </Button>
-              </VStack>
-            </VStack>
-          </SimpleGrid>
-
-          {/* Product Specifications */}
-          <Box
-            bg="white"
-            borderRadius="2xl"
-            p={8}
-            boxShadow="0 4px 20px rgba(0,0,0,0.1)"
-            mb={12}
-          >
-            <Heading size="lg" mb={6} color="gray.800">
-              Specifications
-            </Heading>
-            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
-              {Object.entries(product.specifications).map(([key, value]) => (
-                <VStack key={key} align="stretch" spacing={2}>
-                  <Text
-                    fontSize="sm"
-                    fontWeight="600"
-                    color="gray.500"
-                    textTransform="uppercase"
-                    letterSpacing="wide"
-                  >
-                    {key.replace(/([A-Z])/g, ' $1').trim()}
-                  </Text>
-                  <Text fontSize="lg" color="gray.800" fontWeight="500">
-                    {value}
-                  </Text>
-                </VStack>
-              ))}
-            </SimpleGrid>
-          </Box>
-
-          {/* Related Products */}
-          <Box>
-            <Heading size="lg" mb={6} color="gray.800">
-              Related Products
-            </Heading>
-            <SimpleGrid columns={{ base: 2, md: 4 }} spacing={6}>
-              {productsData
-                .filter(p => p.category === product.category && p.id !== product.id)
-                .slice(0, 4)
-                .map((relatedProduct) => (
-                  <Box
-                    key={relatedProduct.id}
-                    bg="white"
-                    borderRadius="xl"
-                    p={4}
-                    boxShadow="0 4px 15px rgba(0,0,0,0.1)"
-                    cursor="pointer"
-                    _hover={{
-                      transform: "translateY(-4px)",
-                      boxShadow: "0 8px 25px rgba(0,0,0,0.15)"
-                    }}
-                    transition="all 0.3s ease"
-                    onClick={() => navigate(`/product/${relatedProduct.id}`)}
-                  >
-                    <Image
-                      src={relatedProduct.image}
-                      alt={relatedProduct.name}
-                      w="100%"
-                      h="200px"
-                      objectFit="contain"
-                      borderRadius="lg"
-                      mb={3}
-                    />
-                    <Text fontWeight="600" fontSize="sm" color="gray.800" noOfLines={2}>
-                      {relatedProduct.name}
-                    </Text>
-                    <Text fontSize="xs" color="gray.500" mt={1}>
-                      {relatedProduct.type}
-                    </Text>
                   </Box>
-                ))}
-            </SimpleGrid>
-          </Box>
 
-          {/* Back Button */}
-          <Flex justify="center" mt={12}>
-            <Button
-              size="lg"
-              variant="outline"
-              leftIcon={<Icon as={FaArrowLeft} />}
-              onClick={() => navigate(-1)}
-            >
-              Back to Products
-            </Button>
-          </Flex>
-        </MotionBox>
-      </Container>
+                  {/* Main Product Image */}
+                  <Box position="relative">
+                    <AspectRatio ratio={4/5}>
+                      <Box
+                        bg="rgba(255,255,255,0.02)"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        p={16}
+                        position="relative"
+                        overflow="hidden"
+                      >
+                        {/* Elegant background pattern */}
+                        <Box
+                          position="absolute"
+                          top="0"
+                          left="0"
+                          right="0"
+                          bottom="0"
+                          opacity="0.05"
+                          backgroundImage="radial-gradient(circle at 20px 20px, rgba(34,4,56,0.1) 1px, transparent 1px)"
+                          backgroundSize="40px 40px"
+                        />
+                        
+                        {product.image ? (
+                          <Image
+                            src={product.image}
+                            alt={product.name}
+                            maxH="100%"
+                            maxW="100%"
+                            objectFit="contain"
+                            transition="transform 0.6s ease"
+                            _hover={{ transform: "scale(1.08)" }}
+                            filter="drop-shadow(0 20px 40px rgba(0,0,0,0.1))"
+                          />
+                        ) : (
+                          <VStack spacing={8} color={colors.grayText}>
+                            <Box fontSize="8xl" opacity="0.6">💎</Box>
+                            <Text fontWeight="700" fontSize="2xl" color={colors.dark}>{product.name}</Text>
+                            <Text fontSize="lg" color={colors.grayText}>Premium Product</Text>
+                          </VStack>
+                        )}
+                        
+                        {/* Elegant overlay actions */}
+                        <HStack position="absolute" top={6} right={6} spacing={3}>
+                          <Button
+                            leftIcon={<FaExpand />}
+                            size="md"
+                            bg={glassBg}
+                            backdropFilter="blur(20px)"
+                            color="white"
+                            borderRadius="full"
+                            border="1px solid rgba(255,255,255,0.2)"
+                            _hover={{ 
+                              bg: "rgba(255,255,255,0.2)",
+                              transform: "scale(1.1)"
+                            }}
+                            minW="auto"
+                            px={4}
+                            py={3}
+                            transition="all 0.3s ease"
+                          />
+                          <Button
+                            leftIcon={<FaPlay />}
+                            size="md"
+                            bg={glassBg}
+                            backdropFilter="blur(20px)"
+                            color="white"
+                            borderRadius="full"
+                            border="1px solid rgba(255,255,255,0.2)"
+                            _hover={{ 
+                              bg: "rgba(255,255,255,0.2)",
+                              transform: "scale(1.1)"
+                            }}
+                            minW="auto"
+                            px={4}
+                            py={3}
+                            transition="all 0.3s ease"
+                          />
+                        </HStack>
+                      </Box>
+                    </AspectRatio>
+                  </Box>
+                </Box>
+              </MotionBox>
+            </GridItem>
+
+            {/* Product Information */}
+            <GridItem>
+              <MotionBox
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                <VStack spacing={10} align="stretch">
+                  
+                  {/* Product Title & Description */}
+                  <Box 
+                    bg={cardBg}
+                    backdropFilter="blur(30px)"
+                    boxShadow="0 20px 40px rgba(0,0,0,0.3)"
+                    borderRadius="3xl" 
+                    p={12}
+                    border="1px solid rgba(255,255,255,0.1)"
+                    position="relative"
+                    overflow="hidden"
+                  >
+                    {/* Elegant background accent */}
+                    <Box
+                      position="absolute"
+                      top="-50%"
+                      right="-50%"
+                      w="200px"
+                      h="200px"
+                      borderRadius="full"
+                      bg={gradients.accentRadialSoft}
+                      opacity="0.1"
+                      filter="blur(40px)"
+                    />
+                    
+                    <VStack spacing={8} align="start" position="relative" zIndex={1}>
+                      <MotionHeading
+                        as="h1"
+                        fontSize={{ base: "5xl", md: "6xl", lg: "7xl" }}
+                        fontWeight="900"
+                        color="white"
+                        lineHeight="1.1"
+                        bgGradient={gradients.accentText}
+                        bgClip="text"
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.6 }}
+                      >
+                        {product.name}
+                      </MotionHeading>
+                      
+                      <MotionText
+                        fontSize="xl"
+                        color="rgba(255,255,255,0.8)"
+                        lineHeight="1.8"
+                        fontWeight="500"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.8 }}
+                      >
+                        {product.description}
+                      </MotionText>
+
+                      {/* Premium Rating & Reviews */}
+                      <MotionBox
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 1.0 }}
+                      >
+                        <HStack spacing={6} p={6} bg="rgba(255,255,255,0.05)" borderRadius="xl" border="1px solid rgba(255,255,255,0.1)">
+                          <HStack spacing={2}>
+                            {[...Array(5)].map((_, i) => (
+                              <Icon key={i} as={FaStar} color={colors.accentTint} boxSize={6} />
+                            ))}
+                          </HStack>
+                          <Text color="rgba(255,255,255,0.7)" fontWeight="600" fontSize="lg">
+                            (4.8/5) • 127 Premium Reviews
+                          </Text>
+                        </HStack>
+                      </MotionBox>
+                    </VStack>
+                  </Box>
+
+                  {/* Key Features */}
+                  <Box 
+                    bg={cardBg}
+                    backdropFilter="blur(30px)"
+                    boxShadow="0 20px 40px rgba(0,0,0,0.3)"
+                    borderRadius="3xl" 
+                    p={12}
+                    border="1px solid rgba(255,255,255,0.1)"
+                    position="relative"
+                    overflow="hidden"
+                  >
+                    {/* Elegant background accent */}
+                    <Box
+                      position="absolute"
+                      bottom="-30%"
+                      left="-30%"
+                      w="150px"
+                      h="150px"
+                      borderRadius="full"
+                      bg={gradients.accentRadialSoft}
+                      opacity="0.08"
+                      filter="blur(30px)"
+                    />
+                    
+                    <VStack spacing={8} align="stretch" position="relative" zIndex={1}>
+                      <MotionHeading 
+                        fontSize="3xl" 
+                        fontWeight="800" 
+                        color="white"
+                        bgGradient={gradients.accentText}
+                        bgClip="text"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 1.2 }}
+                      >
+                        <Icon as={FaCrown} mr={3} color={colors.accentTint} />
+                        Why Choose This Premium Product?
+                      </MotionHeading>
+                      
+                      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
+                        {[
+                          { icon: FaAward, text: 'Premium Quality', desc: 'Top-grade materials & craftsmanship', color: colors.accentTint },
+                          { icon: FaShieldAlt, text: 'Durable Design', desc: 'Long-lasting performance', color: colors.accentSoft },
+                          { icon: FaTools, text: 'Easy Installation', desc: 'Simple setup process', color: colors.accent },
+                          { icon: FaMagic, text: 'Modern Elegance', desc: 'Contemporary luxury style', color: colors.accentStrong }
+                        ].map((feature, index) => (
+                          <MotionBox
+                            key={index}
+                            p={8}
+                            bg="rgba(255,255,255,0.05)"
+                            backdropFilter="blur(20px)"
+                            borderRadius="2xl"
+                            border="1px solid"
+                            borderColor="rgba(255,255,255,0.1)"
+                            _hover={{
+                              bg: "rgba(255,255,255,0.08)",
+                              borderColor: feature.color,
+                              transform: "translateY(-8px)",
+                              boxShadow: "0 15px 30px rgba(0,0,0,0.2)"
+                            }}
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 1.4 + index * 0.1 }}
+                          >
+                            <HStack spacing={6} align="start">
+                              <Box
+                                p={4}
+                                bg={`linear-gradient(135deg, ${feature.color}20, ${feature.color}10)`}
+                                borderRadius="2xl"
+                                color={feature.color}
+                                boxShadow={shadows.accentSoft}
+                              >
+                                <Icon as={feature.icon} boxSize={8} />
+                              </Box>
+                              <VStack align="start" spacing={2}>
+                                <Text color={colors.dark} fontWeight="800" fontSize="xl">
+                                  {feature.text}
+                                </Text>
+                                <Text color={colors.grayText} fontSize="md" fontWeight="500">
+                                  {feature.desc}
+                                </Text>
+                              </VStack>
+                            </HStack>
+                          </MotionBox>
+                        ))}
+                      </SimpleGrid>
+                    </VStack>
+                  </Box>
+
+                  {/* Contact Section */}
+                  <Box 
+                    bg={cardBg}
+                    backdropFilter="blur(30px)"
+                    boxShadow="0 20px 40px rgba(0,0,0,0.3)"
+                    borderRadius="3xl" 
+                    p={12}
+                    border="1px solid rgba(255,255,255,0.1)"
+                    position="relative"
+                    overflow="hidden"
+                  >
+                    {/* Elegant background accent */}
+                    <Box
+                      position="absolute"
+                      top="-20%"
+                      right="-20%"
+                      w="180px"
+                      h="180px"
+                      borderRadius="full"
+                      bg={gradients.accentRadialSoft}
+                      opacity="0.1"
+                      filter="blur(40px)"
+                    />
+                    
+                    <VStack spacing={8} align="stretch" position="relative" zIndex={1}>
+                      <MotionBox
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 1.8 }}
+                      >
+                        <VStack spacing={4} align="start">
+                          <Heading 
+                            fontSize="3xl" 
+                            fontWeight="800" 
+                            color="white"
+                            bgGradient={gradients.accentText}
+                            bgClip="text"
+                          >
+                            <Icon as={FaGem} mr={3} color={colors.accentTint} />
+                            Get Premium Consultation
+                          </Heading>
+                          <Text 
+                            color={colors.grayText} 
+                            fontSize="xl" 
+                            fontWeight="500"
+                            lineHeight="1.6"
+                          >
+                            Contact our experts for detailed information, pricing, and personalized recommendations.
+                          </Text>
+                        </VStack>
+                      </MotionBox>
+
+                      {/* Premium Contact Buttons */}
+                      <VStack spacing={6}>
+                        <MotionBox
+                          w="100%"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.8, delay: 2.0 }}
+                        >
+                          <Button
+                            w="100%"
+                            bg={gradients.accentLinear}
+                            color="white"
+                            leftIcon={<FaWhatsapp />}
+                            size="xl"
+                            fontWeight="800"
+                            borderRadius="2xl"
+                            py={8}
+                            fontSize="lg"
+                            boxShadow={shadows.accentMedium}
+                            _hover={{ 
+                              transform: "translateY(-4px)",
+                              boxShadow: shadows.accentStrong
+                            }}
+                            onClick={() => handleContactClick('whatsapp')}
+                            transition="all 0.4s ease"
+                          >
+                            Contact via WhatsApp
+                          </Button>
+                        </MotionBox>
+
+                        <MotionBox
+                          w="100%"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.8, delay: 2.2 }}
+                        >
+                          <Button
+                            w="100%"
+                            bg={gradients.accentLinearAlt}
+                            color="white"
+                            leftIcon={<FaPhone />}
+                            size="xl"
+                            fontWeight="800"
+                            borderRadius="2xl"
+                            py={8}
+                            fontSize="lg"
+                            boxShadow={shadows.accentMedium}
+                            _hover={{ 
+                              transform: "translateY(-4px)",
+                              boxShadow: shadows.accentStrong
+                            }}
+                            onClick={() => handleContactClick('phone')}
+                            transition="all 0.4s ease"
+                          >
+                            Call Our Experts
+                          </Button>
+                        </MotionBox>
+
+                        <MotionBox
+                          w="100%"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.8, delay: 2.4 }}
+                        >
+                          <Button
+                            w="100%"
+                            bg={gradients.ctaPill}
+                            color="white"
+                            leftIcon={<FaEnvelope />}
+                            size="xl"
+                            fontWeight="800"
+                            borderRadius="2xl"
+                            py={8}
+                            fontSize="lg"
+                            boxShadow={shadows.accentMedium}
+                            _hover={{ 
+                              transform: "translateY(-4px)",
+                              boxShadow: shadows.accentStrong
+                            }}
+                            onClick={() => handleContactClick('email')}
+                            transition="all 0.4s ease"
+                          >
+                            Send Detailed Inquiry
+                          </Button>
+                        </MotionBox>
+                      </VStack>
+
+                      <Box 
+                        w="100%" 
+                        h="1px" 
+                        bg="rgba(255,255,255,0.3)" 
+                        my={6}
+                      />
+
+                      {/* Premium Contact Information */}
+                      <MotionBox
+                        bg="rgba(255,255,255,0.05)"
+                        backdropFilter="blur(20px)"
+                        p={8}
+                        borderRadius="2xl"
+                        border="1px solid rgba(255,255,255,0.1)"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 2.6 }}
+                      >
+                        <VStack spacing={6}>
+                          <Text fontSize="xl" fontWeight="800" color={colors.dark}>
+                            <Icon as={FaCheckCircle} mr={2} color={colors.accentTint} />
+                            Premium Contact Information
+                          </Text>
+                          <VStack spacing={4} w="100%">
+                            <HStack
+                              p={6}
+                              bg="rgba(255,255,255,0.03)"
+                              borderRadius="2xl"
+                              w="100%"
+                              border="1px solid rgba(255,255,255,0.1)"
+                              _hover={{ 
+                                borderColor: colors.accentTint,
+                                transform: "translateY(-2px)",
+                                boxShadow: "0 10px 20px rgba(0,0,0,0.2)"
+                              }}
+                              transition="all 0.3s ease"
+                            >
+                              <Icon as={FaMapMarkerAlt} color={colors.accentTint} boxSize={6} />
+                              <Text color={colors.dark} fontWeight="700" fontSize="lg">
+                                R Diamond Bathroom Fittings, Delhi
+                              </Text>
+                            </HStack>
+                            <HStack
+                              p={6}
+                              bg="rgba(255,255,255,0.03)"
+                              borderRadius="2xl"
+                              w="100%"
+                              border="1px solid rgba(255,255,255,0.1)"
+                              _hover={{ 
+                                borderColor: colors.accentSoft,
+                                transform: "translateY(-2px)",
+                                boxShadow: "0 10px 20px rgba(0,0,0,0.2)"
+                              }}
+                              transition="all 0.3s ease"
+                            >
+                              <Icon as={FaPhone} color={colors.accentSoft} boxSize={6} />
+                              <Text color="white" fontWeight="700" fontSize="lg">
+                                +91 98765 43210
+                              </Text>
+                            </HStack>
+                            <HStack
+                              p={6}
+                              bg="rgba(255,255,255,0.03)"
+                              borderRadius="2xl"
+                              w="100%"
+                              border="1px solid rgba(255,255,255,0.1)"
+                              _hover={{ 
+                                borderColor: colors.accent,
+                                transform: "translateY(-2px)",
+                                boxShadow: "0 10px 20px rgba(0,0,0,0.2)"
+                              }}
+                              transition="all 0.3s ease"
+                            >
+                              <Icon as={FaEnvelope} color={colors.accent} boxSize={6} />
+                              <Text color="white" fontWeight="700" fontSize="lg">
+                                rdiamond2423@gmail.com
+                              </Text>
+                            </HStack>
+                          </VStack>
+                        </VStack>
+                      </MotionBox>
+                    </VStack>
+                  </Box>
+                </VStack>
+              </MotionBox>
+            </GridItem>
+          </Grid>
+        </Container>
+      </Box>
     </Box>
   );
 };

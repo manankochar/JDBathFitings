@@ -1,0 +1,1913 @@
+import React, { useEffect, useState } from 'react';
+import { colors, gradients, shadows } from '../../theme/colors';
+import FeatureCardsContainer from './FeatureCardsContainer';
+
+const Hero = () => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [wordIndex, setWordIndex] = useState(0);
+
+  useEffect(() => {
+    setIsLoaded(true);
+    
+    const handleMouseMove = (e) => {
+      setMousePosition({
+        x: e.clientX / window.innerWidth,
+        y: e.clientY / window.innerHeight,
+      });
+    };
+    
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Initial check
+    handleResize();
+    
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  // Elegant product carousel
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % 4);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Rotating futuristic value propositions
+  const rotatingWords = [
+    'PRECISION',
+    'SUSTAINABILITY',
+    'INNOVATION',
+    'PERFORMANCE'
+  ];
+
+  useEffect(() => {
+    const wInt = setInterval(() => {
+      setWordIndex((p) => (p + 1) % rotatingWords.length);
+    }, 2600);
+    return () => clearInterval(wInt);
+  }, []);
+
+  const products = [
+    { 
+      name: "Luxury Basin Collection", 
+      subtitle: "Handcrafted Elegance",
+      description: "Premium ceramic basins with gold accents",
+      price: "₹25,000+",
+      gradient: "linear-gradient(135deg, #fef7cd 0%, #fde68a 100%)"
+    },
+    { 
+      name: "Smart Toilet Suite", 
+      subtitle: "Technology Meets Comfort",
+      description: "IoT-enabled intelligent bathroom systems",
+      price: "₹85,000+",
+      gradient: "linear-gradient(135deg, #dbeafe 0%, #c7d2fe 100%)"
+    },
+    { 
+      name: "Designer Faucets", 
+      subtitle: "Architectural Beauty",
+      description: "Precision-engineered water systems",
+      price: "₹15,000+",
+      gradient: "linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)"
+    },
+    { 
+      name: "Spa Shower Systems", 
+      subtitle: "Wellness Experience",
+      description: "Multi-function rainfall showers",
+      price: "₹45,000+",
+      gradient: "linear-gradient(135deg, #fae8ff 0%, #f3e8ff 100%)"
+    }
+  ];
+
+  const features = [
+    {
+      icon: "💎",
+      title: "Premium Materials",
+      description: "Finest ceramics and metals sourced globally",
+      detail: "German engineering standards",
+      gradient: `linear-gradient(135deg, ${colors.accent}20, ${colors.accentSoft}30)`,
+      glow: colors.accent
+    },
+    {
+      icon: "⚡",
+      title: "Precision Crafted",
+      description: "Meticulous attention to every detail",
+      detail: "Handcrafted excellence",
+      gradient: `linear-gradient(135deg, ${colors.accentSoft}20, ${colors.accent}30)`,
+      glow: colors.accentSoft
+    },
+    {
+      icon: "�",
+      title: "Eco Conscious",
+      description: "Sustainable and water-efficient designs",
+      detail: "Green technology",
+      gradient: `linear-gradient(135deg, ${colors.accentTint}20, ${colors.accent}25)`,
+      glow: colors.accentTint
+    },
+    {
+      icon: "🏆",
+      title: "Award Winning",
+      description: "Recognized for innovation and quality",
+      detail: "Industry leader since 1995",
+      gradient: `linear-gradient(135deg, ${colors.accent}25, ${colors.accentStrong}30)`,
+      glow: colors.accentStrong
+    }
+  ];
+
+  const styles = {
+    container: {
+      position: 'relative',
+      minHeight: 'auto',
+      width: '100%',
+      maxWidth: '100vw',
+      boxSizing: 'border-box',
+      overflow: 'hidden',
+      paddingBottom: '80px',
+      zIndex: 1,
+      backgroundColor: '#FFF' // solid background for lower half when video ends
+    },
+    // New wrapper that limits video height to upper portion only
+    videoContainer: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '50vh', // video occupies upper 50%
+      overflow: 'hidden',
+      zIndex: 0,
+      '@media (max-width: 768px)': {
+        height: '45vh'
+      },
+      '@media (max-width: 480px)': {
+        height: '40vh'
+      }
+    },
+    videoBg: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%', // now fills only the videoContainer
+      objectFit: 'cover',
+      zIndex: 0,
+      // Removed brightness filter to show original video colors
+    },
+    videoGradientOverlay: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: '160px',
+      // background: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.85) 60%, #000 100%)',
+      pointerEvents: 'none',
+      zIndex: 1
+    },
+    floatingParticle: {
+      position: 'absolute',
+      width: '4px',
+      height: '4px',
+      background: gradients.accentLinear,
+      borderRadius: '50%',
+      opacity: 0.55
+    },
+    mainContent: {
+      position: 'relative',
+      zIndex: 10,
+      maxWidth: '1280px',
+      margin: '0 auto',
+      padding: '0 16px 64px',
+      // Push content below the video hero
+      marginTop: '45vh',
+      width: '100%',
+      maxWidth: '100vw',
+      boxSizing: 'border-box',
+      overflow: 'hidden',
+      '@media (max-width: 768px)': {
+        padding: '0 16px 60px',
+        marginTop: '40vh',
+        maxWidth: '100vw',
+        overflow: 'hidden'
+      },
+      '@media (max-width: 480px)': {
+        padding: '0 12px 48px',
+        marginTop: '35vh',
+        maxWidth: '100vw',
+        overflow: 'hidden'
+      }
+    },
+    futuristicSection: {
+      position: 'relative',
+      minHeight: 'auto',
+      display: 'grid',
+      gridTemplateColumns: '1.2fr 0.8fr',
+      gap: '60px',
+      alignItems: 'center',
+      padding: '60px 0 40px',
+      '@media (max-width: 980px)': {
+        gridTemplateColumns: '1fr',
+        gap: '40px',
+        padding: '40px 0 30px',
+        minHeight: 'auto'
+      },
+      '@media (max-width: 768px)': {
+        padding: '30px 0 25px',
+        gap: '30px'
+      },
+      '@media (max-width: 600px)': {
+        padding: '25px 0 20px',
+        gap: '25px'
+      },
+      '@media (max-width: 480px)': {
+        padding: '20px 0 15px',
+        gap: '20px'
+      }
+    },
+    heroLeft: {
+      position: 'relative',
+      padding: '0 12px'
+    },
+    futuristicHeading: {
+      fontSize: 'clamp(2.8rem,7vw,5rem)',
+      fontWeight: 800,
+      letterSpacing: '0.05em',
+      lineHeight: 0.95,
+      margin: 0,
+      background: gradients.accentText,
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      position: 'relative',
+      filter: 'drop-shadow(0 4px 18px rgba(255,255,255,0.08))'
+    },
+    scanLine: {
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      height: '100%',
+      width: '100%',
+      background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%)',
+      mixBlendMode: 'overlay',
+      animation: 'scanMove 5s linear infinite'
+    },
+    subDeck: {
+      marginTop: '28px',
+      fontSize: 'clamp(1.05rem,2vw,1.45rem)',
+      color: '#475569',
+      fontWeight: 300,
+      lineHeight: 1.5,
+      maxWidth: '640px'
+    },
+    rotatingContainer: {
+      marginTop: '34px',
+      letterSpacing: '0.6rem',
+      fontSize: 'clamp(0.85rem,1.4vw,1.1rem)',
+      fontWeight: 500,
+      display: 'flex',
+      gap: '14px',
+      flexWrap: 'wrap'
+    },
+    rotatingWord: {
+      position: 'relative',
+      minWidth: '220px',
+      textAlign: 'left',
+      fontSize: 'clamp(1.1rem,2vw,1.6rem)',
+      letterSpacing: '0.5rem',
+      fontWeight: 400,
+      color: '#0f172a'
+    },
+    rotatingWordInner: {
+      display: 'inline-block',
+      animation: 'wordFade 2.6s ease-in-out forwards',
+      background: `linear-gradient(90deg,#1e293b,#0f172a,${colors.accent})`,
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent'
+    },
+    heroRight: {
+      position: 'relative',
+      display: 'grid',
+      gap: '20px',
+      gridTemplateColumns: 'repeat(auto-fill,minmax(160px,1fr))'
+    },
+    rightCard: {
+      position: 'relative',
+      padding: '22px 20px 24px',
+      borderRadius: '18px',
+      border: '1px solid rgba(255,255,255,0.2)',
+      background: 'linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.25) 100%)',
+      backdropFilter: 'blur(18px)',
+      boxShadow: '0 8px 30px -6px rgba(15,23,42,0.25)',
+      overflow: 'hidden'
+    },
+    rightCardAccent: {
+      position: 'absolute',
+      inset: 0,
+      background: `radial-gradient(circle at 30% 20%, ${colors.accentGlow}, transparent 60%)`,
+      opacity: 0,
+      transition: 'opacity .5s'
+    },
+    rightCardTitle: {
+      fontSize: '0.75rem',
+      letterSpacing: '0.4rem',
+      fontWeight: 600,
+      color: '#1e293b',
+      marginBottom: '10px'
+    },
+    rightCardValue: {
+      fontSize: '1.9rem',
+      fontWeight: 700,
+      letterSpacing: '0.05em',
+      background: 'linear-gradient(90deg,#1e293b,#334155)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent'
+    },
+    rightCardFoot: {
+      fontSize: '0.65rem',
+      letterSpacing: '0.3rem',
+      textTransform: 'uppercase',
+      marginTop: '14px',
+      color: '#475569'
+    },
+    header: {
+      textAlign: 'center',
+      marginBottom: '80px',
+      '@media (max-width: 768px)': {
+        marginBottom: '80px'
+      },
+      '@media (max-width: 480px)': {
+        marginBottom: '60px'
+      }
+    },
+    badge: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '12px',
+      background: 'rgba(255, 255, 255, 0.9)',
+      backdropFilter: 'blur(20px)',
+      border: '1px solid rgba(226, 232, 240, 0.5)',
+      borderRadius: '50px',
+      padding: '16px 32px',
+      marginTop: '40px',
+      marginBottom: '32px',
+      boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+      transition: 'all 0.3s ease'
+    },
+    pulsingDot: {
+      width: '8px',
+      height: '8px',
+      background: colors.accent,
+      borderRadius: '50%',
+      animation: 'pulse 2s infinite'
+    },
+    mainHeading: {
+      fontSize: 'clamp(3rem, 8vw, 8rem)',
+      fontWeight: '300',
+      color: '#1e293b',
+      lineHeight: '0.9',
+      letterSpacing: '-0.02em',
+      marginBottom: '32px',
+      display: 'none' // hidden since hero text removed
+    },
+    gradientText: {
+      background: 'linear-gradient(135deg, #64748b 0%, #1e293b 50%, #64748b 100%)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text'
+    },
+    subtitle: {
+      fontSize: 'clamp(1.25rem, 3vw, 2rem)',
+      color: '#64748b',
+      fontWeight: '300',
+      fontStyle: 'italic',
+      position: 'relative',
+      display: 'none'
+    },
+    description: {
+      fontSize: 'clamp(1.125rem, 2vw, 1.5rem)',
+      color: '#64748b',
+      maxWidth: '800px',
+      margin: '0 auto',
+      lineHeight: '1.6',
+      fontWeight: '300',
+      display: 'none'
+    },
+    gridContainer: {
+      display: 'grid',
+      gridTemplateColumns: '2fr 3fr',
+      gap: '64px',
+      alignItems: 'start',
+      width: '100%',
+      maxWidth: '100%',
+      boxSizing: 'border-box',
+      overflow: 'hidden',
+      '@media (max-width: 1024px)': {
+        gridTemplateColumns: '1fr',
+        gap: '48px',
+        width: '100%',
+        maxWidth: '100%'
+      },
+      '@media (max-width: 768px)': {
+        gridTemplateColumns: '1fr',
+        gap: '32px',
+        width: '100%',
+        maxWidth: '100%'
+      },
+      '@media (max-width: 480px)': {
+        gridTemplateColumns: '1fr',
+        gap: '20px',
+        width: '100%',
+        maxWidth: '100%'
+      }
+    },
+    featureCard: {
+      position: 'relative',
+      background: 'rgba(255, 255, 255, 0.7)',
+      backdropFilter: 'blur(20px)',
+      border: '1px solid rgba(226, 232, 240, 0.5)',
+      borderRadius: '16px',
+      padding: '24px',
+      marginBottom: '24px',
+      transition: 'all 0.3s ease',
+      cursor: 'pointer'
+    },
+    featureIcon: {
+      width: '56px',
+      height: '56px',
+      background: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
+      borderRadius: '12px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: '24px',
+      marginRight: '20px',
+      flexShrink: 0,
+      boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+    },
+    productShowcase: {
+      position: 'relative',
+      background: 'rgba(255, 255, 255, 0.8)',
+      backdropFilter: 'blur(30px)',
+      border: '1px solid rgba(226, 232, 240, 0.5)',
+      borderRadius: '24px',
+      padding: '32px',
+      boxShadow: '0 25px 50px rgba(0,0,0,0.1)',
+      overflow: 'hidden'
+    },
+    carouselContainer: {
+      position: 'relative',
+      height: '320px',
+      marginBottom: '32px',
+      overflow: 'hidden',
+      borderRadius: '16px',
+      '@media (max-width: 768px)': {
+        height: '320px',
+        marginBottom: '32px'
+      },
+      '@media (max-width: 480px)': {
+        height: '280px',
+        marginBottom: '28px'
+      }
+    },
+    carouselSlide: {
+      display: 'flex',
+      height: '100%',
+      transform: `translateX(-${currentSlide * 100}%)`,
+      transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)'
+    },
+    slideContent: {
+      minWidth: '100%',
+      height: '100%',
+      borderRadius: '16px',
+      border: '1px solid rgba(255,255,255,0.5)',
+      boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.05)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative',
+      overflow: 'hidden'
+    },
+    slidePattern: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      opacity: 0.05,
+      backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23000000'%3E%3Ccircle cx='50' cy='50' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+    },
+    indicators: {
+      display: 'flex',
+      justifyContent: 'center',
+      gap: '12px',
+      marginBottom: '32px'
+    },
+    indicator: {
+      width: '8px',
+      height: '8px',
+      borderRadius: '50%',
+      background: '#cbd5e1',
+      cursor: 'pointer',
+      transition: 'all 0.5s ease',
+      border: 'none',
+      minWidth: '44px',
+      minHeight: '44px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      '@media (max-width: 480px)': {
+        minWidth: '48px',
+        minHeight: '48px'
+      }
+    },
+    indicatorActive: {
+      background: '#64748b',
+      width: '32px',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+    },
+    buttonPrimary: {
+      background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
+      color: 'white',
+      fontWeight: '500',
+      padding: '16px 32px',
+      borderRadius: '12px',
+      border: 'none',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      boxShadow: '0 8px 25px rgba(30,41,59,0.3)',
+      position: 'relative',
+      overflow: 'hidden',
+      minHeight: '48px',
+      '@media (max-width: 768px)': {
+        padding: '16px 28px',
+        minHeight: '56px'
+      },
+      '@media (max-width: 480px)': {
+        padding: '14px 24px',
+        minHeight: '60px',
+        fontSize: '16px'
+      }
+    },
+    buttonSecondary: {
+      background: 'rgba(255, 255, 255, 0.8)',
+      backdropFilter: 'blur(20px)',
+      border: '1px solid #cbd5e1',
+      color: '#1e293b',
+      fontWeight: '500',
+      padding: '16px 32px',
+      borderRadius: '12px',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      minHeight: '48px',
+      '@media (max-width: 768px)': {
+        padding: '16px 28px',
+        minHeight: '56px'
+      },
+      '@media (max-width: 480px)': {
+        padding: '14px 24px',
+        minHeight: '60px',
+        fontSize: '16px'
+      }
+    },
+    statsGrid: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(3, 1fr)',
+      gap: '24px',
+      marginTop: '32px',
+      '@media (max-width: 768px)': {
+        gridTemplateColumns: 'repeat(3, 1fr)',
+        gap: '16px',
+        marginTop: '24px'
+      },
+      '@media (max-width: 480px)': {
+        gridTemplateColumns: '1fr',
+        gap: '12px',
+        marginTop: '20px'
+      }
+    },
+    statCard: {
+      textAlign: 'center',
+      background: 'rgba(255, 255, 255, 0.6)',
+      backdropFilter: 'blur(20px)',
+      border: '1px solid rgba(226, 232, 240, 0.5)',
+      borderRadius: '16px',
+      padding: '24px',
+      transition: 'all 0.3s ease'
+    },
+    ctaSection: {
+      textAlign: 'center',
+      marginTop: '96px',
+      marginBottom: '64px'
+    },
+    ctaContainer: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '24px',
+      background: gradients.ctaPill,
+      backdropFilter: 'blur(20px)',
+      border: `1px solid ${colors.accent}55`,
+      borderRadius: '50px',
+      padding: '24px 48px',
+      boxShadow: '0 20px 40px rgba(34,4,56,0.25)',
+      position: 'relative'
+    },
+    ctaButton: {
+      background: gradients.accentLinear,
+      color: 'white',
+      fontWeight: '600',
+      padding: '12px 32px',
+      borderRadius: '50px',
+      border: 'none',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      boxShadow: shadows?.accentSoft || '0 8px 25px rgba(34,4,56,0.3)'
+    }
+  };
+
+  // Floating particles animation
+  const FloatingParticles = () => {
+    const [particles, setParticles] = useState([]);
+
+    useEffect(() => {
+      const newParticles = [];
+      for (let i = 0; i < 12; i++) {
+        newParticles.push({
+          id: i,
+          x: Math.random() * window.innerWidth,
+          y: window.innerHeight + 10,
+          delay: Math.random() * 8,
+          duration: 15 + Math.random() * 10
+        });
+      }
+      setParticles(newParticles);
+    }, []);
+
+    return (
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+        {particles.map(particle => (
+          <div
+            key={particle.id}
+            style={{
+              ...styles.floatingParticle,
+              left: `${particle.x}px`,
+              animationName: 'floatUp',
+              animationDuration: `${particle.duration}s`,
+              animationDelay: `${particle.delay}s`,
+              animationIterationCount: 'infinite',
+              animationTimingFunction: 'linear'
+            }}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  // Floating geometric shapes
+  const FloatingShapes = () => {
+    const shapes = [];
+    for (let i = 0; i < 8; i++) {
+      shapes.push({
+        id: i,
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        size: 20 + Math.random() * 20,
+        isCircle: i % 2 === 0
+      });
+    }
+
+    return (
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, overflow: 'hidden', pointerEvents: 'none', opacity: 0.05 }}>
+        {shapes.map(shape => (
+          <div
+            key={shape.id}
+            style={{
+              position: 'absolute',
+              left: `${shape.x}px`,
+              top: `${shape.y}px`,
+              width: `${shape.size}px`,
+              height: `${shape.size}px`,
+              border: '2px solid #64748b',
+              borderRadius: shape.isCircle ? '50%' : '0',
+              transform: shape.isCircle ? 'none' : 'rotate(45deg)',
+              animationName: 'floatRotate',
+              animationDuration: `${20 + Math.random() * 10}s`,
+              animationIterationCount: 'infinite',
+              animationTimingFunction: 'linear'
+            }}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <>
+      <style jsx>{`
+        * {
+          box-sizing: border-box;
+        }
+        
+        html, body {
+          overflow-x: hidden;
+          max-width: 100vw;
+        }
+        
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+        
+        @keyframes floatUp {
+          0% {
+            transform: translateY(0);
+            opacity: 0;
+          }
+          50% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(-100vh);
+            opacity: 0;
+          }
+        }
+        
+        @keyframes floatRotate {
+          0% {
+            transform: translateY(0) rotate(0deg);
+          }
+          50% {
+            transform: translateY(-50px) rotate(180deg);
+          }
+          100% {
+            transform: translateY(0) rotate(360deg);
+          }
+        }
+        
+        @keyframes shimmer {
+          0% {
+            transform: translateX(-100%) skewX(-12deg);
+          }
+          100% {
+            transform: translateX(100%) skewX(-12deg);
+          }
+        }
+        @keyframes scanMove { 0% { transform: translateY(-100%);} 100% { transform: translateY(100%);} }
+        @keyframes wordFade { 0% { opacity:0; transform:translateY(12px);} 15% {opacity:1; transform:translateY(0);} 85% {opacity:1;} 100% {opacity:0; transform:translateY(-10px);} }
+        
+        @keyframes slideInUp {
+          0% {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        
+        @keyframes rotate {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        
+        @media (max-width: 768px) {
+          .grid-responsive {
+            grid-template-columns: 1fr !important;
+            gap: 48px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+          }
+          .text-responsive {
+            font-size: clamp(2.5rem, 10vw, 5rem) !important;
+          }
+          .main-content {
+            padding: 80px 16px 60px !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+          }
+          .hero-heading {
+            font-size: clamp(3.5rem, 12vw, 7rem) !important;
+            line-height: 0.9 !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
+            margin-bottom: 32px !important;
+          }
+          .hero-subtitle {
+            font-size: clamp(1.2rem, 5vw, 1.8rem) !important;
+            padding: 0 12px !important;
+          }
+          .hero-description {
+            font-size: clamp(1rem, 4vw, 1.4rem) !important;
+            padding: 0 12px !important;
+            margin-bottom: 48px !important;
+          }
+          .feature-cards {
+            margin-bottom: 32px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 16px !important;
+          }
+          
+          .feature-card {
+            padding: 20px !important;
+            margin-bottom: 0 !important;
+            border-radius: 16px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+            min-height: 140px !important;
+          }
+          
+          .feature-icon {
+            width: 48px !important;
+            height: 48px !important;
+            margin-right: 12px !important;
+            flex-shrink: 0 !important;
+          }
+          
+          .contact-card {
+            padding: 12px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+            grid-column: 1 / -1 !important;
+          }
+          
+          .contact-card h4 {
+            font-size: 16px !important;
+            margin-bottom: 12px !important;
+          }
+          
+          .contact-card .contact-item {
+            font-size: 12px !important;
+            margin-bottom: 8px !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            justify-content: flex-start !important;
+            gap: 2px !important;
+          }
+          
+          .contact-card .contact-item span {
+            font-size: 11px !important;
+            line-height: 1.3 !important;
+          }
+          .product-showcase {
+            margin-top: 32px !important;
+            padding: 0 12px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+          }
+          
+          .product-showcase h3 {
+            font-size: 24px !important;
+            margin-bottom: 12px !important;
+          }
+          
+          .product-showcase p {
+            font-size: 14px !important;
+            padding: 0 8px !important;
+          }
+          
+          .carousel-container {
+            height: 320px !important;
+            margin-bottom: 32px !important;
+          }
+          
+          .slide-content h4 {
+            font-size: 22px !important;
+            margin-bottom: 8px !important;
+          }
+          
+          .slide-content .subtitle {
+            font-size: 14px !important;
+            margin-bottom: 10px !important;
+          }
+          
+          .slide-content .description {
+            font-size: 13px !important;
+            margin-bottom: 16px !important;
+            line-height: 1.5 !important;
+          }
+          
+          .slide-content .price {
+            font-size: 14px !important;
+          }
+          
+          .responsive-button-grid {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .grid-responsive {
+            gap: 32px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+          }
+          .main-content {
+            padding: 60px 12px 48px !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+          }
+          .hero-heading {
+            font-size: clamp(2.5rem, 10vw, 5rem) !important;
+            line-height: 0.95 !important;
+            margin-bottom: 28px !important;
+          }
+          .hero-subtitle {
+            font-size: clamp(1rem, 4vw, 1.4rem) !important;
+            padding: 0 8px !important;
+          }
+          .hero-description {
+            font-size: clamp(0.9rem, 3vw, 1.2rem) !important;
+            padding: 0 8px !important;
+            margin-bottom: 40px !important;
+          }
+          .badge-mobile {
+            padding: 12px 20px !important;
+            margin-bottom: 24px !important;
+            font-size: 13px !important;
+            max-width: 95% !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+          }
+          .cta-section {
+            margin-top: 60px !important;
+          }
+          .responsive-button-grid {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+          }
+          .carousel-container {
+            height: 280px !important;
+            margin-bottom: 28px !important;
+          }
+          .slide-content h4 {
+            font-size: 20px !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+          }
+          .slide-content .description {
+            font-size: 12px !important;
+            padding: 0 12px !important;
+          }
+          .contact-card {
+            padding: 16px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+            grid-column: 1 / -1 !important;
+          }
+          .feature-card {
+            padding: 16px !important;
+            margin-bottom: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+            min-height: 120px !important;
+          }
+          .feature-icon {
+            width: 44px !important;
+            height: 44px !important;
+            margin-right: 12px !important;
+            flex-shrink: 0 !important;
+          }
+          .feature-cards {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 14px !important;
+          }
+        }
+        
+        @media (max-width: 320px) {
+          .main-content {
+            padding: 48px 8px 36px !important;
+          }
+          .hero-heading {
+            font-size: clamp(2rem, 8vw, 4rem) !important;
+          }
+          .grid-responsive {
+            gap: 28px !important;
+          }
+          .responsive-button-grid {
+            gap: 14px !important;
+          }
+          .product-showcase {
+            padding: 0 8px !important;
+          }
+          .slide-content h4 {
+            font-size: 18px !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+          }
+          .slide-content .description {
+            font-size: 11px !important;
+            padding: 0 10px !important;
+          }
+          .contact-card {
+            padding: 12px !important;
+          }
+        }
+      `}</style>
+      
+      <div style={styles.container}>
+        {/* Limited Height Video Background (upper portion only) */}
+        <div style={styles.videoContainer}>
+          <video
+            style={styles.videoBg}
+            autoPlay
+            loop
+            muted
+            playsInline
+          >
+            <source src={require('../../assets/bgVideo.mp4')} type="video/mp4" />
+          </video>
+          {/* Gradient fade so lower half is solid background */}
+          <div style={styles.videoGradientOverlay} />
+          {/* Minimal overlay hint */}
+          <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',pointerEvents:'none'}}>
+            <div style={{
+              fontSize:'clamp(2.5rem,6vw,5rem)',
+              fontWeight:900,
+              letterSpacing:'0.6rem',
+              background:`linear-gradient(90deg, rgba(255,255,255,0.85), rgba(255,255,255,0.65), ${colors.accent}E6)`,
+              WebkitBackgroundClip:'text',
+              WebkitTextFillColor:'transparent',
+              mixBlendMode:'overlay',
+              opacity:0.25,
+              textAlign:'center'
+            }}></div>
+          </div>
+        </div>
+
+        <div style={styles.mainContent} className="main-content">
+          {/* Futuristic Statement Section */}
+          <section style={styles.futuristicSection}>
+            <div style={styles.heroLeft}>
+              
+               <div style={styles.rotatingContainer}>
+                <div style={styles.rotatingWord}>
+                  <span key={wordIndex} style={styles.rotatingWordInner}>{rotatingWords[wordIndex]}</span>
+                </div>
+              </div>
+              <p style={styles.subDeck}>
+                Elevating everyday rituals with precision-crafted luxury sanitaryware engineered to endure and inspire. Where design intelligence fuses with sustainable performance.
+              </p>
+             {/* <h1
+                style={{
+                  ...styles.futuristicHeading,
+                  transform: `translate3d(${(mousePosition.x-0.5)*16}px, ${(mousePosition.y-0.5)*12}px,0)`
+                }}
+              >
+                R DIAMOND
+                <span style={styles.scanLine} />
+              </h1> */}
+              <div style={{display:'flex', gap:'18px', marginTop:'20px', flexWrap:'wrap'}}>
+                <button
+                  style={{
+                    background:'linear-gradient(135deg,#1e293b,#0f172a)',
+                    color:'#fff',
+                    border:'1px solid #334155',
+                    padding:'16px 34px',
+                    fontSize:'0.85rem',
+                    letterSpacing:'0.25rem',
+                    borderRadius:'14px',
+                    fontWeight:600,
+                    position:'relative',
+                    overflow:'hidden',
+                    cursor:'pointer'
+                  }}
+                  onMouseEnter={(e)=>{e.currentTarget.querySelector('.shine').style.left='120%';}}
+                  onMouseLeave={(e)=>{e.currentTarget.querySelector('.shine').style.left='-120%';}}
+                >
+                  <span className='shine' style={{position:'absolute',top:0,left:'-120%',height:'100%',width:'120%',background:'linear-gradient(115deg, transparent, rgba(255,255,255,0.25), transparent)',transform:'skewX(-20deg)',transition:'left .8s ease'}} />
+                  EXPLORE FUTURE →
+                </button>
+                <button
+                  style={{
+                    background:'rgba(255,255,255,0.55)',
+                    backdropFilter:'blur(14px)',
+                    border:'1px solid rgba(255,255,255,0.4)',
+                    padding:'16px 34px',
+                    fontSize:'0.85rem',
+                    letterSpacing:'0.25rem',
+                    borderRadius:'14px',
+                    fontWeight:600,
+                    color:'#0f172a',
+                    cursor:'pointer',
+                    position:'relative'
+                  }}
+                >VISIT SHOWROOM</button>
+              </div>
+            </div>
+            <div style={styles.heroRight}>
+              {[{t:'YEARS',v:'28'},{t:'COLLECTIONS',v:'45+'},{t:'CLIENTS',v:'15K+'},{t:'WATER SAVINGS',v:'30%'}].map((itm,i)=>(
+                <div key={i} style={styles.rightCard}
+                  onMouseEnter={(e)=>{e.currentTarget.querySelector('.accent').style.opacity=1;}}
+                  onMouseLeave={(e)=>{e.currentTarget.querySelector('.accent').style.opacity=0;}}
+                >
+                  <div className='accent' style={styles.rightCardAccent} />
+                  <div style={styles.rightCardTitle}>{itm.t}</div>
+                  <div style={styles.rightCardValue}>{itm.v}</div>
+                  <div style={styles.rightCardFoot}>ELEVATED</div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Main Content Layout */}
+          <div style={styles.gridContainer} className="grid-responsive">
+            
+            {/* Revolutionary Features Section */}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '24px',
+              position: 'relative'
+            }}>
+              {/* Section Header */}
+              <div style={{
+                textAlign: 'center',
+                marginBottom: '40px',
+                position: 'relative'
+              }}>
+                <h2 style={{
+                  fontSize: isMobile ? '32px' : '48px',
+                  fontWeight: '700',
+                  background: `linear-gradient(135deg, #1e293b 0%, ${colors.accent} 50%, #0f172a 100%)`,
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  marginBottom: '16px',
+                  letterSpacing: '-0.02em'
+                }}>
+                  Excellence Redefined
+                </h2>
+                <div style={{
+                  height: '3px',
+                  width: '120px',
+                  background: `linear-gradient(90deg, transparent, ${colors.accent}, transparent)`,
+                  margin: '0 auto',
+                  borderRadius: '2px',
+                  boxShadow: `0 0 20px ${colors.accent}50`
+                }} />
+              </div>
+
+              {/* Enhanced Feature Cards Grid */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+                gap: '20px',
+                maxWidth: '100%'
+              }}>
+                {features.map((feature, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      background: `
+                        linear-gradient(145deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%),
+                        ${feature.gradient}
+                      `,
+                      backdropFilter: 'blur(20px)',
+                      border: `1px solid rgba(30, 41, 59, 0.5)`,
+                      borderRadius: '20px',
+                      padding: '32px 24px',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      cursor: 'pointer',
+                      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                      boxShadow: `
+                        0 10px 30px rgba(0, 0, 0, 0.3),
+                        0 0 40px ${feature.glow}15
+                      `,
+                      transform: 'translateY(0)',
+                      animation: isLoaded ? `slideInUp 0.8s ease-out ${index * 0.2}s both` : 'none'
+                    }}
+                    className="feature-card-enhanced"
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
+                      e.currentTarget.style.boxShadow = `
+                        0 20px 50px rgba(0, 0, 0, 0.4),
+                        0 0 60px ${feature.glow}30
+                      `;
+                      e.currentTarget.querySelector('.feature-glow').style.opacity = '0.8';
+                      e.currentTarget.querySelector('.feature-icon').style.transform = 'scale(1.2) rotate(10deg)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                      e.currentTarget.style.boxShadow = `
+                        0 10px 30px rgba(0, 0, 0, 0.3),
+                        0 0 40px ${feature.glow}15
+                      `;
+                      e.currentTarget.querySelector('.feature-glow').style.opacity = '0';
+                      e.currentTarget.querySelector('.feature-icon').style.transform = 'scale(1) rotate(0deg)';
+                    }}
+                  >
+                    {/* Background glow effect */}
+                    <div
+                      className="feature-glow"
+                      style={{
+                        position: 'absolute',
+                        top: '-50%',
+                        left: '-50%',
+                        width: '200%',
+                        height: '200%',
+                        background: `radial-gradient(circle, ${feature.glow}20 0%, transparent 70%)`,
+                        opacity: 0,
+                        transition: 'opacity 0.4s ease',
+                        pointerEvents: 'none'
+                      }}
+                    />
+
+                    {/* Animated border */}
+                    <div style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      borderRadius: '20px',
+                      background: `conic-gradient(from 0deg, ${feature.glow}40, transparent 30%, ${feature.glow}20, transparent 70%, ${feature.glow}40)`,
+                      animation: 'rotate 6s linear infinite',
+                      opacity: 0.6,
+                      zIndex: -1
+                    }} />
+
+                    {/* Inner border */}
+                    <div style={{
+                      position: 'absolute',
+                      top: '1px',
+                      left: '1px',
+                      right: '1px',
+                      bottom: '1px',
+                      borderRadius: '19px',
+                      background: 'rgba(15, 23, 42, 0.95)',
+                      zIndex: -1
+                    }} />
+
+                    {/* Icon */}
+                    <div
+                      className="feature-icon"
+                      style={{
+                        fontSize: '48px',
+                        marginBottom: '20px',
+                        display: 'block',
+                        transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                        filter: `drop-shadow(0 0 10px ${feature.glow}60)`
+                      }}
+                    >
+                      {feature.icon}
+                    </div>
+
+                    {/* Title */}
+                    <h3 style={{
+                      fontSize: '20px',
+                      fontWeight: '700',
+                      color: '#f8fafc',
+                      marginBottom: '12px',
+                      letterSpacing: '-0.01em'
+                    }}>
+                      {feature.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p style={{
+                      fontSize: '14px',
+                      color: '#cbd5e1',
+                      lineHeight: '1.6',
+                      marginBottom: '16px'
+                    }}>
+                      {feature.description}
+                    </p>
+
+                    {/* Detail Badge */}
+                    <div style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      padding: '6px 14px',
+                      background: `linear-gradient(135deg, ${feature.glow}20, ${feature.glow}10)`,
+                      border: `1px solid ${feature.glow}40`,
+                      borderRadius: '50px',
+                      fontSize: '12px',
+                      fontWeight: '600',
+                      color: '#e2e8f0',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px'
+                    }}>
+                      <span style={{
+                        width: '6px',
+                        height: '6px',
+                        background: feature.glow,
+                        borderRadius: '50%',
+                        marginRight: '8px',
+                        boxShadow: `0 0 8px ${feature.glow}80`
+                      }} />
+                      {feature.detail}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Revolutionary Product Showcase */}
+            <div 
+              className="product-showcase-enhanced"
+              style={{
+                opacity: isLoaded ? 1 : 0,
+                transform: isLoaded ? 'translateX(0)' : 'translateX(40px)',
+                transition: 'all 1s ease 1s'
+              }}>
+              
+              {/* Modern Header Section */}
+              <div style={{
+                textAlign: 'center',
+                marginBottom: '48px',
+                position: 'relative'
+              }}>
+                <div style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  marginBottom: '20px',
+                  padding: '8px 24px',
+                  background: `linear-gradient(135deg, ${colors.accent}10, ${colors.accentSoft}05)`,
+                  border: `1px solid ${colors.accent}30`,
+                  borderRadius: '50px',
+                  backdropFilter: 'blur(10px)'
+                }}>
+                  <div style={{
+                    width: '8px',
+                    height: '8px',
+                    background: colors.accent,
+                    borderRadius: '50%',
+                    boxShadow: `0 0 12px ${colors.accent}80`,
+                    animation: 'pulse 2s infinite'
+                  }} />
+                  <span style={{
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: colors.accent,
+                    textTransform: 'uppercase',
+                    letterSpacing: '1px'
+                  }}>
+                    Premium Collections
+                  </span>
+                </div>
+
+                <h3 style={{
+                  fontSize: isMobile ? '28px' : '42px',
+                  fontWeight: '700',
+                  background: `linear-gradient(135deg, #1e293b 0%, ${colors.accent} 50%, #0f172a 100%)`,
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  marginBottom: '16px',
+                  letterSpacing: '-0.02em'
+                }}>
+                  Featured Collections
+                </h3>
+                
+                <p style={{
+                  color: '#64748b',
+                  fontSize: isMobile ? '14px' : '18px',
+                  lineHeight: '1.6',
+                  maxWidth: '400px',
+                  margin: '0 auto'
+                }}>
+                  Curated premium sanitaryware for discerning homes
+                </p>
+
+                {/* Decorative elements */}
+                <div style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '-20px',
+                  width: '40px',
+                  height: '2px',
+                  background: `linear-gradient(90deg, transparent, ${colors.accent}60, transparent)`,
+                  transform: 'translateY(-50%)',
+                  display: isMobile ? 'none' : 'block'
+                }} />
+                <div style={{
+                  position: 'absolute',
+                  top: '50%',
+                  right: '-20px',
+                  width: '40px',
+                  height: '2px',
+                  background: `linear-gradient(90deg, transparent, ${colors.accent}60, transparent)`,
+                  transform: 'translateY(-50%)',
+                  display: isMobile ? 'none' : 'block'
+                }} />
+              </div>
+
+              {/* Revolutionary Product Cards */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: isMobile ? '1fr' : '1fr',
+                gap: '24px',
+                maxWidth: '500px',
+                margin: '0 auto'
+              }}>
+                {products.map((product, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      background: `
+                        linear-gradient(145deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%),
+                        ${product.gradient.replace('linear-gradient(135deg,', 'linear-gradient(145deg, rgba(0,0,0,0.1),')}
+                      `,
+                      backdropFilter: 'blur(25px)',
+                      border: `1px solid rgba(30, 41, 59, 0.5)`,
+                      borderRadius: '24px',
+                      padding: '32px',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      cursor: 'pointer',
+                      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                      boxShadow: `
+                        0 15px 40px rgba(0, 0, 0, 0.3),
+                        0 0 50px ${colors.accent}10
+                      `,
+                      transform: 'translateY(0)',
+                      animation: isLoaded ? `slideInUp 0.8s ease-out ${index * 0.3 + 1}s both` : 'none'
+                    }}
+                    className="product-card-enhanced"
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-12px) scale(1.03)';
+                      e.currentTarget.style.boxShadow = `
+                        0 25px 60px rgba(0, 0, 0, 0.4),
+                        0 0 80px ${colors.accent}20
+                      `;
+                      e.currentTarget.querySelector('.product-glow').style.opacity = '1';
+                      e.currentTarget.querySelector('.product-icon').style.transform = 'scale(1.2) rotateY(15deg)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                      e.currentTarget.style.boxShadow = `
+                        0 15px 40px rgba(0, 0, 0, 0.3),
+                        0 0 50px ${colors.accent}10
+                      `;
+                      e.currentTarget.querySelector('.product-glow').style.opacity = '0';
+                      e.currentTarget.querySelector('.product-icon').style.transform = 'scale(1) rotateY(0deg)';
+                    }}
+                  >
+                    {/* Holographic border */}
+                    <div style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      borderRadius: '24px',
+                      background: `conic-gradient(from 0deg, ${colors.accent}30, transparent 30%, ${colors.accentSoft}20, transparent 70%, ${colors.accent}30)`,
+                      animation: 'rotate 8s linear infinite',
+                      opacity: 0.4,
+                      zIndex: -1
+                    }} />
+
+                    {/* Inner glow */}
+                    <div
+                      className="product-glow"
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: `radial-gradient(circle at 50% 50%, ${colors.accent}15 0%, transparent 70%)`,
+                        opacity: 0,
+                        transition: 'opacity 0.4s ease',
+                        borderRadius: '24px'
+                      }}
+                    />
+
+                    {/* Product Icon */}
+                    <div
+                      className="product-icon"
+                      style={{
+                        fontSize: isMobile ? '48px' : '64px',
+                        marginBottom: '24px',
+                        textAlign: 'center',
+                        transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                        filter: `drop-shadow(0 0 20px ${colors.accent}40)`,
+                        perspective: '100px'
+                      }}
+                    >
+                      {index === 0 ? '🚿' : index === 1 ? '🚽' : index === 2 ? '🚰' : '💧'}
+                    </div>
+
+                    {/* Product Info */}
+                    <div style={{ textAlign: 'center' }}>
+                      <h4 style={{
+                        fontSize: isMobile ? '20px' : '26px',
+                        fontWeight: '700',
+                        color: '#f8fafc',
+                        marginBottom: '8px',
+                        letterSpacing: '-0.01em'
+                      }}>
+                        {product.name}
+                      </h4>
+
+                      <p style={{
+                        color: colors.accent,
+                        marginBottom: '12px',
+                        fontWeight: '500',
+                        fontStyle: 'italic',
+                        fontSize: isMobile ? '14px' : '16px'
+                      }}>
+                        {product.subtitle}
+                      </p>
+
+                      <p style={{
+                        color: '#cbd5e1',
+                        fontSize: isMobile ? '13px' : '15px',
+                        marginBottom: '24px',
+                        lineHeight: '1.6'
+                      }}>
+                        {product.description}
+                      </p>
+
+                      {/* Price and CTA */}
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '16px 20px',
+                        background: `linear-gradient(135deg, ${colors.accent}10, ${colors.accentSoft}05)`,
+                        borderRadius: '16px',
+                        border: `1px solid ${colors.accent}20`
+                      }}>
+                        <div style={{
+                          fontSize: isMobile ? '18px' : '22px',
+                          fontWeight: '700',
+                          color: colors.accent
+                        }}>
+                          {product.price}
+                        </div>
+                        
+                        <div style={{
+                          padding: '8px 16px',
+                          background: `linear-gradient(135deg, ${colors.accent}, ${colors.accentSoft})`,
+                          borderRadius: '12px',
+                          fontSize: '12px',
+                          fontWeight: '600',
+                          color: 'white',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px',
+                          cursor: 'pointer',
+                          transition: 'transform 0.2s ease',
+                          boxShadow: `0 4px 12px ${colors.accent}40`
+                        }}
+                        onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
+                        onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                        >
+                          Explore
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* CTA Buttons */}
+              <div style={{
+                display: 'flex',
+                flexDirection: isMobile ? 'column' : 'row',
+                gap: '16px',
+                justifyContent: 'center',
+                marginTop: '32px'
+              }}>
+                <button style={{
+                  padding: '14px 28px',
+                  background: `linear-gradient(135deg, ${colors.accent}, ${colors.accentSoft})`,
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '12px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: `0 8px 25px ${colors.accent}40`
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'translateY(-2px)';
+                  e.target.style.boxShadow = `0 12px 35px ${colors.accent}50`;
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = `0 8px 25px ${colors.accent}40`;
+                }}
+                >
+                  Explore Collection →
+                </button>
+                
+                <button style={{
+                  padding: '14px 28px',
+                  background: 'transparent',
+                  color: colors.accent,
+                  border: `2px solid ${colors.accent}`,
+                  borderRadius: '12px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = colors.accent;
+                  e.target.style.color = 'white';
+                  e.target.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'transparent';
+                  e.target.style.color = colors.accent;
+                  e.target.style.transform = 'translateY(0)';
+                }}
+                >
+                  📍 Visit Showroom
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Elegant CTA */}
+                    ...styles.indicators,
+                    marginBottom: isMobile ? '20px' : '32px',
+                    gap: isMobile ? '8px' : '12px'
+                  }}>
+                    {products.map((_, index) => (
+                      <button
+                        key={index}
+                        style={{
+                          ...styles.indicator,
+                          ...(index === currentSlide ? styles.indicatorActive : {}),
+                          width: isMobile ? '8px' : '8px',
+                          height: isMobile ? '8px' : '8px',
+                          minHeight: isMobile ? '48px' : '44px',
+                          minWidth: isMobile ? '48px' : '44px',
+                          padding: isMobile ? '20px' : '18px'
+                        }}
+                        onClick={() => setCurrentSlide(index)}
+                        onMouseEnter={(e) => {
+                          if (index !== currentSlide) {
+                            e.target.style.background = '#94a3b8';
+                            e.target.style.transform = 'scale(1.2)';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (index !== currentSlide) {
+                            e.target.style.background = '#cbd5e1';
+                            e.target.style.transform = 'scale(1)';
+                          }
+                        }}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Premium Action Buttons */}
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(200px, 1fr))', 
+                    gap: isMobile ? '12px' : '16px',
+                    padding: isMobile ? '0 8px' : '0'
+                  }} className="responsive-button-grid">
+                    <button
+                      style={{
+                        ...styles.buttonPrimary,
+                        fontSize: isMobile ? '14px' : '16px',
+                        padding: isMobile ? '12px 20px' : '16px 32px'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.transform = 'translateY(-2px)';
+                        e.target.style.boxShadow = '0 15px 35px rgba(30,41,59,0.4)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.transform = 'translateY(0)';
+                        e.target.style.boxShadow = '0 8px 25px rgba(30,41,59,0.3)';
+                      }}
+                    >
+                      <div style={{ 
+                        position: 'absolute', 
+                        top: 0, 
+                        left: '-100%', 
+                        width: '100%', 
+                        height: '100%', 
+                        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)', 
+                        transition: 'left 0.6s ease' 
+                      }} />
+                      <span style={{ 
+                        position: 'relative', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center', 
+                        gap: isMobile ? '4px' : '8px',
+                        fontSize: isMobile ? '14px' : '16px'
+                      }}>
+                        <span>{isMobile ? 'Explore' : 'Explore Collection'}</span>
+                        <span style={{ fontSize: isMobile ? '16px' : '18px' }}>→</span>
+                      </span>
+                    </button>
+                    
+                    <button
+                      style={{
+                        ...styles.buttonSecondary,
+                        fontSize: isMobile ? '14px' : '16px',
+                        padding: isMobile ? '12px 20px' : '16px 32px'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.background = 'rgba(255, 255, 255, 1)';
+                        e.target.style.borderColor = '#94a3b8';
+                        e.target.style.transform = 'translateY(-2px)';
+                        e.target.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.background = 'rgba(255, 255, 255, 0.8)';
+                        e.target.style.borderColor = '#cbd5e1';
+                        e.target.style.transform = 'translateY(0)';
+                        e.target.style.boxShadow = 'none';
+                      }}
+                    >
+                      <span style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center', 
+                        gap: isMobile ? '4px' : '8px',
+                        fontSize: isMobile ? '14px' : '16px'
+                      }}>
+                        <span>{isMobile ? 'Showroom' : 'Visit Showroom'}</span>
+                        <span style={{ fontSize: isMobile ? '16px' : '18px' }}>📍</span>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Elegant Stats Grid */}
+              <div style={{
+                ...styles.statsGrid,
+                opacity: isLoaded ? 1 : 0,
+                transform: isLoaded ? 'translateY(0)' : 'translateY(20px)',
+                transition: 'all 0.8s ease 1.6s'
+              }}>
+                {[
+                  { number: "500+", label: "Premium Products", icon: "✨" },
+                  { number: "28", label: "Years Excellence", icon: "🏆" },
+                  { number: "15K+", label: "Satisfied Clients", icon: "💎" }
+                ].map((stat, index) => (
+                  <div 
+                    key={index} 
+                    style={styles.statCard}
+                    onMouseEnter={(e) => {
+                      e.target.style.background = 'rgba(255, 255, 255, 0.8)';
+                      e.target.style.transform = 'translateY(-5px)';
+                      e.target.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.background = 'rgba(255, 255, 255, 0.6)';
+                      e.target.style.transform = 'translateY(0)';
+                      e.target.style.boxShadow = 'none';
+                    }}
+                  >
+                    <div style={{ fontSize: '24px', marginBottom: '8px', opacity: 0.3 }}>
+                      {stat.icon}
+                    </div>
+                    <div style={{ 
+                      fontSize: '28px', 
+                      fontWeight: '300', 
+                      color: '#1e293b', 
+                      marginBottom: '8px' 
+                    }}>
+                      {stat.number}
+                    </div>
+                    <div style={{ 
+                      color: '#64748b', 
+                      fontSize: '14px', 
+                      fontWeight: '500' 
+                    }}>
+                      {stat.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Elegant CTA */}
+          <div 
+            className="cta-section"
+            style={{
+              ...styles.ctaSection,
+              opacity: isLoaded ? 1 : 0,
+              transform: isLoaded ? 'translateY(0)' : 'translateY(40px)',
+              transition: 'all 0.8s ease 2s'
+            }}>
+            <div style={styles.ctaContainer}>
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent)',
+                borderRadius: '50px'
+              }} />
+                <div style={{ 
+                position: 'relative', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '24px',
+                flexWrap: 'wrap',
+                justifyContent: 'center'
+              }}>
+                <div style={{ 
+                  width: '12px', 
+                  height: '12px', 
+                  background: colors.accent, 
+                  borderRadius: '50%',
+                  animation: 'pulse 2s infinite',
+                  boxShadow: '0 2px 8px rgba(34,4,56,0.4)' 
+                }} />
+                <span style={{ 
+                  color: '#1e293b', 
+                  fontWeight: '500', 
+                  fontSize: '18px' 
+                }}>
+                  Ready to experience luxury?
+                </span>
+                <button
+                  style={styles.ctaButton}
+                  onMouseEnter={(e) => {
+                    e.target.style.transform = 'scale(1.05) translateX(5px)';
+                    e.target.style.boxShadow = '0 15px 35px rgba(251, 191, 36, 0.4)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = 'scale(1) translateX(0)';
+                    e.target.style.boxShadow = '0 8px 25px rgba(251, 191, 36, 0.3)';
+                  }}
+                >
+                  <span style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '8px' 
+                  }}>
+                    Begin Your Journey
+                    <span style={{ 
+                      display: 'inline-block',
+                      animation: 'floatArrow 1.5s ease-in-out infinite'
+                    }}>
+                      →
+                    </span>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <style jsx>{`
+        @keyframes floatArrow {
+          0%, 100% { transform: translateX(0); }
+          50% { transform: translateX(5px); }
+        }
+      `}</style>
+    </>
+  );
+};
+
+export default Hero;

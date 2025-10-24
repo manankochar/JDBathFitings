@@ -5,15 +5,25 @@ import Hero from '../components/ui/Hero';
 import About from '../components/ui/About';
 import Contact from '../components/ui/Contact';
 
+import ImageGallery from '../components/ui/ImageGallery';
+import { colors } from '../theme/colors';
+
+// Import the image
+import r1Image from '../assets/r1.png';
+import r2Image from '../assets/r2.png';
+import r3Image from '../assets/r3.png';
+
 const MotionBox = motion(Box);
 
 const Home = () => {
   return (
     <Box 
-      bg="linear-gradient(135deg, #ffffff 0%, #fefce8 15%, #f8fafc 25%, #fef3c7 35%, #e2e8f0 100%)"
+      bg={`linear-gradient(135deg, #ffffff 0%, ${colors.accent}0A 12%, #f8fafc 25%, ${colors.accent}14 38%, #e2e8f0 100%)`}
       minH="100vh"
       position="relative"
       overflow="hidden"
+      w="100%"
+      maxW="100vw"
     >
       {/* Enhanced Background Pattern */}
       <Box
@@ -24,10 +34,10 @@ const Home = () => {
         bottom="0"
         backgroundImage={`
           radial-gradient(circle at 20% 80%, rgba(100,116,139,0.03) 0%, transparent 50%),
-          radial-gradient(circle at 80% 20%, rgba(251,191,36,0.05) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, ${colors.accent}0D 0%, transparent 50%),
           radial-gradient(circle at 40% 40%, rgba(30,41,59,0.02) 0%, transparent 50%),
-          radial-gradient(circle at 60% 10%, rgba(251,191,36,0.02) 0%, transparent 40%),
-          radial-gradient(circle at 10% 60%, rgba(245,158,11,0.03) 0%, transparent 45%)
+          radial-gradient(circle at 60% 10%, ${colors.accent}0A 0%, transparent 40%),
+          radial-gradient(circle at 10% 60%, ${colors.accentStrong || '#32075A'}11 0%, transparent 45%)
         `}
         opacity={0.8}
         zIndex={1}
@@ -39,7 +49,7 @@ const Home = () => {
           w="100%"
           h="100%"
           borderRadius="30% 70% 70% 30% / 30% 30% 70% 70%"
-          bg="linear-gradient(45deg, #64748b, #fbbf24)"
+          bg={`linear-gradient(45deg, #64748b, ${colors.accent})`}
           animation="float 8s ease-in-out infinite"
         />
       </Box>
@@ -49,7 +59,7 @@ const Home = () => {
           w="100%"
           h="100%"
           borderRadius="63% 37% 54% 46% / 55% 48% 52% 45%"
-          bg="linear-gradient(45deg, #fbbf24, #1e293b)"
+          bg={`linear-gradient(45deg, ${colors.accent}, #1e293b)"`}
           animation="float 10s ease-in-out infinite reverse"
         />
       </Box>
@@ -60,7 +70,7 @@ const Home = () => {
           w="100%"
           h="100%"
           borderRadius="50%"
-          bg="linear-gradient(45deg, #fef3c7, #fbbf24)"
+          bg={`linear-gradient(45deg, ${colors.accent}33, ${colors.accent})`}
           animation="float 12s ease-in-out infinite"
         />
       </Box>
@@ -70,7 +80,7 @@ const Home = () => {
           w="100%"
           h="100%"
           borderRadius="40% 60% 60% 40% / 60% 40% 60% 40%"
-          bg="linear-gradient(45deg, #fefce8, #f59e0b)"
+          bg={`linear-gradient(45deg, ${colors.accent}22, ${colors.accentStrong})`}
           animation="float 9s ease-in-out infinite reverse"
         />
       </Box>
@@ -95,6 +105,45 @@ const Home = () => {
           <About />
         </MotionBox>
 
+        {/* Showroom & Work Gallery Section */}
+        <MotionBox
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          viewport={{ once: true }}
+          mt={{ base: 8, md: 12 }}
+        >
+          <ImageGallery
+            title="Showroom Snapshots"
+            subtitle="A quick look at our space."
+            images={[
+              {
+                id: 1,
+                title: "Showroom Front",
+                category: "Exterior",
+                description: "Entrance and signage.",
+                image: r1Image,
+                isNew: true
+              },
+              {
+                id: 2,
+                title: "Interior Display",
+                category: "Interior",
+                description: "Live product layout.",
+                image: r2Image,
+                isNew: false
+              },
+              {
+                id: 3,
+                title: "Fixture Wall",
+                category: "Collection",
+                description: "Faucets & fittings.",
+                image: r3Image,
+                isNew: false
+              }
+            ]}
+          />
+        </MotionBox>
         <MotionBox
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}

@@ -1,9 +1,9 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { colors, gradients } from '../../theme/colors';
-import { Box, Container, Heading, Text, SimpleGrid, Stack, Button, Flex, Badge, VStack, HStack, Icon } from '@chakra-ui/react';
+import { Box, Container, Heading, Text, SimpleGrid, Stack, Button, Flex, Badge, VStack, HStack, Icon, IconButton } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 // Removed framer-motion wrappers to avoid runtime element type issues
-import { FaEye, FaShoppingCart, FaFire, FaArrowRight, FaSearch } from 'react-icons/fa';
+import { FaEye, FaShoppingCart, FaFire, FaArrowRight, FaSearch, FaHeart, FaRegHeart, FaFilePdf, FaDownload } from 'react-icons/fa';
 import { productsData, categories } from '../../data/productsData';
 
 // Using Chakra components directly instead of motion wrappers
@@ -29,7 +29,7 @@ const ProductImageFallback = ({ productName }) => (
   </Box>
 );
 
-// Enhanced Product Image component with better error handling
+// Enhanced Product Image component with lazy loading
 const ProductImage = ({ item }) => {
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -40,19 +40,22 @@ const ProductImage = ({ item }) => {
   }, [item.image]);
 
   const handleImageLoad = useCallback(() => {
-    console.log('Image loaded successfully:', item.image);
     setImageLoaded(true);
-  }, [item.image]);
+  }, []);
 
   if (imageError || !item.image) {
     return <ProductImageFallback productName={item.name} />;
   }
 
+  const imageSrc = item.image?.startsWith('http')
+    ? item.image
+    : `${process.env.PUBLIC_URL || ''}${item.image}`;
+
   return (
     <>
       <img
-        src={item.image}
-        alt={`${item.name} - ${item.category} product`}
+        src={imageSrc}
+        alt={`${item.name} - Premium ${item.category} product by JD Bath Fittings`}
         style={{
           width: '100%',
           height: '100%',
@@ -64,6 +67,7 @@ const ProductImage = ({ item }) => {
         onError={handleImageError}
         onLoad={handleImageLoad}
         loading="lazy"
+        decoding="async"
       />
       {!imageLoaded && (
         <Box
@@ -72,6 +76,7 @@ const ProductImage = ({ item }) => {
           left="50%"
           transform="translate(-50%, -50%)"
           color="gray.400"
+          fontSize="sm"
         >
           Loading...
         </Box>
@@ -145,25 +150,63 @@ const Products = () => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('relevance');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(20); // 20 products per page
+  const [favorites, setFavorites] = useState(() => {
+    const saved = localStorage.getItem('jd-favorites');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Save favorites to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('jd-favorites', JSON.stringify(favorites));
+  }, [favorites]);
+
+  // Toggle favorite
+  const toggleFavorite = useCallback((productId) => {
+    setFavorites(prev => {
+      const isFavorite = prev.includes(productId);
+      if (isFavorite) {
+        return prev.filter(id => id !== productId);
+      }
+      return [...prev, productId];
+    });
+  }, []);
   
-  // Memoize categories calculation
+  // Memoize categories calculation - Simplified by type
   const categoryList = useMemo(() => {
     if (!productsData || productsData.length === 0) {
       return [{ id: 'all', name: 'All Products', count: 0 }];
     }
 
-    const uniqueCategories = [...new Set(productsData.map(p => p.category))];
+    // Group by main product types
+    const typeGroups = {
+      'Toilet': ['Toilet', 'Rimless', 'Comfort', 'Classic', 'Premium', 'Designer', 'Compact', 'Luxury'],
+      'Basin': ['Basin', 'Wash Basin', 'Pedestal'],
+      'Faucet': ['Faucet', 'Mixer', 'Tap', 'Cock'],
+      'Shower': ['Shower', 'Rain', 'Overhead', 'Telephonic'],
+      'Accessories': ['Accessories', 'Towel', 'Soap', 'Glass', 'Kit'],
+      'Plumbing': ['Plumbing', 'Trap', 'Pipe', 'Nipple', 'Coupling', 'Angle'],
+      'Drainage': ['Drainage', 'Grating', 'Floor']
+    };
+
     const categoryList = [
       { id: 'all', name: 'All Products', count: productsData.length }
     ];
-    
-    uniqueCategories.forEach(cat => {
-      const count = productsData.filter(p => p.category === cat).length;
-      categoryList.push({
-        id: cat,
-        name: categories?.[cat] || cat.charAt(0).toUpperCase() + cat.slice(1),
-        count: count
-      });
+
+    Object.entries(typeGroups).forEach(([groupName, keywords]) => {
+      const count = productsData.filter(p => {
+        const type = p.type || '';
+        return keywords.some(keyword => type.includes(keyword));
+      }).length;
+      
+      if (count > 0) {
+        categoryList.push({
+          id: groupName.toLowerCase(),
+          name: groupName,
+          count: count
+        });
+      }
     });
     
     return categoryList;
@@ -173,9 +216,23 @@ const Products = () => {
   const filteredItems = useMemo(() => {
     if (!productsData || productsData.length === 0) return [];
 
+    const typeGroups = {
+      'toilet': ['Toilet', 'Rimless', 'Comfort', 'Classic', 'Premium', 'Designer', 'Compact', 'Luxury'],
+      'basin': ['Basin', 'Wash Basin', 'Pedestal'],
+      'faucet': ['Faucet', 'Mixer', 'Tap', 'Cock'],
+      'shower': ['Shower', 'Rain', 'Overhead', 'Telephonic'],
+      'accessories': ['Accessories', 'Towel', 'Soap', 'Glass', 'Kit'],
+      'plumbing': ['Plumbing', 'Trap', 'Pipe', 'Nipple', 'Coupling', 'Angle'],
+      'drainage': ['Drainage', 'Grating', 'Floor']
+    };
+
     const base = activeCategory === 'all'
       ? productsData
-      : productsData.filter(item => item.category === activeCategory);
+      : productsData.filter(item => {
+          const type = item.type || '';
+          const keywords = typeGroups[activeCategory] || [];
+          return keywords.some(keyword => type.includes(keyword));
+        });
 
     const searched = searchQuery.trim().length === 0
       ? base
@@ -193,6 +250,22 @@ const Products = () => {
 
     return sorted;
   }, [activeCategory, searchQuery, sortBy]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedItems = filteredItems.slice(startIndex, endIndex);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeCategory, searchQuery, sortBy]);
+
+  // Scroll to top when page changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentPage]);
 
   // Gallery data
   const galleryData = useMemo(() => [
@@ -218,15 +291,16 @@ const Products = () => {
   }, []);
 
   return (
-    <Box 
-      id="products"
-      py={{ base: 16, md: 20 }} 
-      bg="linear-gradient(135deg, #ffffff 0%, #f8fafc 25%, #e2e8f0 100%)"
-      position="relative"
-      overflow="hidden"
-      minH="100vh"
-    >
-      {/* Enhanced Background Elements */}
+    <>
+      <Box 
+        id="products"
+        py={{ base: 20, md: 28 }} 
+        bg={`linear-gradient(135deg, #ffffff 0%, #f8fafc 15%, ${colors.accent}0A 35%, #e2e8f0 100%)`}
+        position="relative"
+        overflow="hidden"
+        minH="100vh"
+      >
+      {/* Luxury Background Elements */}
       <Box
         position="absolute"
         top="0"
@@ -234,30 +308,33 @@ const Products = () => {
         right="0"
         bottom="0"
         backgroundImage={`
-          radial-gradient(circle at 20% 80%, rgba(100,116,139,0.05) 0%, transparent 50%),
-          radial-gradient(circle at 80% 20%, ${colors.accent}14 0%, transparent 50%),
-          radial-gradient(circle at 40% 40%, rgba(30,41,59,0.03) 0%, transparent 50%)
+          radial-gradient(circle at 25% 25%, rgba(100,116,139,0.05) 0%, transparent 50%),
+          radial-gradient(circle at 75% 75%, ${colors.accent}14 0%, transparent 50%),
+          radial-gradient(circle at 50% 10%, ${colors.accent}0D 0%, transparent 40%),
+          radial-gradient(circle at 10% 80%, ${colors.accent}0F 0%, transparent 45%)
         `}
-        opacity={0.8}
+        opacity={0.7}
         pointerEvents="none"
       />
       
-      {/* Floating shapes */}
-      <Box 
-        position="absolute" 
-        top="20%" 
-        left="5%" 
-        w="120px" 
-        h="120px" 
-        opacity={0.1}
-        pointerEvents="none"
-      >
+      {/* Floating geometric shapes */}
+      <Box position="absolute" top="10%" left="10%" w="100px" h="100px" opacity={0.1} pointerEvents="none">
         <Box
           w="100%"
           h="100%"
           borderRadius="30% 70% 70% 30% / 30% 30% 70% 70%"
-          bg={`linear-gradient(45deg, #64748b, ${colors.accent})`}
-          animation="float 8s ease-in-out infinite"
+          bg="linear-gradient(45deg, #64748b, #1e293b)"
+          animation="float 6s ease-in-out infinite"
+        />
+      </Box>
+      
+      <Box position="absolute" top="60%" right="15%" w="80px" h="80px" opacity={0.1} pointerEvents="none">
+        <Box
+          w="100%"
+          h="100%"
+          borderRadius="63% 37% 54% 46% / 55% 48% 52% 45%"
+          bg={`linear-gradient(45deg, ${colors.accent}, #64748b)`}
+          animation="float 8s ease-in-out infinite reverse"
         />
       </Box>
       
@@ -269,114 +346,130 @@ const Products = () => {
         className="container-responsive"
       >
         <Stack spacing={{ base: 8, md: 12, lg: 16 }}>
-          {/* Enhanced Section Header */}
-          <Box textAlign="center" mb={8}>
-            <Badge
-              bg="rgba(100,116,139,0.1)"
-              color="#64748b"
-              px={6}
-              py={3}
+          {/* Luxury Section Header */}
+          <Box textAlign="center" mb={12}>
+            {/* <Badge
+              bgGradient={gradients.accentLinear}
+              color="white"
+              px={8}
+              py={4}
               borderRadius="full"
               fontSize="sm"
-              fontWeight="700"
+              fontWeight="800"
               textTransform="uppercase"
               letterSpacing="wider"
-              border="1px solid"
-              borderColor="rgba(100,116,139,0.2)"
-              mb={6}
+              border="2px solid"
+              borderColor={`${colors.accent}30`}
+              mb={8}
               mt={8}
+              boxShadow={`0 8px 25px ${colors.accentGlow}`}
             >
-              Product Collection
-            </Badge>
+              ✨ Premium Collection
+            </Badge> */}
             
-            <VStack spacing={3} align="center" mb={6}>
-              <Text
-                fontSize={{ base: "lg", sm: "xl", md: "2xl", lg: "3xl" }}
-                fontWeight="800"
-                color="gray.800"
-                textAlign="center"
-                lineHeight="1.2"
-                letterSpacing="-0.01em"
-                fontFamily="Inter"
-                px={{ base: 2, md: 0 }}
-                wordBreak="break-word"
-              >
-                Explore Our
-              </Text>
+            <VStack spacing={4} align="center" mb={8}>
               <Heading
                 as="h2"
-                fontSize={{ base: "2xl", sm: "3xl", md: "4xl", lg: "5xl" }}
+                fontSize={{ base: "3xl", sm: "4xl", md: "5xl", lg: "6xl" }}
                 fontWeight="900"
-                color="gray.800"
+                bgGradient={gradients.accentLinear}
+                bgClip="text"
                 lineHeight="1.1"
                 letterSpacing="-0.02em"
-                fontFamily="Inter"
                 textAlign="center"
                 position="relative"
                 px={{ base: 2, md: 0 }}
                 wordBreak="break-word"
-                _after={{
-                  content: '""',
-                  position: 'absolute',
-                  bottom: '-10px',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  w: { base: '120px', sm: '150px', md: '180px' },
-                  h: { base: '2px', md: '3px' },
-                  bg: `linear-gradient(90deg, #64748b, ${colors.accent}, #1e293b)`,
-                  borderRadius: '2px'
-                }}
+                mb={4}
               >
-                <Text 
-                  as="span" 
-                  bgGradient={`linear(45deg, #64748b, ${colors.accent}, #1e293b)`}
-                >
-                  Product Collection
-                </Text>
+                Luxury Bath Fittings
               </Heading>
+              <Box
+                w={{ base: '150px', md: '200px' }}
+                h="4px"
+                bgGradient={gradients.accentLinear}
+                borderRadius="full"
+                mb={4}
+              />
             </VStack>
             
             <Text
-              fontSize={{ base: "sm", sm: "md", md: "lg" }}
-              color="gray.600"
-              maxW="600px"
+              fontSize={{ base: "md", sm: "lg", md: "xl" }}
+              color="gray.700"
+              maxW="700px"
               mx="auto"
-              lineHeight="1.7"
-              fontWeight="400"
-              px={{ base: 2, md: 0 }}
-              wordBreak="break-word"
+              lineHeight="1.8"
+              fontWeight="500"
+              px={{ base: 4, md: 0 }}
+              textAlign="center"
             >
-              Discover our comprehensive range of bathroom fittings, sanitaryware, and accessories. 
-              Each product is carefully selected for quality, durability, and aesthetic appeal.
+              Discover our exquisite collection of premium bathroom fittings and sanitaryware. 
+              Each piece embodies luxury, quality, and timeless elegance.
             </Text>
           </Box>
 
-          {/* Controls: Search + Sort (sticky on scroll) */}
+          {/* PDF Catalog Download Button - Luxury Design */}
+          <Flex justify="center" mb={8}>
+            <Button
+              as="a"
+              href="/Diamond Catalogue.pdf"
+              download="JD-Bath-Fittings-Catalog.pdf"
+              bgGradient={gradients.accentLinear}
+              color="white"
+              px={{ base: 8, md: 12 }}
+              py={{ base: 5, md: 6 }}
+              borderRadius="full"
+              fontWeight="800"
+              fontSize={{ base: "sm", md: "md" }}
+              leftIcon={<Icon as={FaFilePdf} boxSize={5} />}
+              rightIcon={<Icon as={FaDownload} boxSize={4} />}
+              boxShadow={`0 8px 32px ${colors.accentGlow}`}
+              border="2px solid"
+              borderColor="rgba(255,255,255,0.2)"
+              _hover={{
+                transform: "translateY(-3px)",
+                boxShadow: `0 12px 40px ${colors.accentGlow}`,
+                borderColor: "rgba(255,255,255,0.4)",
+              }}
+              transition="all 0.3s ease"
+            >
+              Download Product Catalog
+            </Button>
+          </Flex>
+
+          {/* Luxury Search & Sort Controls */}
           <Box
-            mb={{ base: 2, md: 4 }}
+            mb={{ base: 4, md: 6 }}
             position="sticky"
             top={{ base: '64px', md: '72px' }}
             zIndex={3}
-            bg="rgba(255,255,255,0.85)"
-            backdropFilter="blur(8px)"
-            border="1px solid"
-            borderColor="#e2e8f0"
-            borderRadius="xl"
-            px={{ base: 3, md: 4 }}
-            py={{ base: 2, md: 3 }}
-            boxShadow="0 6px 24px rgba(15,23,42,0.06)"
+            bg="rgba(255,255,255,0.95)"
+            backdropFilter="blur(20px)"
+            border="2px solid"
+            borderColor={`${colors.accent}20`}
+            borderRadius="2xl"
+            px={{ base: 4, md: 6 }}
+            py={{ base: 3, md: 4 }}
+            boxShadow={`0 8px 32px ${colors.accentGlow}`}
           >
             <Flex direction={{ base: 'column', md: 'row' }} gap={{ base: 3, md: 4 }} align="stretch">
               <Box flex="1" position="relative">
-                <Icon as={FaSearch} color="gray.400" position="absolute" left={3} top="50%" transform="translateY(-50%)" pointerEvents="none" />
+                <Icon as={FaSearch} color={colors.accent} position="absolute" left={4} top="50%" transform="translateY(-50%)" pointerEvents="none" zIndex={1} />
                 <Box as="input"
                   size="lg"
-                  style={{ paddingLeft: '40px' }}
-                  placeholder="Search products..."
+                  style={{ 
+                    paddingLeft: '45px',
+                    border: `2px solid ${colors.accent}20`,
+                    borderRadius: '12px',
+                    padding: '12px 16px 12px 45px',
+                    fontSize: '16px',
+                    width: '100%',
+                    transition: 'all 0.3s ease'
+                  }}
+                  placeholder="Search luxury products..."
                   bg="white"
-                  borderColor="#e2e8f0"
-                  _hover={{ borderColor: '#cbd5e1' }}
-                  _focus={{ borderColor: '#64748b', boxShadow: '0 0 0 3px rgba(100,116,139,0.2)' }}
+                  _hover={{ borderColor: `${colors.accent}40` }}
+                  _focus={{ borderColor: colors.accent, boxShadow: `0 0 0 3px ${colors.accentGlow}`, outline: 'none' }}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -387,110 +480,91 @@ const Products = () => {
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                   bg="white"
-                  borderColor="#e2e8f0"
-                  _hover={{ borderColor: '#cbd5e1' }}
-                  _focus={{ borderColor: '#64748b', boxShadow: '0 0 0 3px rgba(100,116,139,0.2)' }}
+                  style={{
+                    border: `2px solid ${colors.accent}20`,
+                    borderRadius: '12px',
+                    padding: '12px 16px',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease'
+                  }}
+                  _hover={{ borderColor: `${colors.accent}40` }}
+                  _focus={{ borderColor: colors.accent, boxShadow: `0 0 0 3px ${colors.accentGlow}`, outline: 'none' }}
                   minW={{ base: '50%', md: '240px' }}
                 >
-                  <option value="relevance">Sort: Relevance</option>
-                  <option value="name_asc">Sort: Name (A–Z)</option>
-                  <option value="name_desc">Sort: Name (Z–A)</option>
+                  <option value="relevance">✨ Relevance</option>
+                  <option value="name_asc">🔤 Name (A–Z)</option>
+                  <option value="name_desc">🔤 Name (Z–A)</option>
                 </Box>
               </Flex>
             </Flex>
           </Box>
-          <Box borderBottom="1px solid #e2e8f0" />
 
-          {/* Enhanced Category Filters */}
-          <Box mt={{ base: 2, md: 3 }}>
+          {/* Category Filters - Clean Design */}
+          <Flex 
+            direction="column"
+            gap={4}
+            mb={{ base: 8, md: 12 }}
+          >
             <Flex 
-              justify={{ base: "flex-start", md: "center" }} 
-              wrap={{ base: "nowrap", md: "wrap" }} 
-              gap={{ base: 2, sm: 3, md: 4 }} 
-              align="center"
-              maxW="100%"
-              overflowX={{ base: "auto", md: "visible" }}
-              px={{ base: 3, sm: 4, md: 0 }}
-              pb={{ base: 2, md: 0 }}
-              mb={{ base: 4, md: 6 }}
-              className="category-filters-responsive"
-              bg={{ base: 'white', md: 'transparent' }}
-              borderRadius="lg"
-              boxShadow={{ base: 'inset 0 -1px 0 #e2e8f0', md: 'none' }}
+              gap={3}
+              overflowX="auto"
+              overflowY="hidden"
+              py={2}
+              px={{ base: 2, md: 0 }}
+              css={{
+                '&::-webkit-scrollbar': {
+                  height: '6px',
+                },
+                '&::-webkit-scrollbar-track': {
+                  background: 'transparent',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  background: colors.accent,
+                  borderRadius: '10px',
+                },
+              }}
             >
-              {categoryList.slice(0, 8).map((category, index) => (
-                <Box key={category.id}>
-                  <Button
-                    onClick={() => handleCategoryChange(category.id)}
-                    bg={activeCategory === category.id 
-                      ? "linear-gradient(135deg, #64748b, #1e293b)" 
-                      : "white"
-                    }
-                    color={activeCategory === category.id ? "white" : "gray.600"}
-                    border={activeCategory === category.id 
-                      ? "none" 
-                      : "2px solid #e2e8f0"
-                    }
-                    size={{ base: "xs", md: "md" }}
-                    px={{ base: 2, md: 5 }}
-                    py={{ base: 1, md: 3 }}
+              {categoryList.map((category) => (
+                <Button
+                  key={category.id}
+                  onClick={() => handleCategoryChange(category.id)}
+                  size="md"
+                  px={6}
+                  py={2}
+                  borderRadius="full"
+                  bg={activeCategory === category.id ? colors.accent : "white"}
+                  color={activeCategory === category.id ? "white" : "gray.700"}
+                  border="2px solid"
+                  borderColor={activeCategory === category.id ? colors.accent : "gray.200"}
+                  fontWeight="600"
+                  fontSize="sm"
+                  whiteSpace="nowrap"
+                  flexShrink={0}
+                  _hover={{
+                    bg: activeCategory === category.id ? colors.accentStrong : "gray.50",
+                    borderColor: colors.accent,
+                    transform: "translateY(-2px)",
+                  }}
+                  transition="all 0.2s"
+                >
+                  {category.name}
+                  <Badge
+                    ml={2}
+                    bg={activeCategory === category.id ? "whiteAlpha.300" : colors.accent}
+                    color="white"
                     borderRadius="full"
-                    fontWeight="600"
-                    fontSize={{ base: "xs", md: "sm" }}
-                    boxShadow={activeCategory === category.id 
-                      ? "0 8px 25px rgba(100,116,139,0.3)" 
-                      : "0 2px 8px rgba(0,0,0,0.08)"
-                    }
-                    transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-                    _hover={{
-                      transform: "translateY(-2px)",
-                      boxShadow: activeCategory === category.id 
-                        ? "0 12px 30px rgba(100,116,139,0.4)"
-                        : "0 4px 15px rgba(0,0,0,0.12)",
-                      bg: activeCategory === category.id 
-                        ? "linear-gradient(135deg, #64748b, #1e293b)" 
-                        : "#f8fafc",
-                      borderColor: activeCategory === category.id 
-                        ? "transparent" 
-                        : "#64748b"
-                    }}
-                    position="relative"
-                    overflow="hidden"
-                    minW={{ base: "80px", md: "120px" }}
-                    flexShrink={0}
+                    px={2}
+                    fontSize="xs"
+                    fontWeight="700"
                   >
-                    <HStack spacing={{ base: 1, md: 2 }} justify="center" flexWrap="nowrap" alignItems="center">
-                      {activeCategory === category.id && <Icon as={FaFire} boxSize={{ base: 2, md: 3 }} />}
-                      <Text 
-                        fontWeight="600" 
-                        textAlign="center"
-                        fontSize={{ base: "xs", md: "sm" }}
-                        noOfLines={1}
-                      >
-                        {category.name}
-                      </Text>
-                      <Badge
-                        bg={activeCategory === category.id 
-                          ? "rgba(255,255,255,0.2)" 
-                          : "#64748b"
-                        }
-                        color={activeCategory === category.id ? "white" : "white"}
-                        fontSize={{ base: "10px", md: "11px" }}
-                        px={{ base: 2, md: 2 }}
-                        py={0.5}
-                        borderRadius="full"
-                        fontWeight="700"
-                        minW="22px"
-                        textAlign="center"
-                      >
-                        {category.count}
-                      </Badge>
-                    </HStack>
-                  </Button>
-                </Box>
+                    {category.count}
+                  </Badge>
+                </Button>
               ))}
             </Flex>
-          </Box>
+          </Flex>
 
           {/* Products Grid */}
           <SimpleGrid
@@ -501,31 +575,33 @@ const Products = () => {
             maxW="100%"
             className="responsive-grid"
           >
-              {filteredItems.length > 0 ? (
-                filteredItems.map((item, index) => (
+              {paginatedItems.length > 0 ? (
+                paginatedItems.map((item, index) => (
                   <Box
                     key={`${item.id}-${activeCategory}`}
-                    bg="rgba(255,255,255,0.95)"
-                    backdropFilter="blur(20px)"
-                    borderRadius="2xl"
-                    border="1px solid"
-                    borderColor="rgba(255,255,255,0.3)"
-                    boxShadow="0 8px 32px rgba(0,0,0,0.1)"
+                    bg="rgba(255,255,255,0.98)"
+                    backdropFilter="blur(30px)"
+                    borderRadius="3xl"
+                    border="2px solid"
+                    borderColor={`${colors.accent}15`}
+                    boxShadow={`0 10px 40px ${colors.accentGlow}`}
                     overflow="hidden"
                     cursor="pointer"
                     position="relative"
-                      _hover={{
-                        boxShadow: "0 25px 50px rgba(100,116,139,0.2)",
-                        borderColor: "rgba(100,116,139,0.3)"
-                      }}
+                    _hover={{
+                      transform: "translateY(-8px)",
+                      boxShadow: `0 20px 60px ${colors.accentGlow}`,
+                      borderColor: `${colors.accent}40`
+                    }}
                     role="group"
-                    minH={{ base: "320px", sm: "360px", md: "380px", lg: "400px" }}
+                    minH={{ base: "340px", sm: "380px", md: "400px", lg: "420px" }}
                     display="flex"
                     flexDirection="column"
                     w="100%"
                     maxW="100%"
                     boxSizing="border-box"
                     className="product-card-responsive"
+                    transition="all 0.4s cubic-bezier(0.4, 0, 0.2, 1)"
                   >
                     {/* Image Container */}
                     <Box
@@ -548,16 +624,16 @@ const Products = () => {
                         <ProductImage item={item} />
                       </Box>
                       
-                      {/* Enhanced Hover Overlay */}
+                      {/* Luxury Hover Overlay */}
                       <Box
                         position="absolute"
                         top="0"
                         left="0"
                         right="0"
                         bottom="0"
-                        bg="linear-gradient(135deg, rgba(100,116,139,0.95), rgba(30,41,59,0.95))"
+                        bgGradient={`linear(135deg, ${colors.accent}F0, ${colors.accentStrong}F0)`}
                         opacity="0"
-                        transition="all 0.4s ease"
+                        transition="all 0.5s cubic-bezier(0.4, 0, 0.2, 1)"
                         display="flex"
                         flexDirection="column"
                         alignItems="center"
@@ -577,65 +653,132 @@ const Products = () => {
                             {item.name}
                           </Text>
                           <HStack spacing={4}>
-                            <Button as={RouterLink} to={`/product/${item.id}`} size="md" bg={gradients.accentLinear} color="white" fontWeight="800" borderRadius="2xl" px={6} py={3} transition="all 0.3s ease">
+                            <Button 
+                              as={RouterLink} 
+                              to={`/product/${item.id}`} 
+                              size="md" 
+                              bg="white"
+                              color={colors.accent}
+                              fontWeight="800" 
+                              borderRadius="2xl" 
+                              px={6} 
+                              py={3} 
+                              border="2px solid white"
+                              _hover={{ transform: "scale(1.05)", boxShadow: "0 8px 20px rgba(255,255,255,0.3)" }}
+                              transition="all 0.3s ease"
+                            >
                               <Icon as={FaEye} mr={2} /> View Details
                             </Button>
-                            <Button as={RouterLink} to={`/product/${item.id}`} size="md" bg="rgba(255,255,255,0.9)" color="#64748b" fontWeight="700" borderRadius="2xl" px={6} py={3} transition="all 0.3s ease">
-                              <Icon as={FaShoppingCart} mr={2} /> Contact Us
+                            <Button 
+                              as={RouterLink} 
+                              to={`/contact`} 
+                              size="md" 
+                              bg="rgba(255,255,255,0.2)" 
+                              color="white"
+                              fontWeight="700" 
+                              borderRadius="2xl" 
+                              px={6} 
+                              py={3} 
+                              border="2px solid rgba(255,255,255,0.4)"
+                              backdropFilter="blur(10px)"
+                              _hover={{ bg: "rgba(255,255,255,0.3)", transform: "scale(1.05)" }}
+                              transition="all 0.3s ease"
+                            >
+                              <Icon as={FaShoppingCart} mr={2} /> Contact
                             </Button>
                           </HStack>
                         </VStack>
                       </Box>
 
-                      {/* Enhanced Category Badge */}
+                      {/* Luxury Category Badge */}
                       <Badge
                         position="absolute"
-                        top="4"
+                        bottom="4"
                         left="4"
-                        bg="linear-gradient(135deg, #64748b, #1e293b)"
+                        bgGradient={gradients.accentLinear}
                         color="white"
-                        px={3}
-                        py={1}
+                        px={4}
+                        py={2}
                         borderRadius="full"
                         fontSize="xs"
-                        fontWeight="700"
+                        fontWeight="800"
                         textTransform="uppercase"
-                        letterSpacing="1px"
-                        boxShadow="0 4px 15px rgba(100,116,139,0.3)"
+                        letterSpacing="1.5px"
+                        boxShadow={`0 6px 20px ${colors.accentGlow}`}
+                        border="2px solid rgba(255,255,255,0.3)"
+                        backdropFilter="blur(10px)"
                       >
                         {item.type || item.category}
                       </Badge>
 
-                      {/* Popular Badge */}
+                      {/* Premium HOT Badge */}
                       {index < 3 && (
                         <Badge
                           position="absolute"
                           top="4"
                           right="4"
-                          bg={gradients.accentLinear}
-                          color="white"
-                          px={2}
-                          py={1}
+                          bg="rgba(255,255,255,0.95)"
+                          color={colors.accent}
+                          px={3}
+                          py={2}
                           borderRadius="full"
                           fontSize="xs"
-                          fontWeight="700"
+                          fontWeight="800"
+                          boxShadow="0 6px 20px rgba(0,0,0,0.15)"
+                          border={`2px solid ${colors.accent}30`}
+                          backdropFilter="blur(10px)"
                         >
                           <HStack spacing={1}>
-                            <Icon as={FaFire} boxSize={2} />
-                          
+                            <Icon as={FaFire} boxSize={3} color={colors.accent} />
+                            <Text>HOT</Text>
                           </HStack>
                         </Badge>
                       )}
+
+                      {/* Favorite Button */}
+                      <IconButton
+                        position="absolute"
+                        top="4"
+                        left="4"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleFavorite(item.id);
+                        }}
+                        bg="white"
+                        color={favorites.includes(item.id) ? "red.500" : "gray.700"}
+                        size="md"
+                        borderRadius="full"
+                        boxShadow="0 4px 12px rgba(0,0,0,0.2)"
+                        border="2px solid"
+                        borderColor={favorites.includes(item.id) ? "red.300" : "gray.300"}
+                        _hover={{
+                          transform: "scale(1.15)",
+                          bg: "white",
+                          color: favorites.includes(item.id) ? "red.600" : colors.accent,
+                          borderColor: favorites.includes(item.id) ? "red.400" : colors.accent,
+                          boxShadow: "0 6px 16px rgba(0,0,0,0.3)",
+                        }}
+                        transition="all 0.3s ease"
+                        aria-label={favorites.includes(item.id) ? "Remove from favorites" : "Add to favorites"}
+                        zIndex={2}
+                      >
+                        <Icon 
+                          as={favorites.includes(item.id) ? FaHeart : FaRegHeart} 
+                          boxSize={5}
+                        />
+                      </IconButton>
                     </Box>
 
-                    {/* Enhanced Product Info */}
-                    <VStack spacing={{ base: 2, md: 3 }} p={{ base: 3, md: 4 }} align="stretch" flex="1">
-                      <VStack spacing={2} align="stretch" flex="1">
+                    {/* Luxury Product Info */}
+                    <VStack spacing={{ base: 3, md: 4 }} p={{ base: 4, md: 5 }} align="stretch" flex="1">
+                      <VStack spacing={3} align="stretch" flex="1">
                         <Heading
                           as="h3"
-                          fontSize={{ base: "sm", md: "md" }}
-                          fontWeight="800"
-                          color="gray.800"
+                          fontSize={{ base: "md", md: "lg" }}
+                          fontWeight="900"
+                          bgGradient={gradients.accentLinear}
+                          bgClip="text"
                           fontFamily="Inter"
                           lineHeight="1.3"
                           noOfLines={2}
@@ -658,21 +801,19 @@ const Products = () => {
                       <Button
                         as={RouterLink}
                         to={`/product/${item.id}`}
-                        variant="ghost"
-                        size="xs"
-                        color="#64748b"
-                        fontWeight="700"
-                        rightIcon={<Icon as={FaArrowRight} boxSize={3} />}
-                        p={0}
-                        h="auto"
-                        fontSize="xs"
+                        bgGradient={gradients.accentLinear}
+                        color="white"
+                        size="md"
+                        fontWeight="800"
+                        rightIcon={<Icon as={FaArrowRight} boxSize={4} />}
+                        borderRadius="xl"
+                        py={6}
+                        fontSize="sm"
                         _hover={{
-                          bg: "transparent",
-                          color: colors.accent,
-                          transform: "translateX(4px)"
+                          transform: "translateY(-2px)",
+                          boxShadow: `0 8px 25px ${colors.accentGlow}`
                         }}
                         transition="all 0.3s ease"
-                        justifyContent="flex-start"
                         mt="auto"
                       >
                         View Details
@@ -691,14 +832,127 @@ const Products = () => {
                   </Text>
                   <Button
                     onClick={() => handleCategoryChange('all')}
-                    colorScheme="purple"
-                    variant="outline"
+                    bgGradient={gradients.accentLinear}
+                    color="white"
+                    size="lg"
+                    fontWeight="800"
+                    borderRadius="xl"
+                    px={8}
+                    py={6}
+                    _hover={{ transform: "translateY(-2px)", boxShadow: `0 10px 30px ${colors.accentGlow}` }}
                   >
                     View All Products
                   </Button>
                 </Box>
               )}
           </SimpleGrid>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <Flex 
+              justify="center" 
+              align="center" 
+              gap={2}
+              mt={12}
+              mb={8}
+              flexWrap="wrap"
+            >
+              {/* Previous Button */}
+              <Button
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                isDisabled={currentPage === 1}
+                bgGradient={currentPage === 1 ? "gray.200" : gradients.accentLinear}
+                color={currentPage === 1 ? "gray.500" : "white"}
+                size="md"
+                px={6}
+                fontWeight="700"
+                borderRadius="xl"
+                _hover={{
+                  transform: currentPage === 1 ? "none" : "translateY(-2px)",
+                  boxShadow: currentPage === 1 ? "none" : `0 8px 25px ${colors.accentGlow}`
+                }}
+                transition="all 0.3s ease"
+              >
+                ← Previous
+              </Button>
+
+              {/* Page Numbers */}
+              <HStack spacing={2} flexWrap="wrap" justify="center">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                  // Show first page, last page, current page, and pages around current
+                  const showPage = 
+                    page === 1 || 
+                    page === totalPages || 
+                    (page >= currentPage - 1 && page <= currentPage + 1);
+                  
+                  const showEllipsis = 
+                    (page === currentPage - 2 && currentPage > 3) ||
+                    (page === currentPage + 2 && currentPage < totalPages - 2);
+
+                  if (showEllipsis) {
+                    return <Text key={page} color="gray.500" fontWeight="700">...</Text>;
+                  }
+
+                  if (!showPage) return null;
+
+                  return (
+                    <Button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      bg={currentPage === page ? colors.accent : "white"}
+                      color={currentPage === page ? "white" : colors.accent}
+                      border="2px solid"
+                      borderColor={colors.accent}
+                      size="md"
+                      minW="45px"
+                      h="45px"
+                      fontWeight="800"
+                      fontSize="md"
+                      borderRadius="xl"
+                      boxShadow={currentPage === page ? `0 4px 15px ${colors.accentGlow}` : "0 2px 8px rgba(0,0,0,0.1)"}
+                      _hover={{
+                        transform: "translateY(-2px)",
+                        boxShadow: `0 8px 25px ${colors.accentGlow}`,
+                        bg: currentPage === page ? colors.accentStrong : `${colors.accent}15`,
+                        color: currentPage === page ? "white" : colors.accent
+                      }}
+                      transition="all 0.3s ease"
+                    >
+                      {page}
+                    </Button>
+                  );
+                })}
+              </HStack>
+
+              {/* Next Button */}
+              <Button
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                isDisabled={currentPage === totalPages}
+                bgGradient={currentPage === totalPages ? "gray.200" : gradients.accentLinear}
+                color={currentPage === totalPages ? "gray.500" : "white"}
+                size="md"
+                px={6}
+                fontWeight="700"
+                borderRadius="xl"
+                _hover={{
+                  transform: currentPage === totalPages ? "none" : "translateY(-2px)",
+                  boxShadow: currentPage === totalPages ? "none" : `0 8px 25px ${colors.accentGlow}`
+                }}
+                transition="all 0.3s ease"
+              >
+                Next →
+              </Button>
+            </Flex>
+          )}
+
+          {/* Page Info */}
+          {filteredItems.length > 0 && (
+            <Flex justify="center" mb={8}>
+              <Text color="gray.600" fontSize="sm" fontWeight="600">
+                Showing {startIndex + 1}-{Math.min(endIndex, filteredItems.length)} of {filteredItems.length} products
+              </Text>
+            </Flex>
+          )}
 
           {/* Gallery Images Section */}
           <Box mt={16}>
@@ -735,30 +989,21 @@ const Products = () => {
             </SimpleGrid>
           </Box>
 
-          {/* View All Button */}
+          {/* Product Count Display */}
           {productsData && productsData.length > 0 && (
             <Flex justify="center" pt={8}>
-              <Button
-                as={RouterLink}
-                to="/all-products"
-                bg="linear-gradient(135deg, #64748b, #1e293b)"
+              <Badge
+                bgGradient={gradients.accentLinear}
                 color="white"
-                size="lg"
-                px={12}
-                py={6}
-                fontSize="lg"
-                fontWeight="700"
-                borderRadius="xl"
-                boxShadow="0 8px 25px rgba(100,116,139,0.3)"
-                _hover={{
-                  transform: "translateY(-3px) scale(1.05)",
-                  boxShadow: "0 20px 40px rgba(100,116,139,0.4)"
-                }}
-                transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-                rightIcon={<Icon as={FaArrowRight} />}
+                px={8}
+                py={4}
+                borderRadius="full"
+                fontSize="md"
+                fontWeight="800"
+                boxShadow={`0 8px 25px ${colors.accentGlow}`}
               >
-                View All {productsData.length} Products
-              </Button>
+                Showing {filteredItems.length} of {productsData.length} Premium Products
+              </Badge>
             </Flex>
           )}
         </Stack>
@@ -868,6 +1113,7 @@ const Products = () => {
         }
       `}</style>
     </Box>
+    </>
   );
 };
 

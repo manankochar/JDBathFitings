@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Box, 
   Container, 
@@ -22,8 +23,13 @@ const ImageGallery = ({
   columns = { base: 1, md: 2, lg: 3, xl: 4 }
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const onClose = () => setIsOpen(false);
+  
+  const handleContactClick = () => {
+    navigate('/contact');
+  };
 
   // Default gallery items if no images provided
   const defaultGalleryItems = [
@@ -177,6 +183,7 @@ const ImageGallery = ({
           {/* Optional CTA below grid */}
           <Box textAlign="center" mt={{ base: 10, md: 14 }}>
             <Box as="button"
+              onClick={handleContactClick}
               px={8}
               py={4}
               borderRadius="full"
@@ -189,6 +196,7 @@ const ImageGallery = ({
               boxShadow="0 8px 28px -8px rgba(15,23,42,0.55)"
               transition="all .4s cubic-bezier(.4,0,.2,1)"
               _hover={{ transform: 'translateY(-4px)', boxShadow: '0 16px 42px -10px rgba(15,23,42,0.65)' }}
+              cursor="pointer"
             >
               Contact Us
             </Box>

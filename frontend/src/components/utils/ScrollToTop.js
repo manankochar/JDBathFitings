@@ -1,20 +1,102 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useLayoutEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  // Scroll to top on route change
+  // Use useLayoutEffect for synchronous scroll before paint
+  useLayoutEffect(() => {
+    // Disable scroll restoration
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    
+    // Force scroll to top immediately - multiple methods for cross-browser support
+    window.scrollTo(0, 0);
+    window.scroll(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    
+    // For mobile browsers - force scroll on root element
+    const root = document.getElementById('root');
+    if (root) {
+      root.scrollTop = 0;
+    }
+  }, [pathname]);
+
+  // Additional useEffect for mobile browsers with more aggressive timing
   useEffect(() => {
-    // Use requestAnimationFrame for smoother performance
-    requestAnimationFrame(() => {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: 'smooth'
+    // Aggressive scroll reset function
+    const forceScrollToTop = () => {
+      // Method 1: window.scrollTo with options
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      window.scrollTo(0, 0);
+      window.scroll(0, 0);
+      
+      // Method 2: Direct DOM manipulation
+      if (document.documentElement) {
+        document.documentElement.scrollTop = 0;
+        document.documentElement.scrollLeft = 0;
+      }
+      
+      if (document.body) {
+        document.body.scrollTop = 0;
+        document.body.scrollLeft = 0;
+      }
+
+      // Method 3: Root element (important for React apps)
+      const root = document.getElementById('root');
+      if (root) {
+        root.scrollTop = 0;
+        root.scrollLeft = 0;
+      }
+
+      // Method 4: All scrollable elements
+      const scrollableElements = document.querySelectorAll('[style*="overflow"]');
+      scrollableElements.forEach(el => {
+        el.scrollTop = 0;
+        el.scrollLeft = 0;
+      });
+      
+      // Method 5: Chakra UI containers (if present)
+      const chakraContainers = document.querySelectorAll('.chakra-container, .chakra-stack, .chakra-box');
+      chakraContainers.forEach(el => {
+        el.scrollTop = 0;
+      });
+    };
+
+    // Execute immediately
+    forceScrollToTop();
+
+    // Use requestAnimationFrame for next frame
+    const rafId = requestAnimationFrame(() => {
+      forceScrollToTop();
+    });
+    
+    // Second RAF for iOS Safari
+    const rafId2 = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        forceScrollToTop();
       });
     });
+
+    // Multiple timeouts for mobile browsers - extended for slower devices
+    const timeouts = [
+      setTimeout(forceScrollToTop, 0),
+      setTimeout(forceScrollToTop, 1),
+      setTimeout(forceScrollToTop, 10),
+      setTimeout(forceScrollToTop, 50),
+      setTimeout(forceScrollToTop, 100),
+      setTimeout(forceScrollToTop, 200),
+      setTimeout(forceScrollToTop, 300)
+    ];
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      cancelAnimationFrame(rafId2);
+      timeouts.forEach(clearTimeout);
+    };
   }, [pathname]);
 
   // Show/hide scroll to top button based on scroll position

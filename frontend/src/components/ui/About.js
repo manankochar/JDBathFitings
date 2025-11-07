@@ -1,5 +1,5 @@
 import React from 'react';
-import { colors } from '../../theme/colors';
+import { colors, gradients } from '../../theme/colors';
 import { Box, Container, Heading, Text, SimpleGrid, Stack, VStack, Badge, Button } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 // icons removed (using emoji icons in data)
@@ -157,7 +157,8 @@ const About = () => {
               </Text>
               <Text 
                 as="span" 
-                bgGradient={`linear(45deg, #64748b, #1e293b, ${colors.accent})`}
+                bgGradient={gradients.accentLinear}
+                bgClip="text"
                 position="relative"
                 _after={{
                   content: '""',
@@ -167,7 +168,7 @@ const About = () => {
                   transform: 'translateX(-50%)',
                   w: { base: '120px', sm: '150px', md: '180px' },
                   h: { base: '3px', md: '4px' },
-                  bg: `linear-gradient(90deg, #64748b, #1e293b, ${colors.accent})`,
+                  bgGradient: gradients.accentLinear,
                   borderRadius: '2px'
                 }}
               >

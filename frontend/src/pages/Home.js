@@ -21,7 +21,7 @@ const Home = () => {
       bg={`linear-gradient(135deg, #ffffff 0%, ${colors.accent}0A 12%, #f8fafc 25%, ${colors.accent}14 38%, #e2e8f0 100%)`}
       minH="100vh"
       position="relative"
-      overflow="hidden"
+      overflowX="hidden"
       w="100%"
       maxW="100vw"
     >
@@ -95,23 +95,22 @@ const Home = () => {
           <Hero />
         </MotionBox>
 
-        <MotionBox
+<MotionBox
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
           viewport={{ once: true }}
-          mt={{ base: 8, md: 12 }}
+         
         >
-          <About />
+          <Contact />
         </MotionBox>
-
         {/* Showroom & Work Gallery Section */}
         <MotionBox
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
           viewport={{ once: true }}
-          mt={{ base: 8, md: 12 }}
+        
         >
           <ImageGallery
             title="Showroom Snapshots"
@@ -144,15 +143,7 @@ const Home = () => {
             ]}
           />
         </MotionBox>
-        <MotionBox
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          viewport={{ once: true }}
-          mt={{ base: 8, md: 12 }}
-        >
-          <Contact />
-        </MotionBox>
+        
       </Box>
 
       {/* Global Animation Styles */}

@@ -5,9 +5,9 @@ import { Box } from '@chakra-ui/react';
 
 const Layout = ({ children }) => {
   return (
-    <Box minH="100vh" display="flex" flexDirection="column" w="100%" maxW="100vw" overflow="hidden">
+    <Box minH="100vh" display="flex" flexDirection="column" w="100%" maxW="100vw" overflowX="hidden">
       <Navbar />
-      <Box flex="1" as="main" w="100%" maxW="100%" overflow="hidden">
+      <Box flex="1" as="main" w="100%" maxW="100%" overflowX="hidden">
         {children}
       </Box>
       <Footer />

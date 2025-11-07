@@ -8,10 +8,8 @@ html {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  /* Enable premium smooth scrolling */
-  scroll-behavior: smooth;
-  /* Enhanced scrolling on all browsers */
-  scroll-padding-top: 80px; /* Offset for fixed headers */
+  /* Instant scroll for page navigation */
+  scroll-behavior: auto;
 }
 
 body {
@@ -31,9 +29,9 @@ body {
   /* Premium touch scrolling */
   -webkit-overflow-scrolling: touch;
   /* Enhanced scroll performance */
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   /* Momentum scrolling for iOS */
-  -webkit-scroll-behavior: smooth;
+  -webkit-scroll-behavior: auto;
 }
 
 #root {
@@ -74,11 +72,15 @@ code {
     overflow-x: hidden !important;
     width: 100% !important;
     max-width: 100% !important;
+    /* Force instant scroll on mobile */
+    scroll-behavior: auto !important;
+    -webkit-scroll-behavior: auto !important;
   }
   
-  /* * {
-    max-width: 100% !important;
-  } */
+  /* Ensure all elements have instant scroll on mobile */
+  * {
+    scroll-behavior: auto !important;
+  }
   
   /* Fix for potential layout issues */
   .chakra-stack,
@@ -107,8 +109,8 @@ code {
 
 /* Premium Smooth Scrolling Enhancements */
 * {
-  /* Smooth transitions for all scrollable elements */
-  scroll-behavior: smooth;
+  /* Auto scroll for instant page navigation */
+  scroll-behavior: auto;
 }
 
 /* Enhanced scrolling for containers */
@@ -120,7 +122,7 @@ code {
 /* Premium scroll animations */
 @media (prefers-reduced-motion: no-preference) {
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
   }
   
   /* Smooth scroll with easing */

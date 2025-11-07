@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FaGem, FaDraftingCompass, FaLeaf, FaTrophy } from 'react-icons/fa';
 import { colors, gradients, shadows } from '../../theme/colors';
 
 const Hero = () => {
+  const navigate = useNavigate();
+
   // Rotating words for the animated heading
   const rotatingWords = [
     "Luxury Sanitaryware",
@@ -71,25 +75,25 @@ const Hero = () => {
 
   const features = [
     {
-      icon: "🪨",
+      icon: <FaGem size={28} color={colors.accent} />,
       title: "Premium Materials",
       description: "Finest ceramics & metals sourced globally",
       detail: "German engineering, world-class quality"
     },
     {
-      icon: "🛠️",
+      icon: <FaDraftingCompass size={28} color={colors.accentStrong} />,
       title: "Precision Crafted",
       description: "Meticulous attention to every detail",
       detail: "Hand-finished, artisan excellence"
     },
     {
-      icon: "🌱",
+      icon: <FaLeaf size={28} color={colors.accentTint} />,
       title: "Eco Conscious",
       description: "Sustainable, water-efficient innovation",
       detail: "Advanced green technology"
     },
     {
-      icon: "🥇",
+      icon: <FaTrophy size={28} color={colors.accent} />,
       title: "Award Winning",
       description: "Recognized for innovation & quality",
       detail: "Industry leader since 1995"
@@ -1096,6 +1100,7 @@ const Hero = () => {
                     overflow:'hidden',
                     cursor:'pointer'
                   }}
+                  onClick={() => navigate('/products')}
                   onMouseEnter={(e)=>{e.currentTarget.querySelector('.shine').style.left='120%';}}
                   onMouseLeave={(e)=>{e.currentTarget.querySelector('.shine').style.left='-120%';}}
                 >
@@ -1116,6 +1121,7 @@ const Hero = () => {
                     cursor:'pointer',
                     position:'relative'
                   }}
+                  onClick={() => navigate('/contact')}
                 >VISIT SHOWROOM</button>
               </div>
             </div>
@@ -1211,41 +1217,57 @@ const Hero = () => {
               <div style={styles.productShowcase}>
                 
                 <div style={{ position: 'relative' }}>
-                  {/* Header */}
+                  {/* Header - Redesigned */}
                   <div style={{ 
                     textAlign: 'center', 
-                    marginBottom: isMobile ? '20px' : '32px',
-                    padding: isMobile ? '0 8px' : '0'
+                    marginBottom: isMobile ? '28px' : '48px',
+                    padding: isMobile ? '0 12px' : '0'
                   }}>
                     <h3 style={{ 
-                      fontSize: isMobile ? '20px' : '28px', 
-                      fontWeight: '300', 
-                      color: '#1e293b', 
-                      marginBottom: isMobile ? '8px' : '12px',
-                      wordWrap: 'break-word',
-                      overflowWrap: 'break-word'
+                      fontSize: isMobile ? '28px' : '42px', 
+                      fontWeight: '900', 
+                      background: 'linear-gradient(135deg, #220438 0%, #32075A 50%, #4B0B7A 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                      marginBottom: isMobile ? '12px' : '16px',
+                      letterSpacing: '-0.02em',
+                      lineHeight: '1.2'
                     }}>
                       Featured Collections
                     </h3>
                     <p style={{ 
                       color: '#64748b',
-                      fontSize: isMobile ? '12px' : '16px',
-                      lineHeight: '1.5',
-                      padding: isMobile ? '0 4px' : '0'
+                      fontSize: isMobile ? '14px' : '18px',
+                      lineHeight: '1.6',
+                      fontWeight: '500',
+                      maxWidth: '600px',
+                      margin: '0 auto'
                     }}>
                       Curated premium sanitaryware for discerning homes
                     </p>
                   </div>
                   
-                  {/* Elegant Product Carousel */}
+                  {/* Redesigned Product Card */}
                   <div style={{
-                    ...styles.carouselContainer,
-                    height: isMobile ? '240px' : '320px',
-                    marginBottom: isMobile ? '20px' : '32px'
-                  }} 
-                  className="carousel-container"
-                  onMouseEnter={() => setIsPaused(true)}
-                  onMouseLeave={() => setIsPaused(false)}
+                    background: 'white',
+                    borderRadius: isMobile ? '24px' : '32px',
+                    padding: isMobile ? '24px' : '40px',
+                    boxShadow: '0 20px 60px rgba(34, 4, 56, 0.12)',
+                    border: '2px solid rgba(34, 4, 56, 0.08)',
+                    marginBottom: isMobile ? '24px' : '40px',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    transition: 'all 0.4s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.boxShadow = '0 30px 80px rgba(34, 4, 56, 0.18)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 20px 60px rgba(34, 4, 56, 0.12)';
+                  }}
                   onTouchStart={(e) => {
                     setIsPaused(true);
                     const touchStart = e.touches[0].clientX;
@@ -1258,212 +1280,128 @@ const Hero = () => {
                     const swipeThreshold = 50;
                     
                     if (touchStart - touchEnd > swipeThreshold) {
-                      // Swipe left - next slide
                       setCurrentSlide(prev => (prev + 1) % products.length);
                     } else if (touchEnd - touchStart > swipeThreshold) {
-                      // Swipe right - previous slide
                       setCurrentSlide(prev => prev === 0 ? products.length - 1 : prev - 1);
                     }
                   }}
                   >
-                    <div style={styles.carouselSlide}>
-                      {products.map((product, index) => (
-                        <div key={index} style={styles.slideContent} className="slide-content">
-                          <div style={{ 
-                            width: '100%', 
-                            height: '100%', 
-                            background: product.gradient, 
-                            borderRadius: '16px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
+                    {/* Product Display */}
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      textAlign: 'center'
+                    }}>
+                      {/* Product Image */}
+                      <div style={{
+                        width: '100%',
+                        height: isMobile ? '200px' : '280px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginBottom: isMobile ? '20px' : '32px',
+                        background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 100%)',
+                        borderRadius: isMobile ? '16px' : '20px',
+                        padding: isMobile ? '20px' : '30px',
+                        position: 'relative',
+                        overflow: 'hidden'
+                      }}>
+                        <div style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          background: 'radial-gradient(circle at 30% 30%, rgba(34, 4, 56, 0.03), transparent 70%)',
+                          pointerEvents: 'none'
+                        }} />
+                        <img 
+                          src={products[currentSlide].image} 
+                          alt={products[currentSlide].name}
+                          style={{
+                            maxWidth: '90%',
+                            maxHeight: '100%',
+                            objectFit: 'contain',
+                            filter: 'drop-shadow(0 8px 24px rgba(0,0,0,0.12))',
                             position: 'relative',
-                            overflow: 'hidden',
-                            border: '1px solid rgba(255,255,255,0.5)'
-                          }}>
-                            
-                            <div style={styles.slidePattern} />
-                            
-                            <div style={{ 
-                              position: 'relative', 
-                              textAlign: 'center', 
-                              color: '#1e293b', 
-                              maxWidth: isMobile ? '100%' : '400px',
-                              margin: '0 auto',
-                              padding: isMobile ? '0 12px' : '0 20px',
-                              wordWrap: 'break-word',
-                              overflowWrap: 'break-word',
-                              height: '100%',
-                              display: 'flex',
-                              flexDirection: 'column',
-                              justifyContent: 'space-between'
-                            }}>
-                              {/* Product Image */}
-                              <div style={{ 
-                                flex: '1',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                marginBottom: isMobile ? '12px' : '16px'
-                              }}>
-                                <img 
-                                  src={product.image} 
-                                  alt={product.name}
-                                  style={{
-                                    maxWidth: '80%',
-                                    maxHeight: '180px',
-                                    objectFit: 'contain',
-                                    filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))'
-                                  }}
-                                />
-                              </div>
-                              
-                              {/* Product Info */}
-                              <div>
-                                <h4 style={{ 
-                                  fontSize: isMobile ? '18px' : '24px', 
-                                  fontWeight: '500', 
-                                  marginBottom: isMobile ? '6px' : '8px',
-                                  wordWrap: 'break-word',
-                                  overflowWrap: 'break-word',
-                                  lineHeight: '1.2'
-                                }}>
-                                  {product.name}
-                                </h4>
-                                <p className="subtitle" style={{ 
-                                  color: '#475569', 
-                                  marginBottom: isMobile ? '8px' : '12px', 
-                                  fontWeight: '300', 
-                                  fontStyle: 'italic',
-                                  fontSize: isMobile ? '12px' : '16px',
-                                  lineHeight: '1.3'
-                                }}>
-                                  {product.subtitle}
-                                </p>
-                                <p className="description" style={{ 
-                                  color: '#64748b', 
-                                  fontSize: isMobile ? '11px' : '14px',
-                                  lineHeight: isMobile ? '1.4' : '1.6',
-                                  wordWrap: 'break-word',
-                                  overflowWrap: 'break-word'
-                                }}>
-                                  {product.description}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+                            zIndex: 1
+                          }}
+                        />
+                      </div>
+                      
+                      {/* Product Info */}
+                      <div style={{ width: '100%' }}>
+                        <h4 style={{ 
+                          fontSize: isMobile ? '24px' : '32px', 
+                          fontWeight: '800', 
+                          color: '#1e293b',
+                          marginBottom: isMobile ? '8px' : '12px',
+                          lineHeight: '1.2'
+                        }}>
+                          {products[currentSlide].name}
+                        </h4>
+                        <p style={{ 
+                          color: '#64748b', 
+                          marginBottom: isMobile ? '12px' : '16px', 
+                          fontWeight: '500', 
+                          fontStyle: 'italic',
+                          fontSize: isMobile ? '14px' : '18px',
+                          lineHeight: '1.4'
+                        }}>
+                          {products[currentSlide].subtitle}
+                        </p>
+                        <p style={{ 
+                          color: '#64748b', 
+                          fontSize: isMobile ? '13px' : '16px',
+                          lineHeight: '1.6',
+                          maxWidth: '500px',
+                          margin: '0 auto'
+                        }}>
+                          {products[currentSlide].description}
+                        </p>
+                      </div>
                     </div>
                   </div>
                   
-                  {/* Navigation Arrows */}
+
+                  
+                  {/* Redesigned Slide Indicators */}
                   <div style={{
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    gap: '20px',
-                    marginBottom: isMobile ? '15px' : '20px'
-                  }}>
-                    <button
-                      onClick={() => {
-                        setCurrentSlide(prev => prev === 0 ? products.length - 1 : prev - 1);
-                        setIsPaused(true);
-                        setTimeout(() => setIsPaused(false), 3000);
-                      }}
-                      style={{
-                        background: 'rgba(255, 255, 255, 0.9)',
-                        border: 'none',
-                        borderRadius: '50%',
-                        width: '44px',
-                        height: '44px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-                        transition: 'all 0.3s ease',
-                        fontSize: '18px',
-                        color: '#4a5568'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.background = 'rgba(255, 255, 255, 1)';
-                        e.target.style.transform = 'scale(1.1)';
-                        e.target.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.2)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.background = 'rgba(255, 255, 255, 0.9)';
-                        e.target.style.transform = 'scale(1)';
-                        e.target.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.15)';
-                      }}
-                    >
-                      ←
-                    </button>
-                    
-                    <button
-                      onClick={() => {
-                        setCurrentSlide(prev => (prev + 1) % products.length);
-                        setIsPaused(true);
-                        setTimeout(() => setIsPaused(false), 3000);
-                      }}
-                      style={{
-                        background: 'rgba(255, 255, 255, 0.9)',
-                        border: 'none',
-                        borderRadius: '50%',
-                        width: '44px',
-                        height: '44px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-                        transition: 'all 0.3s ease',
-                        fontSize: '18px',
-                        color: '#4a5568'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.background = 'rgba(255, 255, 255, 1)';
-                        e.target.style.transform = 'scale(1.1)';
-                        e.target.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.2)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.background = 'rgba(255, 255, 255, 0.9)';
-                        e.target.style.transform = 'scale(1)';
-                        e.target.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.15)';
-                      }}
-                    >
-                      →
-                    </button>
-                  </div>
-                  
-                  {/* Elegant Slide Indicators */}
-                  <div style={{
-                    ...styles.indicators,
-                    marginBottom: isMobile ? '20px' : '32px',
-                    gap: isMobile ? '8px' : '12px'
+                    gap: isMobile ? '10px' : '14px',
+                    marginBottom: isMobile ? '24px' : '36px'
                   }}>
                     {products.map((_, index) => (
                       <button
                         key={index}
                         style={{
-                          ...styles.indicator,
-                          ...(index === currentSlide ? styles.indicatorActive : {}),
-                          width: isMobile ? '8px' : '8px',
-                          height: isMobile ? '8px' : '8px',
-                          minHeight: isMobile ? '48px' : '44px',
-                          minWidth: isMobile ? '48px' : '44px',
-                          padding: isMobile ? '20px' : '18px'
+                          width: index === currentSlide ? (isMobile ? '32px' : '40px') : (isMobile ? '10px' : '12px'),
+                          height: isMobile ? '10px' : '12px',
+                          borderRadius: '10px',
+                          border: 'none',
+                          background: index === currentSlide 
+                            ? 'linear-gradient(90deg, #220438 0%, #32075A 50%, #4B0B7A 100%)'
+                            : 'rgba(34, 4, 56, 0.2)',
+                          cursor: 'pointer',
+                          transition: 'all 0.4s ease',
+                          padding: 0,
+                          boxShadow: index === currentSlide 
+                            ? '0 4px 12px rgba(34, 4, 56, 0.3)'
+                            : 'none'
                         }}
                         onClick={() => setCurrentSlide(index)}
                         onMouseEnter={(e) => {
                           if (index !== currentSlide) {
-                            e.target.style.background = '#94a3b8';
+                            e.target.style.background = 'rgba(34, 4, 56, 0.4)';
                             e.target.style.transform = 'scale(1.2)';
                           }
                         }}
                         onMouseLeave={(e) => {
                           if (index !== currentSlide) {
-                            e.target.style.background = '#cbd5e1';
+                            e.target.style.background = 'rgba(34, 4, 56, 0.2)';
                             e.target.style.transform = 'scale(1)';
                           }
                         }}
@@ -1471,79 +1409,76 @@ const Hero = () => {
                     ))}
                   </div>
 
-                  {/* Premium Action Buttons */}
+                  {/* Redesigned Action Buttons */}
                   <div style={{ 
                     display: 'grid', 
-                    gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(200px, 1fr))', 
-                    gap: isMobile ? '12px' : '16px',
-                    padding: isMobile ? '0 8px' : '0'
-                  }} className="responsive-button-grid">
+                    gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', 
+                    gap: isMobile ? '14px' : '18px',
+                    padding: isMobile ? '0 12px' : '0'
+                  }}>
                     <button
                       style={{
-                        ...styles.buttonPrimary,
-                        fontSize: isMobile ? '14px' : '16px',
-                        padding: isMobile ? '12px 20px' : '16px 32px'
+                        background: 'linear-gradient(135deg, #220438 0%, #32075A 50%, #4B0B7A 100%)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: isMobile ? '14px' : '16px',
+                        padding: isMobile ? '16px 24px' : '18px 32px',
+                        fontSize: isMobile ? '15px' : '17px',
+                        fontWeight: '800',
+                        cursor: 'pointer',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        transition: 'all 0.3s ease',
+                        boxShadow: '0 8px 24px rgba(34, 4, 56, 0.3)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px'
                       }}
+                      onClick={() => navigate('/products')}
                       onMouseEnter={(e) => {
-                        e.target.style.transform = 'translateY(-2px)';
-                        e.target.style.boxShadow = '0 15px 35px rgba(30,41,59,0.4)';
+                        e.target.style.transform = 'translateY(-3px)';
+                        e.target.style.boxShadow = '0 12px 32px rgba(34, 4, 56, 0.4)';
                       }}
                       onMouseLeave={(e) => {
                         e.target.style.transform = 'translateY(0)';
-                        e.target.style.boxShadow = '0 8px 25px rgba(30,41,59,0.3)';
+                        e.target.style.boxShadow = '0 8px 24px rgba(34, 4, 56, 0.3)';
                       }}
                     >
-                      <div style={{ 
-                        position: 'absolute', 
-                        top: 0, 
-                        left: '-100%', 
-                        width: '100%', 
-                        height: '100%', 
-                        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)', 
-                        transition: 'left 0.6s ease' 
-                      }} />
-                      <span style={{ 
-                        position: 'relative', 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center', 
-                        gap: isMobile ? '4px' : '8px',
-                        fontSize: isMobile ? '14px' : '16px'
-                      }}>
-                        <span>{isMobile ? 'Explore' : 'Explore Collection'}</span>
-                        <span style={{ fontSize: isMobile ? '16px' : '18px' }}>→</span>
-                      </span>
+                      <span>Explore Collection</span>
+                      <span style={{ fontSize: '18px' }}>→</span>
                     </button>
                     
                     <button
                       style={{
-                        ...styles.buttonSecondary,
-                        fontSize: isMobile ? '14px' : '16px',
-                        padding: isMobile ? '12px 20px' : '16px 32px'
+                        background: 'white',
+                        color: '#220438',
+                        border: '2px solid #220438',
+                        borderRadius: isMobile ? '14px' : '16px',
+                        padding: isMobile ? '16px 24px' : '18px 32px',
+                        fontSize: isMobile ? '15px' : '17px',
+                        fontWeight: '800',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px'
                       }}
+                      onClick={() => navigate('/contact')}
                       onMouseEnter={(e) => {
-                        e.target.style.background = 'rgba(255, 255, 255, 1)';
-                        e.target.style.borderColor = '#94a3b8';
-                        e.target.style.transform = 'translateY(-2px)';
-                        e.target.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
+                        e.target.style.background = 'rgba(34, 4, 56, 0.05)';
+                        e.target.style.transform = 'translateY(-3px)';
+                        e.target.style.boxShadow = '0 8px 24px rgba(34, 4, 56, 0.15)';
                       }}
                       onMouseLeave={(e) => {
-                        e.target.style.background = 'rgba(255, 255, 255, 0.8)';
-                        e.target.style.borderColor = '#cbd5e1';
+                        e.target.style.background = 'white';
                         e.target.style.transform = 'translateY(0)';
                         e.target.style.boxShadow = 'none';
                       }}
                     >
-                      <span style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center', 
-                        gap: isMobile ? '4px' : '8px',
-                        fontSize: isMobile ? '14px' : '16px'
-                      }}>
-                        <span>{isMobile ? 'Showroom' : 'Visit Showroom'}</span>
-                        <span style={{ fontSize: isMobile ? '16px' : '18px' }}>📍</span>
-                      </span>
+                      <span>Visit Showroom</span>
+                      <span style={{ fontSize: '18px' }}>📍</span>
                     </button>
                   </div>
                 </div>
@@ -1563,10 +1498,10 @@ const Hero = () => {
                   gap: isMobile ? '8px' : '16px'
                 }}>
                   {[
-                    { number: "500+", label: "Premium Products", icon: "✨" },
-                    { number: "28", label: "Years Excellence", icon: "🏆" },
-                    { number: "15K+", label: "Satisfied Clients", icon: "💎" },
-                    { number: "30%", label: "Water Savings", icon: "💧" }
+                    { number: "500+", label: "Premium Products", icon: "" },
+                    { number: "28", label: "Years Excellence", icon: "" },
+                    { number: "15K+", label: "Satisfied Clients", icon: "" },
+                    { number: "30%", label: "Water Savings", icon: "" }
                   ].map((stat, index) => (
                     <div 
                       key={index} 
@@ -1641,7 +1576,7 @@ const Hero = () => {
               }}>
                 {/* Tagline and icon for left empty space */}
                 <div style={{display:'flex',alignItems:'center',gap:'10px',marginRight:'18px',minWidth:'170px'}}>
-                  <span style={{fontSize:'28px',color:colors.accent,opacity:0.7,verticalAlign:'middle'}}>💎</span>
+                  <span style={{fontSize:'28px',color:colors.accent,opacity:0.7,verticalAlign:'middle'}}></span>
                   <span style={{fontWeight:600,fontSize:'1.1rem',color:'#2d225a',letterSpacing:'0.02em',opacity:0.85,whiteSpace:'nowrap'}}>Luxury. Innovation. Trust.</span>
                 </div>
                 <div style={{ 
@@ -1666,13 +1601,14 @@ const Hero = () => {
                 </span>
                 <button
                   style={styles.ctaButton}
+                  onClick={() => navigate('/contact')}
                   onMouseEnter={(e) => {
                     e.target.style.transform = 'scale(1.05) translateX(5px)';
-                    e.target.style.boxShadow = '0 15px 35px rgba(251, 191, 36, 0.4)';
+                    e.target.style.boxShadow = '0 15px 35px rgba(34, 4, 56, 0.4)';
                   }}
                   onMouseLeave={(e) => {
                     e.target.style.transform = 'scale(1) translateX(0)';
-                    e.target.style.boxShadow = '0 8px 25px rgba(251, 191, 36, 0.3)';
+                    e.target.style.boxShadow = '0 8px 25px rgba(34, 4, 56, 0.3)';
                   }}
                 >
                   <span style={{ 

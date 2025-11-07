@@ -15,320 +15,213 @@ import {
   Icon,
   Image,
 } from '@chakra-ui/react';
-import { FaTwitter, FaYoutube, FaInstagram, FaFacebook, FaMapMarkerAlt, FaPhone, FaEnvelope } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaPhone, FaEnvelope } from 'react-icons/fa';
 import logoImage from '../../assets/logo.png';
 
 const Footer = () => {
   return (
     <Box
-      bg="var(--white-primary)"
+      bg="#f5f5f5"
       color="gray.800"
       position="relative"
       overflow="hidden"
       zIndex="1"
-      borderTop="1px solid"
-      borderColor="gray.200"
     >
-      {/* Futuristic background effects */}
-      <Box
-        position="absolute"
-        top="-150px"
-        left="-150px"
-        width="400px"
-        height="400px"
-        borderRadius="full"
-        bg="rgba(100, 116, 139, 0.06)"
-        filter="blur(100px)"
-        zIndex="-1"
-      />
-      <Box
-        position="absolute"
-        bottom="-150px"
-        right="-150px"
-        width="400px"
-        height="400px"
-        borderRadius="full"
-        bg={`${colors.accent}10`}
-        filter="blur(100px)"
-        zIndex="-1"
-      />
-      <Box
-        position="absolute"
-        top="50%"
-        left="50%"
-        transform="translate(-50%, -50%)"
-        width="300px"
-        height="300px"
-        borderRadius="full"
-        bg="rgba(30, 41, 59, 0.04)"
-        filter="blur(80px)"
-        zIndex="-1"
-      />
-      
-      <Container as={Stack} maxW={'container.xl'} py={16} px={{ base: 6, md: 8, lg: 12 }}>
-        <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={10}>
-          <Stack spacing={8}>
+      <Container as={Stack} maxW={'container.xl'} py={12} px={{ base: 6, md: 8, lg: 12 }}>
+        <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={{ base: 8, md: 12 }} alignItems="flex-start">
+          {/* Company Info Section */}
+          <Stack spacing={6}>
             <Box>
-              <Image src={logoImage} alt="JD Sanitaryware Logo" width="200px" />
+              <Image src={logoImage} alt="JD Sanitaryware Logo" width="180px" mb={4} />
             </Box>
-            <Text fontSize={'md'} maxW="320px" lineHeight="1.7" color="gray.600" fontWeight="400">
+            <Text fontSize={'sm'} maxW="300px" lineHeight="1.8" color="gray.700" fontWeight="400">
               A reputed name in the plumbing, bathroom and sanitaryware industry, providing 
               excellent products that are cost effective and stay in good working condition 
               for the long run. Your trusted partner for quality bathroom solutions.
             </Text>
-            <Stack direction={'row'} spacing={4}>
-              <SocialButton label={'Twitter'} href={'#'}>
-                <FaTwitter />
-              </SocialButton>
-              <SocialButton label={'YouTube'} href={'#'}>
-                <FaYoutube />
-              </SocialButton>
-              <SocialButton label={'Instagram'} href={'#'}>
-                <FaInstagram />
-              </SocialButton>
-              <SocialButton label={'Facebook'} href={'#'}>
-                <FaFacebook />
-              </SocialButton>
-            </Stack>
           </Stack>
           
-          <Stack align={'flex-start'} spacing={6}>
+          {/* Quick Links Section */}
+          <Stack align={'flex-start'} spacing={5}>
             <Heading 
               as="h4" 
               size="md" 
-              color="gray.700" 
+              color="gray.900" 
               fontFamily="Inter" 
-              fontWeight="700"
-              letterSpacing="-0.01em"
+              fontWeight="600"
+              fontSize="18px"
             >
               Quick Links
             </Heading>
-            <Stack spacing={3}>
+            <Stack spacing={2.5}>
               <Link 
                 as={RouterLink} 
                 to="/" 
-                color="gray.600"
-                fontWeight="500"
+                color="gray.700"
+                fontWeight="400"
+                fontSize="15px"
                 _hover={{ 
-                  color: '#64748b',
-                  transform: 'translateX(4px)',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                  color: colors.accent,
+                  textDecoration: 'none'
                 }}
-                transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+                transition="all 0.2s ease"
               >
                 Home
               </Link>
               <Link 
                 as={RouterLink} 
                 to="/about" 
-                color="gray.600"
-                fontWeight="500"
+                color="gray.700"
+                fontWeight="400"
+                fontSize="15px"
                 _hover={{ 
-                  color: '#64748b',
-                  transform: 'translateX(4px)',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                  color: colors.accent,
+                  textDecoration: 'none'
                 }}
-                transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+                transition="all 0.2s ease"
               >
                 About Us
               </Link>
               <Link 
                 as={RouterLink} 
                 to="/products" 
-                color="gray.600"
-                fontWeight="500"
+                color="gray.700"
+                fontWeight="400"
+                fontSize="15px"
                 _hover={{ 
-                  color: '#64748b',
-                  transform: 'translateX(4px)',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                  color: colors.accent,
+                  textDecoration: 'none'
                 }}
-                transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+                transition="all 0.2s ease"
               >
                 Products
               </Link>
               <Link 
                 as={RouterLink} 
                 to="/contact" 
-                color="gray.600"
-                fontWeight="500"
+                color="gray.700"
+                fontWeight="400"
+                fontSize="15px"
                 _hover={{ 
-                  color: '#64748b',
-                  transform: 'translateX(4px)',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                  color: colors.accent,
+                  textDecoration: 'none'
                 }}
-                transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+                transition="all 0.2s ease"
               >
                 Contact
               </Link>
             </Stack>
           </Stack>
           
-          <Stack align={'flex-start'} spacing={6}>
+          {/* Contact Us Section */}
+          <Stack align={'flex-start'} spacing={5}>
             <Heading 
               as="h4" 
               size="md" 
-              color="gray.700" 
+              color="gray.900" 
               fontFamily="Inter" 
-              fontWeight="700"
-              letterSpacing="-0.01em"
-            >
-              Products
-            </Heading>
-            <Stack spacing={3}>
-              <Link 
-                href={'#'} 
-                color="gray.600"
-                fontWeight="500"
-                _hover={{ 
-                  color: '#64748b',
-                  transform: 'translateX(4px)',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-                }}
-                transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-              >
-                Bathroom Fittings
-              </Link>
-              <Link 
-                href={'#'} 
-                color="gray.600"
-                fontWeight="500"
-                _hover={{ 
-                  color: '#64748b',
-                  transform: 'translateX(4px)',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-                }}
-                transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-              >
-                Sanitaryware Collection
-              </Link>
-              <Link 
-                href={'#'} 
-                color="gray.600"
-                fontWeight="500"
-                _hover={{ 
-                  color: '#64748b',
-                  transform: 'translateX(4px)',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-                }}
-                transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-              >
-                Toilet Collection
-              </Link>
-              <Link 
-                href={'#'} 
-                color="gray.600"
-                fontWeight="500"
-                _hover={{ 
-                  color: '#64748b',
-                  transform: 'translateX(4px)',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-                }}
-                transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-              >
-                Fitting Accessories
-              </Link>
-              <Link 
-                href={'#'} 
-                color="gray.600"
-                fontWeight="500"
-                _hover={{ 
-                  color: '#64748b',
-                  transform: 'translateX(4px)',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-                }}
-                transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-              >
-                Premium Solutions
-              </Link>
-            </Stack>
-          </Stack>
-          
-          <Stack align={'flex-start'} spacing={6}>
-            <Heading 
-              as="h4" 
-              size="md" 
-              color="gray.700" 
-              fontFamily="Inter" 
-              fontWeight="700"
-              letterSpacing="-0.01em"
+              fontWeight="600"
+              fontSize="18px"
             >
               Contact Us
             </Heading>
-            <Stack spacing={4}>
-              <Flex align="center" color="gray.600">
+            <Stack spacing={3}>
+              <Flex align="flex-start" color="gray.700">
                 <Icon 
                   as={FaMapMarkerAlt} 
                   mr={3} 
-                  color="#64748b" 
-                  fontSize="lg"
+                  mt={1}
+                  color="gray.900" 
+                  fontSize="md"
                 />
-                <Text fontWeight="500">Chawri Bazar, Delhi, India</Text>
+                <Text fontWeight="400" fontSize="15px">Chawri Bazar, Delhi, India</Text>
               </Flex>
-              <Flex align="center" color="gray.600">
+              <Flex align="center" color="gray.700">
                 <Icon 
                   as={FaPhone} 
                   mr={3} 
-                  color={colors.accent} 
-                  fontSize="lg"
+                  color="gray.900" 
+                  fontSize="md"
                 />
-                <Text fontWeight="500">+91-8527161330</Text>
+                <Text fontWeight="400" fontSize="15px">+91-8527161330</Text>
               </Flex>
-              <Flex align="center" color="gray.600" mb={2}>
+              <Flex align="center" color="gray.700">
                 <Icon 
                   as={FaPhone} 
                   mr={3} 
-                  color={colors.accent} 
-                  fontSize="lg"
+                  color="gray.900" 
+                  fontSize="md"
                 />
-                <Text fontWeight="500">+91-8826455039</Text>
+                <Text fontWeight="400" fontSize="15px">+91-8826455039</Text>
               </Flex>
-              <Flex align="center" color="gray.600">
+              <Flex align="center" color="gray.700">
                 <Icon 
                   as={FaEnvelope} 
                   mr={3} 
-                  color="#1e293b" 
-                  fontSize="lg"
+                  color="gray.900" 
+                  fontSize="md"
                 />
-                <Text fontWeight="500">rdiamond2423@gmail.com</Text>
+                <Link 
+                  href={'mailto:rdiamond2423@gmail.com'} 
+                  color="gray.700"
+                  fontWeight="400"
+                  fontSize="15px"
+                  _hover={{ 
+                    color: colors.accent,
+                    textDecoration: 'none'
+                  }}
+                  transition="all 0.2s ease"
+                >
+                  rdiamond2423@gmail.com
+                </Link>
               </Flex>
             </Stack>
             
-            <Stack spacing={4} width="100%" pt={4}>
+            {/* Stay Updated Section */}
+            <Stack spacing={3} width="100%" pt={3}>
               <Heading 
                 as="h5" 
                 size="sm" 
-                color="gray.700"
+                color="gray.900"
                 fontFamily="Inter"
-                fontWeight="700"
+                fontWeight="600"
+                fontSize="16px"
               >
                 Stay Updated
               </Heading>
-              <Box className="neo-card" p={4}>
-                <Stack spacing={3}>
-                  <Input
-                    placeholder={'Enter your email'}
-                    bg="white"
-                    border="1px solid"
-                    borderColor="gray.200"
-                    borderRadius="lg"
-                    fontWeight="500"
-                    _focus={{
-                      borderColor: '#64748b',
-                      boxShadow: '0 0 0 1px #64748b',
-                    }}
-                    _placeholder={{ color: 'gray.500' }}
-                  />
-                  <Button
-                    className="primary-button"
-                    size="sm"
-                    w="full"
-                    borderRadius="lg"
-                    fontWeight="600"
-                  >
-                    Subscribe
-                  </Button>
-                </Stack>
-              </Box>
+              <Stack spacing={2.5}>
+                <Input
+                  placeholder={'Enter your email'}
+                  bg="white"
+                  border="1px solid"
+                  borderColor="gray.300"
+                  borderRadius="md"
+                  size="md"
+                  fontWeight="400"
+                  fontSize="14px"
+                  _focus={{
+                    borderColor: colors.accent,
+                    boxShadow: 'none',
+                  }}
+                  _placeholder={{ color: 'gray.500' }}
+                />
+                <Button
+                  bg="#2d1b4e"
+                  color="white"
+                  size="md"
+                  w="full"
+                  borderRadius="md"
+                  fontWeight="600"
+                  fontSize="14px"
+                  _hover={{ 
+                    bg: "#1e1333",
+                    transform: 'none'
+                  }}
+                  transition="all 0.2s ease"
+                >
+                  Subscribe
+                </Button>
+              </Stack>
             </Stack>
           </Stack>
         </SimpleGrid>
@@ -364,7 +257,7 @@ const Footer = () => {
               fontWeight="500"
               fontSize="sm"
               _hover={{ 
-                color: '#64748b',
+                color: colors.accent,
                 transform: 'translateY(-1px)',
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
@@ -378,7 +271,7 @@ const Footer = () => {
               fontWeight="500"
               fontSize="sm"
               _hover={{ 
-                color: '#64748b',
+                color: colors.accent,
                 transform: 'translateY(-1px)',
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
@@ -390,38 +283,6 @@ const Footer = () => {
         </Container>
       </Box>
     </Box>
-  );
-};
-
-const SocialButton = ({ children, label, href }) => {
-  return (
-    <Button
-      bg="white"
-      border="1px solid"
-      borderColor="gray.200"
-      rounded={'full'}
-      w={10}
-      h={10}
-      cursor={'pointer'}
-      as={'a'}
-      href={href}
-      display={'inline-flex'}
-      alignItems={'center'}
-      justifyContent={'center'}
-      transition={'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'}
-      color="gray.600"
-      boxShadow="0 2px 8px rgba(0, 0, 0, 0.08)"
-      _hover={{
-        bg: '#64748b',
-        color: 'white',
-        borderColor: '#64748b',
-        transform: 'translateY(-2px)',
-        boxShadow: '0 8px 20px rgba(99, 102, 241, 0.3)'
-      }}
-      aria-label={label}
-    >
-      {children}
-    </Button>
   );
 };
 

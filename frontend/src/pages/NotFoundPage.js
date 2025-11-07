@@ -14,7 +14,7 @@ const NotFoundPage = () => {
       color: '#1e293b',
       textAlign: 'center',
       position: 'relative',
-      overflow: 'hidden'
+      overflowX: 'hidden'
     },
     backgroundPattern: {
       position: 'absolute',

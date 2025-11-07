@@ -129,8 +129,8 @@ const Navbar = () => {
               position="relative"
             >
               <Image
-                src="/jankidas-logo.png"
-                alt="JD Bath Fittings"
+                src="/logo.png"
+                alt="R Diamond Logo"
                 w="100%"
                 h="100%"
                 objectFit="contain"
@@ -219,29 +219,44 @@ const Navbar = () => {
           >
             {/* Mobile Menu Header */}
             <Box
-              bgGradient="linear(135deg, #1e293b 0%, #475569 50%, #64748b 100%)"
+              bgGradient="linear(135deg, #220438 0%, #32075A 50%, #4B0B7A 100%)"
               p={{ base: 6, sm: 8 }}
               color="white"
+              position="relative"
+              overflow="hidden"
+              _before={{
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                bgGradient: 'radial(circle at 30% 20%, rgba(255,255,255,0.1), transparent 50%)',
+                pointerEvents: 'none'
+              }}
             >
               <VStack spacing={4} align="stretch">
                 <HStack justify="space-between" align="center">
                   <VStack align="flex-start" spacing={1}>
-                    <Text fontSize="xl" fontWeight="800" letterSpacing="tight">
-                      Menu
+                    <Text fontSize="2xl" fontWeight="900" letterSpacing="tight">
+                      ✨ Menu
                     </Text>
-                    <Text fontSize="sm" opacity={0.9}>
-                      Navigate to any section
+                    <Text fontSize="sm" opacity={0.95} fontWeight="500">
+                      Explore our luxury collection
                     </Text>
                   </VStack>
                   <Button
                     onClick={handleToggle}
                     variant="ghost"
-                    size="sm"
+                    size="md"
                     color="white"
                     borderRadius="full"
-                    _hover={{ bg: 'rgba(255, 255, 255, 0.2)' }}
+                    bg="rgba(255, 255, 255, 0.1)"
+                    border="2px solid rgba(255, 255, 255, 0.2)"
+                    _hover={{ bg: 'rgba(255, 255, 255, 0.25)', transform: 'rotate(90deg)' }}
+                    transition="all 0.3s ease"
                   >
-                    <FaTimes size={18} />
+                    <FaTimes size={20} />
                   </Button>
                 </HStack>
                 
@@ -321,7 +336,7 @@ const Navbar = () => {
                   </Button>
                   <Button
                     as="a"
-                    href="mailto:jd95royal@gmail.com"
+                    href="mailto:rdiamond2423@gmail.com"
                     leftIcon={<FaEnvelope />}
                     size="sm"
                     variant="outline"
@@ -339,23 +354,24 @@ const Navbar = () => {
                   to="/contact"
                   w="full"
                   h={{ base: "56px", sm: "64px" }}
-                  bgGradient="linear(135deg, #1e293b 0%, #475569 50%, #fbbf24 100%)"
+                  bgGradient="linear(135deg, #220438 0%, #32075A 50%, #4B0B7A 100%)"
                   color="white"
                   fontSize={{ base: "md", sm: "lg" }}
-                  fontWeight={800}
+                  fontWeight={900}
                   borderRadius="2xl"
                   position="relative"
                   overflow="hidden"
-                  border="2px solid"
-                  borderColor="rgba(251, 191, 36, 0.3)"
-                  boxShadow="0 8px 32px rgba(30, 41, 59, 0.25)"
+                  border="3px solid"
+                  borderColor="rgba(255, 255, 255, 0.2)"
+                  boxShadow="0 10px 40px rgba(34, 4, 56, 0.4)"
                   _hover={{
-                    transform: "translateY(-4px) scale(1.02)",
-                    bgGradient: "linear(135deg, #0f172a 0%, #1e293b 50%, #f59e0b 100%)",
-                    boxShadow: "0 16px 48px rgba(15, 23, 42, 0.35)",
+                    transform: "translateY(-4px) scale(1.03)",
+                    bgGradient: "linear(135deg, #32075A 0%, #4B0B7A 50%, #6B1BAA 100%)",
+                    boxShadow: "0 16px 50px rgba(34, 4, 56, 0.5)",
+                    borderColor: "rgba(255, 255, 255, 0.3)",
                   }}
                   _active={{
-                    transform: "translateY(-2px) scale(0.98)"
+                    transform: "translateY(-2px) scale(0.99)"
                   }}
                   transition="all 0.4s cubic-bezier(0.16, 1, 0.3, 1)"
                   onClick={handleToggle}
@@ -390,34 +406,34 @@ const MobileNavLink = ({ to, label, icon: Icon, isActive, onClose, index = 0 }) 
       px={6}
       borderRadius="2xl"
       bg={isActive 
-        ? 'linear-gradient(135deg, #1e293b 0%, #475569 100%)' 
-        : 'rgba(255, 255, 255, 0.9)'
+        ? 'linear-gradient(135deg, #220438 0%, #32075A 100%)' 
+        : 'rgba(255, 255, 255, 0.95)'
       }
       color={isActive ? 'white' : '#1e293b'}
-      fontWeight={isActive ? '700' : '600'}
+      fontWeight={isActive ? '800' : '600'}
       fontSize="lg"
       transition="all 0.4s cubic-bezier(0.16, 1, 0.3, 1)"
       border="2px solid"
       borderColor={isActive 
-        ? 'rgba(30, 41, 59, 0.3)' 
-        : 'rgba(100, 116, 139, 0.15)'
+        ? 'rgba(34, 4, 56, 0.4)' 
+        : 'rgba(34, 4, 56, 0.1)'
       }
       position="relative"
       overflow="hidden"
       backdropFilter="blur(10px)"
       boxShadow={isActive 
-        ? '0 8px 32px rgba(30, 41, 59, 0.25), 0 1px 0 rgba(255, 255, 255, 0.2) inset' 
-        : '0 4px 20px rgba(100, 116, 139, 0.08), 0 1px 0 rgba(255, 255, 255, 0.5) inset'
+        ? '0 8px 32px rgba(34, 4, 56, 0.3), 0 1px 0 rgba(255, 255, 255, 0.15) inset' 
+        : '0 4px 20px rgba(34, 4, 56, 0.08), 0 1px 0 rgba(255, 255, 255, 0.5) inset'
       }
       _hover={{
         bg: isActive 
-          ? 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)' 
-          : 'rgba(100, 116, 139, 0.08)',
+          ? 'linear-gradient(135deg, #32075A 0%, #4B0B7A 100%)' 
+          : 'rgba(34, 4, 56, 0.05)',
         transform: 'translateY(-3px) scale(1.02)',
         boxShadow: isActive 
-          ? '0 12px 40px rgba(15, 23, 42, 0.35), 0 1px 0 rgba(255, 255, 255, 0.3) inset' 
-          : '0 8px 32px rgba(100, 116, 139, 0.15), 0 1px 0 rgba(255, 255, 255, 0.6) inset',
-        borderColor: 'rgba(100, 116, 139, 0.3)'
+          ? '0 12px 40px rgba(34, 4, 56, 0.4), 0 1px 0 rgba(255, 255, 255, 0.2) inset' 
+          : '0 8px 32px rgba(34, 4, 56, 0.12), 0 1px 0 rgba(255, 255, 255, 0.6) inset',
+        borderColor: 'rgba(34, 4, 56, 0.3)'
       }}
     >
       <HStack spacing={4} align="center">
@@ -426,9 +442,9 @@ const MobileNavLink = ({ to, label, icon: Icon, isActive, onClose, index = 0 }) 
           borderRadius="xl"
           bg={isActive 
             ? 'rgba(255, 255, 255, 0.2)'
-            : 'linear-gradient(135deg, rgba(100, 116, 139, 0.1), rgba(71, 85, 105, 0.1))'
+            : 'linear-gradient(135deg, rgba(34, 4, 56, 0.08), rgba(50, 7, 90, 0.08))'
           }
-          color={isActive ? 'white' : '#64748b'}
+          color={isActive ? 'white' : '#4B0B7A'}
           display="flex"
           alignItems="center"
           justifyContent="center"

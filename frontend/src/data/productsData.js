@@ -1244,6 +1244,374 @@ export const productsData = [
     type: "Ultimate Design",
     image: "/images/Zita.png",
     description: "Ultimate design representing the pinnacle of sanitaryware innovation and style."
+  },
+
+  // Faucet Collections - Creta Series
+  {
+    id: 149,
+    name: "Creta Basin Mixer",
+    category: "faucet",
+    type: "Basin Mixer",
+    image: "/images/newProducts/creta/1.jpg",
+    description: "Premium Creta series basin mixer with elegant chrome finish and smooth operation."
+  },
+  {
+    id: 150,
+    name: "Creta Sink Mixer",
+    category: "faucet",
+    type: "Sink Mixer",
+    image: "/images/newProducts/creta/2.jpg",
+    description: "Durable Creta sink mixer designed for kitchen and utility areas."
+  },
+  {
+    id: 151,
+    name: "Creta Wall Mixer",
+    category: "faucet",
+    type: "Wall Mixer",
+    image: "/images/newProducts/creta/3.jpg",
+    description: "Wall-mounted Creta mixer with contemporary design and precision engineering."
+  },
+
+  // Faucet Collections - Metro Series
+  {
+    id: 152,
+    name: "Metro Basin Mixer",
+    category: "faucet",
+    type: "Basin Mixer",
+    image: "/images/newProducts/metro/1.jpg",
+    description: "Metropolitan style basin mixer with sleek lines and modern aesthetics."
+  },
+  {
+    id: 153,
+    name: "Metro Sink Cock",
+    category: "faucet",
+    type: "Sink Cock",
+    image: "/images/newProducts/metro/2.jpg",
+    description: "Metro series sink cock with robust construction and easy maintenance."
+  },
+
+  // Faucet Collections - Olive Series
+  {
+    id: 154,
+    name: "Olive Basin Mixer",
+    category: "faucet",
+    type: "Basin Mixer",
+    image: "/images/newProducts/olive/1.jpg",
+    description: "Olive series basin mixer with nature-inspired design and premium finish."
+  },
+  {
+    id: 155,
+    name: "Olive Wall Mixer",
+    category: "faucet",
+    type: "Wall Mixer",
+    image: "/images/newProducts/olive/2.jpg",
+    description: "Elegant Olive wall mixer combining functionality with sophisticated styling."
+  },
+
+  // Faucet Collections - Myra Series
+  {
+    id: 156,
+    name: "Myra Basin Mixer",
+    category: "faucet",
+    type: "Basin Mixer",
+    image: "/images/newProducts/myra/1.jpg",
+    description: "Myra series basin mixer with graceful curves and smooth water flow."
+  },
+  {
+    id: 157,
+    name: "Myra Pillar Cock",
+    category: "faucet",
+    type: "Pillar Cock",
+    image: "/images/newProducts/myra/2.jpg",
+    description: "Classic Myra pillar cock with timeless design and reliable performance."
+  },
+
+  // Shower Systems - Bend Shower
+  {
+    id: 158,
+    name: "Bend Shower Arm",
+    category: "shower",
+    type: "Shower Arm",
+    image: "/images/newProducts/bendshower/1.jpg",
+    description: "Flexible bend shower arm for adjustable shower head positioning."
+  },
+  {
+    id: 159,
+    name: "Bend Shower Set",
+    category: "shower",
+    type: "Complete Set",
+    image: "/images/newProducts/bendshower/2.jpg",
+    description: "Complete bend shower set with all mounting accessories included."
+  },
+
+  // Shower Systems - Overhead Shower
+  {
+    id: 160,
+    name: "Overhead Shower Round",
+    category: "shower",
+    type: "Overhead Shower",
+    image: "/images/newProducts/overheadshower/1.jpg",
+    description: "Round overhead shower with rainfall effect for luxurious bathing experience."
+  },
+  {
+    id: 161,
+    name: "Overhead Shower Square",
+    category: "shower",
+    type: "Overhead Shower",
+    image: "/images/newProducts/overheadshower/2.jpg",
+    description: "Square overhead shower with modern design and wide water coverage."
+  },
+
+  // Shower Systems - Rain Shower
+  {
+    id: 162,
+    name: "Rain Shower Panel",
+    category: "shower",
+    type: "Rain Shower",
+    image: "/images/newProducts/rainshower/1.jpg",
+    description: "Premium rain shower panel with multiple spray patterns and massage jets."
+  },
+  {
+    id: 163,
+    name: "Rain Shower Head",
+    category: "shower",
+    type: "Rain Shower",
+    image: "/images/newProducts/rainshower/2.jpg",
+    description: "Large rain shower head delivering gentle rainfall simulation."
+  },
+
+  // Shower Systems - Telephonic Shower
+  {
+    id: 164,
+    name: "Telephonic Hand Shower",
+    category: "shower",
+    type: "Hand Shower",
+    image: "/images/newProducts/telephonicshower/1.jpg",
+    description: "Ergonomic telephonic hand shower with multiple spray modes."
+  },
+  {
+    id: 165,
+    name: "Telephonic Shower Set",
+    category: "shower",
+    type: "Hand Shower Set",
+    image: "/images/newProducts/telephonicshower/2.jpg",
+    description: "Complete telephonic shower set with holder and flexible hose."
+  },
+
+  // Health Faucets
+  {
+    id: 166,
+    name: "Health Faucet Chrome",
+    category: "healthfaucet",
+    type: "Health Faucet",
+    image: "/images/newProducts/healthfaucets/1.jpg",
+    description: "Chrome-plated health faucet with ergonomic grip and precise water control."
+  },
+  {
+    id: 167,
+    name: "Health Faucet Premium",
+    category: "healthfaucet",
+    type: "Health Faucet",
+    image: "/images/newProducts/healthfaucets/2.jpg",
+    description: "Premium health faucet with anti-bacterial coating and leak-proof design."
+  },
+
+  // Bathroom Accessories - Towel Rails
+  {
+    id: 168,
+    name: "Towel Rail Single",
+    category: "accessories",
+    type: "Towel Rail",
+    image: "/images/newProducts/towelrails/1.jpg",
+    description: "Single bar towel rail with sturdy mounting and rust-resistant finish."
+  },
+  {
+    id: 169,
+    name: "Towel Rail Double",
+    category: "accessories",
+    type: "Towel Rail",
+    image: "/images/newProducts/towelrails/2.jpg",
+    description: "Double bar towel rail providing extra hanging space for towels."
+  },
+
+  // Bathroom Accessories - Towel Ring
+  {
+    id: 170,
+    name: "Towel Ring Round",
+    category: "accessories",
+    type: "Towel Ring",
+    image: "/images/newProducts/towelring/1.jpg",
+    description: "Round towel ring with polished chrome finish and easy installation."
+  },
+  {
+    id: 171,
+    name: "Towel Ring Square",
+    category: "accessories",
+    type: "Towel Ring",
+    image: "/images/newProducts/towelring/2.jpg",
+    description: "Square towel ring with contemporary design and durable construction."
+  },
+
+  // Bathroom Accessories - Soap Dish
+  {
+    id: 172,
+    name: "Soap Dish Wall Mount",
+    category: "accessories",
+    type: "Soap Dish",
+    image: "/images/newProducts/soapdish/1.jpg",
+    description: "Wall-mounted soap dish with drainage holes and easy cleaning."
+  },
+  {
+    id: 173,
+    name: "Soap Dish Corner",
+    category: "accessories",
+    type: "Soap Dish",
+    image: "/images/newProducts/soapdish/2.jpg",
+    description: "Corner soap dish maximizing space efficiency in compact bathrooms."
+  },
+
+  // Bathroom Accessories - Glass Shelf
+  {
+    id: 174,
+    name: "Glass Shelf Single",
+    category: "accessories",
+    type: "Glass Shelf",
+    image: "/images/newProducts/glassshelf/1.jpg",
+    description: "Tempered glass shelf with chrome brackets for bathroom storage."
+  },
+  {
+    id: 175,
+    name: "Glass Shelf Double",
+    category: "accessories",
+    type: "Glass Shelf",
+    image: "/images/newProducts/glassshelf/2.jpg",
+    description: "Double-tier glass shelf providing ample storage for toiletries."
+  },
+
+  // Plumbing Fittings - Bottle Trap
+  {
+    id: 176,
+    name: "Bottle Trap Chrome",
+    category: "plumbing",
+    type: "Bottle Trap",
+    image: "/images/newProducts/bottletrap/1.jpg",
+    description: "Chrome-finished bottle trap with easy-clean design and leak-proof seal."
+  },
+  {
+    id: 177,
+    name: "Bottle Trap Square",
+    category: "plumbing",
+    type: "Bottle Trap",
+    image: "/images/newProducts/bottletrap/2.jpg",
+    description: "Square bottle trap with modern aesthetics and efficient drainage."
+  },
+
+  // Plumbing Fittings - Connection Pipe
+  {
+    id: 178,
+    name: "Connection Pipe Flexible",
+    category: "plumbing",
+    type: "Connection Pipe",
+    image: "/images/newProducts/connectionpipe/1.jpg",
+    description: "Flexible connection pipe for easy installation and maintenance."
+  },
+  {
+    id: 179,
+    name: "Connection Pipe Rigid",
+    category: "plumbing",
+    type: "Connection Pipe",
+    image: "/images/newProducts/connectionpipe/2.jpg",
+    description: "Rigid connection pipe with precise threading and durable construction."
+  },
+
+  // Plumbing Fittings - Extension Nipples
+  {
+    id: 180,
+    name: "Extension Nipple Short",
+    category: "plumbing",
+    type: "Extension Nipple",
+    image: "/images/newProducts/extensionnipples/1.jpg",
+    description: "Short extension nipple for connecting pipes at various distances."
+  },
+  {
+    id: 181,
+    name: "Extension Nipple Long",
+    category: "plumbing",
+    type: "Extension Nipple",
+    image: "/images/newProducts/extensionnipples/2.jpg",
+    description: "Long extension nipple for extended reach plumbing connections."
+  },
+
+  // Plumbing Fittings - Waste Coupling
+  {
+    id: 182,
+    name: "Waste Coupling Standard",
+    category: "plumbing",
+    type: "Waste Coupling",
+    image: "/images/newProducts/wastecoupling/1.jpg",
+    description: "Standard waste coupling for secure pipe connections and drainage."
+  },
+  {
+    id: 183,
+    name: "Waste Coupling Heavy Duty",
+    category: "plumbing",
+    type: "Waste Coupling",
+    image: "/images/newProducts/wastecoupling/2.jpg",
+    description: "Heavy-duty waste coupling for high-flow drainage applications."
+  },
+
+  // Drainage - Gratings
+  {
+    id: 184,
+    name: "Floor Grating Square",
+    category: "drainage",
+    type: "Floor Grating",
+    image: "/images/newProducts/gratings/1.jpg",
+    description: "Square floor grating with anti-clog design and stainless steel construction."
+  },
+  {
+    id: 185,
+    name: "Floor Grating Round",
+    category: "drainage",
+    type: "Floor Grating",
+    image: "/images/newProducts/gratings/2.jpg",
+    description: "Round floor grating with decorative pattern and efficient water drainage."
+  },
+
+  // Angle Cocks
+  {
+    id: 186,
+    name: "Angle Cock Chrome",
+    category: "plumbing",
+    type: "Angle Cock",
+    image: "/images/newProducts/projectanglecock/1.jpg",
+    description: "Chrome-plated angle cock for water supply control and shut-off."
+  },
+  {
+    id: 187,
+    name: "Angle Cock Brass",
+    category: "plumbing",
+    type: "Angle Cock",
+    image: "/images/newProducts/projectanglecock/2.jpg",
+    description: "Brass angle cock with superior durability and corrosion resistance."
+  },
+
+  // Allied Items
+  {
+    id: 188,
+    name: "Allied Bathroom Fitting Set",
+    category: "accessories",
+    type: "Complete Set",
+    image: "/images/newProducts/allieditems/1.jpg",
+    description: "Complete bathroom fitting set with all essential accessories included."
+  },
+  {
+    id: 189,
+    name: "Allied Premium Kit",
+    category: "accessories",
+    type: "Premium Kit",
+    image: "/images/newProducts/allieditems/2.jpg",
+    description: "Premium allied kit with coordinated accessories for luxury bathrooms."
   }
 ];
 
@@ -1261,7 +1629,13 @@ export const categories = {
   pedestal: 'Pedestal Design',
   italian: 'Italian Collection',
   european: 'European Style',
-  concealed: 'Concealed Cistern'
+  concealed: 'Concealed Cistern',
+  faucet: 'Faucets & Mixers',
+  shower: 'Shower Systems',
+  healthfaucet: 'Health Faucets',
+  accessories: 'Bathroom Accessories',
+  plumbing: 'Plumbing Fittings',
+  drainage: 'Drainage Solutions'
 };
 
 // Get products by category
